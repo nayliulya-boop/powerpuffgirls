@@ -23,7 +23,7 @@
 <body class="min-h-screen bg-slate-900 text-slate-900 font-sans antialiased flex items-center justify-center p-4 sm:p-6 lg:p-10">
 
     <!-- Main Login Card Container -->
-    <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+    <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
 
         <!-- Left Branding Panel (No Photo, Clean High-Contrast Gradient) -->
         <div class="lg:col-span-5 bg-gradient-to-br from-orange-600 via-orange-500 to-pink-600 text-white p-8 sm:p-9 flex flex-col justify-between">
@@ -33,6 +33,7 @@
                     U
                 </div>
                 <div class="min-w-0">
+                    <span class="font-extrabold text-lg tracking-tight text-white block leading-tight whitespace-nowrap">
                     <span class="font-extrabold text-base sm:text-lg tracking-tight text-white block leading-tight whitespace-nowrap">
                         ulyaboolatkepalastoopid
                     </span>
