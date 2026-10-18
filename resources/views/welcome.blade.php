@@ -34,6 +34,7 @@
                 </div>
                 <div class="min-w-0">
                     <span class="font-extrabold text-lg tracking-tight text-white block leading-tight whitespace-nowrap">
+                    <span class="font-extrabold text-base sm:text-lg tracking-tight text-white block leading-tight whitespace-nowrap">
                         ulyaboolatkepalastoopid
                     </span>
                     <span class="text-xs font-bold uppercase tracking-widest text-orange-100 block mt-0.5">
