@@ -1,4 +1,4 @@
-<!DOCTYPE html> //seluk seluk
+<!DOCTYPE html> //seluk seluk    // woooooooo
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
