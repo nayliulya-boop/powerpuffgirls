@@ -26,17 +26,17 @@
     <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
 
         <!-- Left Branding Panel (No Photo, Clean High-Contrast Gradient) -->
-        <div class="lg:col-span-5 bg-gradient-to-br from-orange-600 via-orange-500 to-pink-600 text-white p-8 sm:p-10 flex flex-col justify-between">
+        <div class="lg:col-span-5 bg-gradient-to-br from-orange-600 via-orange-500 to-pink-600 text-white p-8 sm:p-9 flex flex-col justify-between">
             <!-- Brand Header -->
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-white text-orange-600 flex items-center justify-center font-black text-2xl shadow-md">
+                <div class="w-11 h-11 shrink-0 rounded-2xl bg-white text-orange-600 flex items-center justify-center font-black text-xl shadow-md">
                     U
                 </div>
-                <div>
-                    <span class="font-extrabold text-xl tracking-tight text-white block leading-tight break-all">
+                <div class="min-w-0">
+                    <span class="font-extrabold text-base sm:text-lg tracking-tight text-white block leading-tight whitespace-nowrap">
                         ulyaboolatkepalastoopid
                     </span>
-                    <span class="text-xs font-bold uppercase tracking-widest text-orange-100">
+                    <span class="text-xs font-bold uppercase tracking-widest text-orange-100 block mt-0.5">
                         Travel Agency Portal
                     </span>
                 </div>

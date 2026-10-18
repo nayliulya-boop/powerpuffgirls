@@ -2,19 +2,18 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Test that the home page is rendered properly.
      */
     public function test_home_page_is_rendered(): void
     {
         $response = $this->get('/');
 
         $response->assertOk()
-            ->assertSee('<h1>Home</h1>', false);
+            ->assertSee('Azure', false);
     }
 }
