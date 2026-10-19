@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Home Page (AzureVoyage luxury travel home)
+Route::view('/', 'home')->name('home');
+Route::view('/home', 'home');
+
+// Login Page (Travel agency portal test login)
+Route::view('/login', 'welcome')->name('login');
+
+// About Page (Simple test page, no database connection)
+Route::view('/about', 'about')->name('about');
