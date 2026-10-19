@@ -177,7 +177,7 @@
                                 type="text"
                                 id="email"
                                 name="email"
-                                placeholder="traveler@azurevoyage.com"
+                                placeholder="izzatiberserah@gmail.com"
                                 class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border-2 border-slate-300 text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition"
                             >
                         </div>

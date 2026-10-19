@@ -106,7 +106,7 @@
                         type="text"
                         id="name"
                         name="name"
-                        placeholder="Jane Doe"
+                        placeholder="Ulya Berserah"
                         class="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition"
                     >
                 </div>
@@ -119,7 +119,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        placeholder="traveler@azurevoyage.com"
+                        placeholder="namtan@gmail.com"
                         class="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-200 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition"
                     >
                 </div>
