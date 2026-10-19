@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Vite compiled assets (run `npm run build` to generate) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -24,13 +25,47 @@
         }
         .bg-mesh-blue {
             background-color: #f0f7ff;
-            background-image: 
+            background-image:
                 radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.12) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
                 radial-gradient(at 50% 100%, rgba(224, 242, 254, 0.6) 0px, transparent 50%);
         }
         .hero-gradient-overlay {
             background: linear-gradient(180deg, rgba(7, 24, 53, 0.55) 0%, rgba(11, 27, 60, 0.75) 100%);
+        }
+        /* Glassmorphism Nav */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(224, 242, 254, 0.8);
+        }
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(224, 242, 254, 0.9);
+        }
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -10px rgba(2, 132, 199, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        /* Card shadows */
+        .travel-shadow {
+            box-shadow: 0 10px 30px -5px rgba(2, 132, 199, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+        }
+        .travel-shadow-lg {
+            box-shadow: 0 20px 40px -12px rgba(2, 132, 199, 0.16), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+        }
+        /* Gradient text */
+        .text-gradient-azure {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #0369a1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
