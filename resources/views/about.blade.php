@@ -65,110 +65,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-sky-500 selection:text-white">
 
-    <!-- Top Announcement Bar (Synced with Home) -->
-    <div class="bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 text-white text-xs sm:text-sm py-2 px-4 shadow-sm">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-sm">
-                    ✨ About AzureVoyage
-                </span>
-                <span>Learn how we craft extraordinary escapes & world-class travel experiences</span>
-            </div>
-            <div class="hidden md:flex items-center gap-6 text-xs text-sky-100">
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                    24/7 Concierge: +1 (800) 429-8732
-                </span>
-                <span class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    IATA & ATOL Protected
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation Header (Synchronized with Home & Login) -->
-    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Brand / Logo -->
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
-                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
-                            <!-- Modern Compass SVG Icon -->
-                            <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                                <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1">
-                                Azure<span class="text-sky-600">Voyage</span>
-                            </span>
-                            <span class="block text-[10px] uppercase tracking-widest font-semibold text-sky-600 -mt-1">
-                                Luxury Travel Agency
-                            </span>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Desktop Nav Links -->
-                <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
-                    <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                        <span>Home</span>
-                    </a>
-                    <a href="{{ route('about') }}" class="text-sky-600 font-semibold transition flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>About</span>
-                    </a>
-                    <a href="{{ route('customer') }}" class="text-slate-600 hover:text-sky-600 transition flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        <span>Customer</span>
-                    </a>
-                </nav>
-
-                <!-- Actions / Login -->
-                <div class="hidden md:flex items-center gap-3">
-                    <a href="{{ url('/login') }}" class="inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-semibold text-sm text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 shadow-md shadow-sky-500/20 hover:shadow-lg hover:shadow-sky-500/30 transition-all duration-200 transform hover:-translate-y-0.5 gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                        <span>Login</span>
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl text-slate-600 hover:text-sky-600 hover:bg-sky-50 transition" aria-label="Toggle Menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-sky-100 bg-white/95 backdrop-blur-lg px-4 pt-3 pb-6 space-y-3">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span>Home</span>
-            </a>
-            <a href="{{ route('about') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-base font-semibold text-sky-600 bg-sky-50">
-                <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>About</span>
-            </a>
-            <a href="{{ route('customer') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span>Customer</span>
-            </a>
-            <div class="pt-3 border-t border-slate-100">
-                <a href="{{ url('/login') }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 shadow-md shadow-sky-500/20 transition gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                    <span>Login</span>
-                </a>
-            </div>
-        </div>
-    </header>
+    @include('partials.navbar')
 
     <!-- Main About Page Hero Section -->
     <section class="relative hero-pattern text-white py-20 lg:py-28 overflow-hidden">
@@ -594,28 +491,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-12 text-sm border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center font-bold">
-                        ✈️
-                    </div>
-                    <span class="text-xl font-extrabold text-white">Azure<span class="text-sky-400">Voyage</span></span>
-                </div>
-                <div class="flex items-center gap-6 text-xs font-semibold text-slate-300">
-                    <a href="{{ route('home') }}" class="hover:text-white transition">Home</a>
-                    <a href="{{ route('about') }}" class="text-sky-400 font-bold">About</a>
-                    <a href="{{ route('customer') }}" class="hover:text-white transition">Customer</a>
-                    <a href="{{ url('/login') }}" class="hover:text-white transition">Login</a>
-                </div>
-            </div>
-            <div class="pt-8 text-center text-xs text-slate-500">
-                <p>© {{ date('Y') }} AzureVoyage • Powerpuff Girls Travel Agency Project. All rights reserved. Zero database dependency.</p>
-            </div>
-        </div>
-    </footer>
+    @include('partials.footer')
 
     <!-- Interactive Scripts -->
     <script>
