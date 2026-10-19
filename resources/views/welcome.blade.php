@@ -146,9 +146,6 @@
             <div class="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white">
                 <div class="max-w-md mx-auto w-full">
                     <div class="mb-8">
-                        <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-600 bg-sky-50 px-3 py-1 rounded-full mb-2">
-                            No Database Connected (Test Mode)
-                        </span>
                         <h2 class="font-extrabold text-3xl text-slate-900">
                             Welcome Back! 👋
                         </h2>
@@ -159,15 +156,15 @@
 
                     <!-- Alert Banner (Hidden by default, shown on submit) -->
                     <div id="loginSuccessAlert" class="hidden mb-6 p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 text-base font-bold">
-                        🎉 Test Login Successful! Redirecting to AzureVoyage Home...
+                        🎉 Login Successful! Redirecting to AzureVoyage Home...
                     </div>
 
                     <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6" novalidate>
                         @csrf
-                        <!-- Email Input (Not Required for Testing) -->
+                        <!-- Email Input -->
                         <div>
                             <label for="email" class="block text-sm font-extrabold uppercase tracking-wide text-slate-800 mb-2">
-                                Email Address <span class="text-slate-400 font-semibold normal-case">(Optional for test)</span>
+                                Email Address
                             </label>
                             <input
                                 type="text"
@@ -178,11 +175,11 @@
                             >
                         </div>
 
-                        <!-- Password Input (Not Required for Testing) -->
+                        <!-- Password Input -->
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <label for="password" class="block text-sm font-extrabold uppercase tracking-wide text-slate-800">
-                                    Password <span class="text-slate-400 font-semibold normal-case">(Optional for test)</span>
+                                    Password
                                 </label>
                                 <a href="#" onclick="alert('Password reset link sent!'); return false;" class="text-sm font-bold text-sky-600 hover:underline">
                                     Forgot password?
@@ -220,7 +217,7 @@
                             type="submit"
                             class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-base shadow-lg shadow-sky-600/25 transition"
                         >
-                            Sign In (Test Login) →
+                            Sign In →
                         </button>
                     </form>
 

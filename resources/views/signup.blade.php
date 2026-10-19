@@ -82,9 +82,6 @@
         <div class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-sky-100 p-8 sm:p-10">
 
             <div class="text-center mb-8">
-                <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-600 bg-sky-50 px-3 py-1 rounded-full mb-3">
-                    No Database (Test Mode)
-                </span>
                 <h1 class="font-extrabold text-3xl text-slate-900">
                     Create Account
                 </h1>
@@ -102,7 +99,7 @@
                 @csrf
                 <div>
                     <label for="name" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Full Name <span class="text-slate-400 font-medium normal-case">(Optional)</span>
+                        Full Name
                     </label>
                     <input
                         type="text"
@@ -115,7 +112,7 @@
 
                 <div>
                     <label for="email" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Email Address <span class="text-slate-400 font-medium normal-case">(Optional)</span>
+                        Email Address
                     </label>
                     <input
                         type="email"
@@ -128,7 +125,7 @@
 
                 <div>
                     <label for="password" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Password <span class="text-slate-400 font-medium normal-case">(Optional)</span>
+                        Password
                     </label>
                     <input
                         type="password"
@@ -143,7 +140,7 @@
                     type="submit"
                     class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-sm shadow-lg shadow-sky-600/25 transition"
                 >
-                    Sign Up (Test) →
+                    Sign Up →
                 </button>
             </form>
 
