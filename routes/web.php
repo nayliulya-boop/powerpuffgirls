@@ -14,3 +14,6 @@ Route::view('/signup', 'signup')->name('signup');
 
 // About Page (Simple test page, no database connection)
 Route::view('/about', 'about')->name('about');
+
+// Customer Page (VIP club, client activity, and inquiry)
+Route::view('/customer', 'customer')->name('customer');

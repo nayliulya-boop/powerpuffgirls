@@ -225,6 +225,10 @@
                     </form>
 
                     <!-- Quick Links to Other Pages -->
+                    <div class="mt-8 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-sm font-bold">
+                        <a href="{{ route('home') }}" class="text-sky-600 hover:underline">← Home</a>
+                        <a href="{{ route('about') }}" class="text-slate-600 hover:text-sky-600 hover:underline">About Us</a>
+                        <a href="{{ route('customer') }}" class="text-sky-600 hover:underline">Customer VIP Portal →</a>
                     <div class="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between text-sm font-bold">
                         <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 hover:underline">← Home</a>
                         <a href="{{ route('signup') }}" class="text-sky-600 hover:underline">Create Account (Sign Up) →</a>
