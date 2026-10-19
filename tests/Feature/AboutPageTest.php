@@ -8,7 +8,7 @@ use Tests\TestCase;
 class AboutPageTest extends TestCase
 {
     /**
-     * Test that the about page renders successfully with 200 OK.
+     * Test that the about page renders successfully with 200 OK and contains about-specific sections.
      */
     public function test_about_page_renders_successfully(): void
     {
@@ -16,7 +16,10 @@ class AboutPageTest extends TestCase
 
         $response->assertOk()
             ->assertSee('About Our Project')
-            ->assertSee('No Database Connected');
+            ->assertSee('No Database Connected')
+            ->assertSee('Nayli Ulya')
+            ->assertSee('Our Core Values')
+            ->assertSee('Frequently Asked Questions');
     }
 
     /**
