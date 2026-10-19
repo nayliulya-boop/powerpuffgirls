@@ -7,9 +7,9 @@
 <!-- Breadcrumbs -->
 <div class="bg-slate-100 border-b border-slate-200 py-3 text-xs font-semibold text-slate-600">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2">
-        <a href="{{ route('home') }}" class="hover:text-sky-600">Laman Utama</a>
+        <a href="{{ route('home') }}" class="hover:text-sky-600">Home</a>
         <span>/</span>
-        <a href="{{ route('packages.index') }}" class="hover:text-sky-600">Pakej Pelancongan</a>
+        <a href="{{ route('packages.index') }}" class="hover:text-sky-600">Packages</a>
         <span>/</span>
         <a href="{{ route('packages.index', ['category' => $package->category]) }}" class="hover:text-sky-600">{{ $package->category }}</a>
         <span>/</span>
@@ -332,3 +332,4 @@
 </script>
 @endpush
 @endsection
+

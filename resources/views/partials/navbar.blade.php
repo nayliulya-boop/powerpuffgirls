@@ -48,22 +48,22 @@
             <nav class="hidden md:flex items-center gap-7 text-sm font-semibold">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-sky-600 font-bold bg-sky-50/80 px-3 py-1.5 rounded-lg' : 'text-slate-700 hover:text-sky-600' }} transition flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    <span>Laman Utama</span>
+                    <span>Home</span>
                 </a>
 
                 <a href="{{ route('packages.index') }}" class="{{ request()->routeIs('packages.*') || request()->routeIs('booking.*') ? 'text-sky-600 font-bold bg-sky-50/80 px-3 py-1.5 rounded-lg' : 'text-slate-700 hover:text-sky-600' }} transition flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Pakej Pelancongan</span>
+                    <span>Packages</span>
                 </a>
 
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-sky-600 font-bold bg-sky-50/80 px-3 py-1.5 rounded-lg' : 'text-slate-700 hover:text-sky-600' }} transition flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Tentang Kami</span>
+                    <span>About Us</span>
                 </a>
 
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'text-sky-600 font-bold bg-sky-50/80 px-3 py-1.5 rounded-lg' : 'text-slate-700 hover:text-sky-600' }} transition flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                    <span>Hubungi & Testimoni</span>
+                    <span>Contact & Testimonials</span>
                 </a>
             </nav>
 
@@ -73,7 +73,7 @@
                     <!-- Logged in Customer Dropdown / Links -->
                     <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition">
                         <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        <span>Tempahan Saya</span>
+                        <span>My Bookings</span>
                     </a>
 
                     <div class="relative group">
@@ -147,25 +147,24 @@
     <div id="mobile-drawer" class="hidden md:hidden border-t border-sky-100 bg-white px-4 pt-3 pb-6 space-y-2">
         <a href="{{ route('home') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold {{ request()->routeIs('home') ? 'text-sky-600 bg-sky-50' : 'text-slate-700' }}">
             <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span>Laman Utama</span>
+            <span>Home</span>
         </a>
         <a href="{{ route('packages.index') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold {{ request()->routeIs('packages.*') ? 'text-sky-600 bg-sky-50' : 'text-slate-700' }}">
             <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Pakej Pelancongan</span>
+            <span>Packages</span>
         </a>
         <a href="{{ route('about') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold {{ request()->routeIs('about') ? 'text-sky-600 bg-sky-50' : 'text-slate-700' }}">
             <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Tentang Kami</span>
+            <span>About Us</span>
         </a>
         <a href="{{ route('contact') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold {{ request()->routeIs('contact') ? 'text-sky-600 bg-sky-50' : 'text-slate-700' }}">
             <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-            <span>Hubungi & Testimoni</span>
+            <span>Contact & Testimonials</span>
         </a>
         <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-sm font-semibold {{ request()->routeIs('customer.*') ? 'text-sky-600 bg-sky-50' : 'text-slate-700' }}">
             <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            <span>Tempahan Saya (My Bookings)</span>
-        </a>
-
+            <span>My Bookings</span>
+        </a>                
         <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
             @auth
                 <a href="{{ route('customer.profile') }}" class="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50 text-slate-800 text-xs font-bold">
@@ -189,3 +188,4 @@
         </div>
     </div>
 </header>
+

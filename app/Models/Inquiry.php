@@ -23,3 +23,4 @@ class Inquiry extends Model
         'status',
     ];
 }
+
