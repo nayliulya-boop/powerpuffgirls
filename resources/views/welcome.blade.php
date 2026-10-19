@@ -226,8 +226,8 @@
 
                     <!-- Quick Links to Other Pages -->
                     <div class="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between text-sm font-bold">
-                        <a href="{{ route('home') }}" class="text-sky-600 hover:underline">← Back to Home Page</a>
-                        <a href="{{ route('about') }}" class="text-slate-600 hover:text-sky-600 hover:underline">About AzureVoyage →</a>
+                        <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 hover:underline">← Home</a>
+                        <a href="{{ route('signup') }}" class="text-sky-600 hover:underline">Create Account (Sign Up) →</a>
                     </div>
                 </div>
             </div>
