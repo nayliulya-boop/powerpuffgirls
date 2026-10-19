@@ -68,6 +68,7 @@
                 <nav class="flex items-center gap-6 text-sm font-semibold">
                     <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition">Home</a>
                     <a href="{{ route('about') }}" class="text-slate-600 hover:text-sky-600 transition">About</a>
+                    <a href="{{ route('customer') }}" class="text-slate-600 hover:text-sky-600 transition">Customer</a>
                     <a href="{{ route('login') }}" class="text-slate-600 hover:text-sky-600 transition">Login</a>
                     <a href="{{ route('signup') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-sky-600 to-blue-600 shadow-md shadow-sky-500/20">
                         Sign Up

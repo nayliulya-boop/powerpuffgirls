@@ -90,8 +90,15 @@
                         <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>About</span>
                     </a>
+                    <a href="{{ route('customer') }}" class="text-slate-600 hover:text-sky-600 transition flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <span>Customer</span>
+                    </a>
                     <a href="{{ url('/login') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-sky-600 to-blue-600 shadow-md shadow-sky-500/20">
                         Login
+                    </a>
+                    <a href="{{ route('signup') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition">
+                        Sign Up
                     </a>
                 </nav>
             </div>
