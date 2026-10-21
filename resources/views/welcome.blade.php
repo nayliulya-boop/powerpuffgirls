@@ -147,7 +147,7 @@
                 <div class="max-w-md mx-auto w-full">
                     <div class="mb-8">
                         <span class="inline-block text-xs font-bold uppercase tracking-widest text-sky-600 bg-sky-50 px-3 py-1 rounded-full mb-2">
-                            No Database Connected (Test Mode)
+                            Secure Traveler Sign-In
                         </span>
                         <h2 class="font-extrabold text-3xl text-slate-900">
                             Welcome Back! 👋
@@ -157,32 +157,36 @@
                         </p>
                     </div>
 
-                    <!-- Alert Banner (Hidden by default, shown on submit) -->
-                    <div id="loginSuccessAlert" class="hidden mb-6 p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-900 text-base font-bold">
-                        🎉 Test Login Successful! Redirecting to AzureVoyage Home...
-                    </div>
+                    @if ($errors->any())
+                        <div class="mb-6 p-4 rounded-2xl bg-red-50 border-2 border-red-200 text-red-800 text-sm font-bold" role="alert">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
 
-                    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6" novalidate>
+                    <form id="loginForm" method="POST" action="{{ route('login.store') }}" class="space-y-6">
                         @csrf
-                        <!-- Email Input (Not Required for Testing) -->
                         <div>
                             <label for="email" class="block text-sm font-extrabold uppercase tracking-wide text-slate-800 mb-2">
-                                Email Address <span class="text-slate-400 font-semibold normal-case">(Optional for test)</span>
+                                Email Address
                             </label>
                             <input
-                                type="text"
+                                type="email"
                                 id="email"
                                 name="email"
+                                value="{{ old('email') }}"
                                 placeholder="traveler@azurevoyage.com"
+                                autocomplete="email"
+                                required
                                 class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border-2 border-slate-300 text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition"
                             >
                         </div>
 
-                        <!-- Password Input (Not Required for Testing) -->
                         <div>
                             <div class="flex items-center justify-between mb-2">
                                 <label for="password" class="block text-sm font-extrabold uppercase tracking-wide text-slate-800">
-                                    Password <span class="text-slate-400 font-semibold normal-case">(Optional for test)</span>
+                                    Password
                                 </label>
                                 <a href="#" onclick="alert('Password reset link sent!'); return false;" class="text-sm font-bold text-sky-600 hover:underline">
                                     Forgot password?
@@ -194,6 +198,8 @@
                                     id="password"
                                     name="password"
                                     placeholder="••••••••••••"
+                                    autocomplete="current-password"
+                                    required
                                     class="w-full px-4 py-3.5 pr-20 rounded-xl bg-slate-50 border-2 border-slate-300 text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-sky-600 focus:bg-white transition"
                                 >
                                 <button
@@ -210,7 +216,7 @@
                         <!-- Remember Me -->
                         <div class="flex items-center justify-between">
                             <label class="inline-flex items-center gap-2.5 cursor-pointer">
-                                <input type="checkbox" checked class="w-5 h-5 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                <input type="checkbox" name="remember" value="1" @checked(old('remember')) class="w-5 h-5 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
                                 <span class="text-sm font-bold text-slate-700">Keep me signed in</span>
                             </label>
                         </div>
@@ -220,7 +226,7 @@
                             type="submit"
                             class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-base shadow-lg shadow-sky-600/25 transition"
                         >
-                            Sign In (Test Login) →
+                            Sign In →
                         </button>
                     </form>
 
@@ -249,15 +255,6 @@
                 input.type = 'password';
                 btn.textContent = 'SHOW';
             }
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const alertBox = document.getElementById('loginSuccessAlert');
-            alertBox.classList.remove('hidden');
-            setTimeout(() => {
-                window.location.href = '/home';
-            }, 800);
         }
     </script>
 </body>
