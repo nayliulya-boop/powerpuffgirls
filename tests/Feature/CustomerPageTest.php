@@ -47,4 +47,3 @@ class CustomerPageTest extends TestCase
         $this->get(route('login'))->assertOk();
     }
 }
-
