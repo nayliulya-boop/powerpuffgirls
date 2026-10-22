@@ -27,6 +27,8 @@ Route::view('/customer', 'customer')->name('customer');
 // Authenticated Customer Area
 Route::middleware('auth')->group(function (): void {
     Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
+    Route::get('/customer/profile', [CustomerDashboardController::class, 'profile'])->name('customer.profile');
+    Route::get('/customer/history', [CustomerDashboardController::class, 'history'])->name('customer.history');
     Route::post('/customer/vacations', [CustomerDashboardController::class, 'store'])->name('customer.vacations.store');
     Route::post('/customer/vacations/{vacation}/cancel', [CustomerDashboardController::class, 'cancel'])->name('customer.vacations.cancel');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
