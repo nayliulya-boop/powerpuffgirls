@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Destination;
+use App\Models\User;
 use App\Models\Vacation;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -50,6 +51,65 @@ class CustomerDashboardController extends Controller
             ->orderBy('start_date', 'desc')
             ->get();
 
+        $stats = $this->calculateStats($user);
+
+        $nextTrip = $user->vacations()
+            ->where('status', 'upcoming')
+            ->orderBy('start_date')
+            ->first();
+
+        return view('customer.dashboard', [
+            'user' => $user,
+            'vacations' => $vacations,
+            'stats' => $stats,
+            'status' => $status,
+            'search' => $search,
+            'nextTrip' => $nextTrip,
+            'destinations' => Destination::all(),
+        ]);
+    }
+
+    /**
+     * Display the customer profile page.
+     */
+    public function profile(Request $request): View
+    {
+        $user = $request->user();
+        $stats = $this->calculateStats($user);
+
+        return view('customer.profile', [
+            'user' => $user,
+            'stats' => $stats,
+        ]);
+    }
+
+    /**
+     * Display the customer vacation history page.
+     */
+    public function history(Request $request): View
+    {
+        $user = $request->user();
+        $stats = $this->calculateStats($user);
+
+        $vacations = $user->vacations()
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        return view('customer.history', [
+            'user' => $user,
+            'stats' => $stats,
+            'vacations' => $vacations,
+        ]);
+    }
+
+    /**
+     * Calculate and return luxury customer statistics.
+     *
+     * @return array{totalBookings: int, upcomingCount: int, completedCount: int, cancelledCount: int, totalSpend: float, loyaltyPoints: int, vipTier: string}
+     */
+    private function calculateStats(User $user): array
+    {
         $allUserVacations = $user->vacations()->get();
 
         $totalBookings = $allUserVacations->count();
@@ -66,12 +126,7 @@ class CustomerDashboardController extends Controller
             default => 'Signature Gold VIP',
         };
 
-        $nextTrip = $allUserVacations
-            ->where('status', 'upcoming')
-            ->sortBy('start_date')
-            ->first();
-
-        $stats = [
+        return [
             'totalBookings' => $totalBookings,
             'upcomingCount' => $upcomingCount,
             'completedCount' => $completedCount,
@@ -80,16 +135,6 @@ class CustomerDashboardController extends Controller
             'loyaltyPoints' => $loyaltyPoints,
             'vipTier' => $vipTier,
         ];
-
-        return view('customer.dashboard', [
-            'user' => $user,
-            'vacations' => $vacations,
-            'stats' => $stats,
-            'status' => $status,
-            'search' => $search,
-            'nextTrip' => $nextTrip,
-            'destinations' => Destination::all(),
-        ]);
     }
 
     /**
