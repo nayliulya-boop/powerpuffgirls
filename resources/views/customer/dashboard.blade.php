@@ -341,10 +341,8 @@
             </div>
         </section>
 
-        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
-        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
         <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
-        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
                 <div class="md:col-span-4 h-64 md:h-auto relative overflow-hidden group">
                     <img
