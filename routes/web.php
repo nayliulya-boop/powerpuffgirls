@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Home Page (AzureVoyage luxury travel home)
-Route::view('/', 'home')->name('home');
-Route::view('/home', 'home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index']);
 
 // Login Page (Travel agency portal test login)
 Route::view('/login', 'welcome')->name('login');

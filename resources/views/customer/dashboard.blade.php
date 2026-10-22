@@ -331,8 +331,8 @@
             </div>
         </section>
 
-        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming) -->
-        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true))
+        <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
                 <div class="md:col-span-4 h-64 md:h-auto relative overflow-hidden group">
                     <img
@@ -773,48 +773,30 @@
                         Popular Luxury Destinations (Click to auto-fill)
                     </label>
                     <div class="flex flex-wrap gap-2 text-xs">
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Maldives, South Ari Atoll', 'Overwater Sunset Lagoon Villa & Private Catamaran')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            🏝️ Maldives Overwater
-                        </button>
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Amalfi Coast, Italy', 'Cliffside Luxury Suite & Capri Yacht Odyssey')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            ⛵ Amalfi Coast & Capri
-                        </button>
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Swiss Alps, Zermatt', 'Matterhorn Alpine Chalet & Glacier Helicopter Safari')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            🏔️ Swiss Alps Zermatt
-                        </button>
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Santorini, Greece', 'Oia Sunset Infinity Pool Villa & Aegean Wine Cruise')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            🏛️ Santorini Caldera
-                        </button>
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Kyoto & Tokyo, Japan', 'Traditional Ryokan with Private Onsen & Forest Tea Sanctuary')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            ⛩️ Kyoto Ryokan
-                        </button>
-                        <button
-                            type="button"
-                            onclick="setDestinationPreset('Bora Bora, French Polynesia', 'Mount Otemanu Overwater Villa & Shark Snorkel Safari')"
-                            class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                        >
-                            🌊 Bora Bora Lagoon
-                        </button>
+                        @forelse ($destinations ?? [] as $dest)
+                            <button
+                                type="button"
+                                onclick="setDestinationPreset('{{ addslashes($dest->location) }}', '{{ addslashes($dest->title) }}')"
+                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
+                            >
+                                ✈️ {{ $dest->title }}
+                            </button>
+                        @empty
+                            <button
+                                type="button"
+                                onclick="setDestinationPreset('Maldives, South Ari Atoll', 'Overwater Sunset Lagoon Villa & Private Catamaran')"
+                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
+                            >
+                                🏝️ Maldives Overwater
+                            </button>
+                            <button
+                                type="button"
+                                onclick="setDestinationPreset('Amalfi Coast, Italy', 'Cliffside Luxury Suite & Capri Yacht Odyssey')"
+                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
+                            >
+                                ⛵ Amalfi Coast & Capri
+                            </button>
+                        @endforelse
                     </div>
                 </div>
 
