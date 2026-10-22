@@ -62,4 +62,3 @@ class RegisterController extends Controller
             ->with('success', "🎉 Welcome to AzureVoyage, {$user->name}! Your traveler account has been successfully created.");
     }
 }
-
