@@ -69,4 +69,3 @@ class Package extends Model
         return $this->hasMany(Review::class);
     }
 }
-

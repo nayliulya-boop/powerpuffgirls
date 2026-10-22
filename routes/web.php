@@ -20,7 +20,7 @@ Route::view('/home', 'home');
 // 2. About Us
 Route::view('/about', 'about')->name('about');
 
-// 3. Contact Us & Reviews          
+// 3. Contact Us & Reviews
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/inquiry', [ContactController::class, 'storeInquiry'])->name('contact.inquiry');
 Route::post('/contact/review', [ContactController::class, 'storeReview'])->name('contact.review');

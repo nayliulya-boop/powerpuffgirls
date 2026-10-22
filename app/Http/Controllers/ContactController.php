@@ -74,4 +74,3 @@ class ContactController extends Controller
         return back()->with('review_success', 'Terima kasih atas perkongsian ulasan & testimoni anda! Kami amat menghargai sokongan anda.');
     }
 }
-
