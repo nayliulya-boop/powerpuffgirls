@@ -35,7 +35,7 @@ class CustomerDashboardController extends Controller
 
         $vacationsQuery = $user->vacations();
 
-        if (in_array($status, ['upcoming', 'ongoing', 'completed', 'cancelled'], true)) {
+        if (in_array($status, ['pending_approval', 'approved', 'rejected', 'upcoming', 'ongoing', 'completed', 'cancelled'], true)) {
             $vacationsQuery->where('status', $status);
         }
 
@@ -113,10 +113,12 @@ class CustomerDashboardController extends Controller
         $allUserVacations = $user->vacations()->get();
 
         $totalBookings = $allUserVacations->count();
+        $pendingApprovalCount = $allUserVacations->where('status', 'pending_approval')->count();
+        $approvedCount = $allUserVacations->where('status', 'approved')->count();
         $upcomingCount = $allUserVacations->where('status', 'upcoming')->count();
         $completedCount = $allUserVacations->where('status', 'completed')->count();
         $cancelledCount = $allUserVacations->where('status', 'cancelled')->count();
-        $totalSpend = (float) $allUserVacations->whereIn('status', ['upcoming', 'ongoing', 'completed'])->sum('price');
+        $totalSpend = (float) $allUserVacations->where('payment_status', 'paid')->sum('price');
 
         $loyaltyPoints = (int) round($totalSpend * 1.5);
 
@@ -128,6 +130,8 @@ class CustomerDashboardController extends Controller
 
         return [
             'totalBookings' => $totalBookings,
+            'pendingApprovalCount' => $pendingApprovalCount,
+            'approvedCount' => $approvedCount,
             'upcomingCount' => $upcomingCount,
             'completedCount' => $completedCount,
             'cancelledCount' => $cancelledCount,
@@ -189,14 +193,15 @@ class CustomerDashboardController extends Controller
             'end_date' => $validated['end_date'],
             'travelers_count' => $validated['travelers_count'],
             'price' => $price,
-            'status' => 'upcoming',
+            'status' => 'pending_approval',
+            'payment_status' => 'unpaid',
             'tier' => $validated['tier'],
             'image_url' => $imageUrl,
             'notes' => $validated['notes'],
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', "✨ Splendid! Your luxury vacation to {$validated['destination']} has been booked ({$packageCode}). Your private concierge is preparing your welcome pack.");
+            ->with('success', "✨ Tempahan percutian anda ke {$validated['destination']} ({$packageCode}) telah berjaya dihantar! Pihak Admin sedang menyemak ketersediaan slot & penginapan. Sila tunggu kelulusan admin untuk membuat bayaran.");
     }
 
     /**

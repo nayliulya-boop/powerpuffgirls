@@ -109,7 +109,7 @@ class CustomerVacationTest extends TestCase
             'destination' => 'Bora Bora, French Polynesia',
             'title' => 'Mount Otemanu Overwater Villa & Safari',
             'tier' => 'Diamond Sovereign',
-            'status' => 'upcoming',
+            'status' => 'pending_approval',
         ]);
     }
 
