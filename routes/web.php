@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
     Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
 
+
 // Authenticated Area
 Route::middleware('auth')->group(function (): void {
     // Role Dispatcher
