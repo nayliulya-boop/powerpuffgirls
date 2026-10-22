@@ -120,6 +120,7 @@
                         <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             My Profile
+                        </a>
                         <a href="{{ route('customer.history') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.history') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
                             <svg class="w-4 h-4 {{ request()->routeIs('customer.history') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             history
@@ -342,6 +343,8 @@
 
         <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
         @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
+        <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
                 <div class="md:col-span-4 h-64 md:h-auto relative overflow-hidden group">
                     <img
@@ -1123,5 +1126,6 @@
             }
         });
     </script>
+    @include('partials.logout-toastr')
 </body>
 </html>

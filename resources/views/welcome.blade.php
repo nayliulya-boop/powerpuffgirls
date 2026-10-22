@@ -257,5 +257,6 @@
             }
         }
     </script>
+    @include('partials.logout-toastr')
 </body>
 </html>

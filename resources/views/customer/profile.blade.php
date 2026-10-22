@@ -457,6 +457,7 @@
         </div>
     </footer>
 
+    @include('partials.logout-toastr')
 </body>
 </html>
 

@@ -43,6 +43,10 @@ class LoginController extends Controller
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
+        if (($login->role ?? 'customer') === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
         return redirect()->route('customer.dashboard');
     }
 
