@@ -117,23 +117,31 @@
                             <svg class="w-4 h-4 {{ request()->routeIs('customer.profile') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                             profile
                         </a>
+                        <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            My Profile
                         <a href="{{ route('customer.history') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.history') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
                             <svg class="w-4 h-4 {{ request()->routeIs('customer.history') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             history
                         </a>
+                        @if ($user->isAdmin())
+                            <a href="{{ route('admin.profile') }}" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-400/20 text-amber-800 border border-amber-300 hover:bg-amber-300 transition flex items-center gap-1">
+                                🛡️ Admin Portal
+                            </a>
+                        @endif
                     </nav>
 
                     <!-- User Profile & Sign Out -->
                     <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-sky-500/20">
+                        <a href="{{ route('profile') }}" title="Edit Profile" class="flex items-center gap-2.5 group hover:opacity-90 transition">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </div>
                             <div class="hidden sm:block text-left">
-                                <span class="text-sm font-bold text-slate-900 block leading-tight">{{ $user->name }}</span>
-                                <span class="text-xs font-semibold text-sky-600 block">{{ $user->email }}</span>
+                                <span class="text-sm font-bold text-slate-900 block leading-tight group-hover:text-sky-600 transition">{{ $user->name }}</span>
+                                <span class="text-xs font-semibold text-sky-600 block">{{ $user->role === 'admin' ? 'Admin Profile →' : 'Edit Profile →' }}</span>
                             </div>
-                        </div>
+                        </a>
 
                         <!-- Logout Form -->
                         <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -222,6 +230,7 @@
 
                     <p class="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
                         Here is your bespoke travel portal. Manage your upcoming vacations, review past itineraries, and request new luxury escapes with your dedicated private concierge.
+       
                     </p>
 
                     <div class="pt-2 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-300">
@@ -331,6 +340,8 @@
             </div>
         </section>
 
+        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
         <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
         @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
