@@ -112,6 +112,7 @@
                         <a href="#bookings-management" class="hover:text-sky-600 transition">Bookings</a>
                         <a href="#clients-directory" class="hover:text-sky-600 transition">VIP Clients</a>
                         <a href="#destinations-catalog" class="hover:text-sky-600 transition">Destinations</a>
+                        <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition">Admin Profile</a>
                         <a href="{{ route('home') }}" class="hover:text-sky-600 transition flex items-center gap-1">
                             <span>Public Site</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -521,6 +522,7 @@
         </div>
     </footer>
 
+    @include('partials.logout-toastr')
 </body>
 </html>
 

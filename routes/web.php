@@ -5,9 +5,9 @@ use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerProfileController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\EnsureUserIsAdmin;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Home Page (AzureVoyage luxury travel home)
@@ -31,11 +31,14 @@ Route::view('/customer', 'customer')->name('customer');
 
 // Authenticated Customer & Admin Area
 Route::middleware('auth')->group(function (): void {
+    // Role Dispatcher
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+    // Admin Area
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/vacations/{vacation}/status', [AdminDashboardController::class, 'updateVacationStatus'])->name('admin.vacations.status');
     Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
     Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
-
 
 // Authenticated Area
 Route::middleware('auth')->group(function (): void {
@@ -44,18 +47,12 @@ Route::middleware('auth')->group(function (): void {
 
     // Customer Area
     Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
-    Route::get('/customer/profile', [CustomerDashboardController::class, 'profile'])->name('customer.profile');
     Route::get('/customer/history', [CustomerDashboardController::class, 'history'])->name('customer.history');
-    Route::post('/customer/vacations', [CustomerDashboardController::class, 'store'])->name('customer.vacations.store');
-    Route::post('/customer/vacations/{vacation}/cancel', [CustomerDashboardController::class, 'cancel'])->name('customer.vacations.cancel');
     Route::get('/customer/profile', [CustomerProfileController::class, 'edit'])->name('customer.profile');
     Route::put('/customer/profile', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
-
-    // Admin Area (Protected by Administrator Privilege Middleware)
-    Route::middleware(EnsureUserIsAdmin::class)->group(function (): void {
-        Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile');
-        Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
-    });
+    Route::post('/customer/vacations', [CustomerDashboardController::class, 'store'])->name('customer.vacations.store');
+    Route::post('/customer/vacations/{vacation}/cancel', [CustomerDashboardController::class, 'cancel'])->name('customer.vacations.cancel');
 
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
+
