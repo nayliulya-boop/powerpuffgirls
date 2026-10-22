@@ -99,6 +99,10 @@
                 <!-- Navigation Links & User Menu -->
                 <div class="flex items-center gap-3 sm:gap-6">
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                        <a href="{{ route('admin.bookings.index') }}" class="hover:text-amber-600 transition flex items-center gap-1.5 font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            Booking Requests
+                        </a>
                         <a href="{{ route('admin.profile') }}" class="text-slate-900 font-bold flex items-center gap-1.5 border-b-2 border-slate-900 py-1">
                             <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             Admin Profile
@@ -197,10 +201,17 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
+                    <a
+                        href="{{ route('admin.bookings.index') }}"
+                        class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-900 bg-amber-400 hover:bg-amber-300 transition flex items-center gap-2 shadow-lg shadow-amber-400/20"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        <span>Manage Bookings & Availability</span>
+                    </a>
                     <a
                         href="{{ route('customer.dashboard') }}"
-                        class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-900 bg-amber-400 hover:bg-amber-300 transition flex items-center gap-2 shadow-lg shadow-amber-400/20"
+                        class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-slate-800 hover:bg-slate-700 transition flex items-center gap-2 border border-slate-700"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         <span>Preview Customer Portal</span>

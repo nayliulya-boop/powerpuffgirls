@@ -41,6 +41,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<Payment, $this>
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
      * Get user role from the login credential store.
      */
     public function getRoleAttribute(): string
