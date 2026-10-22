@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\HomeController;
@@ -24,8 +25,13 @@ Route::view('/about', 'about')->name('about');
 // Customer Page (VIP club, client activity, and inquiry)
 Route::view('/customer', 'customer')->name('customer');
 
-// Authenticated Customer Area
+// Authenticated Customer & Admin Area
 Route::middleware('auth')->group(function (): void {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/vacations/{vacation}/status', [AdminDashboardController::class, 'updateVacationStatus'])->name('admin.vacations.status');
+    Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
+    Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
+
     Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
     Route::post('/customer/vacations', [CustomerDashboardController::class, 'store'])->name('customer.vacations.store');
     Route::post('/customer/vacations/{vacation}/cancel', [CustomerDashboardController::class, 'cancel'])->name('customer.vacations.cancel');

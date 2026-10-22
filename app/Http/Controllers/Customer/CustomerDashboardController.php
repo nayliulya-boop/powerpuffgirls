@@ -8,6 +8,7 @@ use App\Models\Vacation;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CustomerDashboardController extends Controller
@@ -15,9 +16,18 @@ class CustomerDashboardController extends Controller
     /**
      * Display the customer dashboard with their vacation bookings and stats.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $user = $request->user();
+
+        $role = DB::table('login')
+            ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
+            ->value('role');
+
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
 
         $status = $request->query('status', 'all');
         $search = trim((string) $request->query('search', ''));

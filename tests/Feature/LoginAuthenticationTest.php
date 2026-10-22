@@ -36,9 +36,31 @@ class LoginAuthenticationTest extends TestCase
         $this->post(route('login.store'), [
             'email' => $user->email,
             'password' => 'password',
-        ])->assertRedirectToRoute('customer.dashboard');
+        ])->assertRedirectToRoute('admin.dashboard');
 
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_authenticated_admin_can_view_admin_dashboard(): void
+    {
+        $this->seed(LoginSeeder::class);
+        $admin = User::where('email', 'admin@example.test')->firstOrFail();
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Welcome Admin')
+            ->assertSee('All Client Bookings');
+    }
+
+    public function test_customer_cannot_access_admin_dashboard(): void
+    {
+        $this->seed(LoginSeeder::class);
+        $customer = User::where('email', 'customer1@example.test')->firstOrFail();
+
+        $this->actingAs($customer)
+            ->get(route('admin.dashboard'))
+            ->assertRedirectToRoute('customer.dashboard');
     }
 
     public function test_invalid_credentials_are_rejected_without_authenticating(): void
