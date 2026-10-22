@@ -6,11 +6,12 @@ use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Home Page (AzureVoyage luxury travel home)
-Route::view('/', 'home')->name('home');
-Route::view('/home', 'home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index']);
 
 // Login Page (Travel agency portal test login)
 Route::view('/login', 'welcome')->name('login');
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function (): void {
 
     // Customer Area
     Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
+    Route::get('/customer/profile', [CustomerDashboardController::class, 'profile'])->name('customer.profile');
+    Route::get('/customer/history', [CustomerDashboardController::class, 'history'])->name('customer.history');
     Route::post('/customer/vacations', [CustomerDashboardController::class, 'store'])->name('customer.vacations.store');
     Route::post('/customer/vacations/{vacation}/cancel', [CustomerDashboardController::class, 'cancel'])->name('customer.vacations.cancel');
     Route::get('/customer/profile', [CustomerProfileController::class, 'edit'])->name('customer.profile');

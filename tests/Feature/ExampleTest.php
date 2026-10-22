@@ -14,6 +14,8 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk()
-            ->assertSee('Azure', false);
+            ->assertSee('Azure')
+            ->assertSee('Iconic White')
+            ->assertSee('Baa Atoll Overwater Villas');
     }
 }

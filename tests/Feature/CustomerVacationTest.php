@@ -169,4 +169,49 @@ class CustomerVacationTest extends TestCase
 
         $this->assertGuest();
     }
+
+    public function test_authenticated_customer_can_view_profile(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Lady Genevieve',
+            'email' => 'genevieve@example.test',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('customer.profile'))
+            ->assertOk()
+            ->assertSee('Lady Genevieve')
+            ->assertSee('genevieve@example.test')
+            ->assertSee(route('customer.dashboard'))
+            ->assertSee(route('customer.profile'))
+            ->assertSee(route('customer.history'));
+    }
+
+    public function test_authenticated_customer_can_view_history(): void
+    {
+        $user = User::factory()->create(['name' => 'Lord Harrington']);
+
+        Vacation::factory()->completed()->create([
+            'user_id' => $user->id,
+            'destination' => 'Amalfi Coast Villa',
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('customer.history'))
+            ->assertOk()
+            ->assertSee('Amalfi Coast Villa')
+            ->assertSee('Completed Journey')
+            ->assertSee(route('customer.dashboard'))
+            ->assertSee(route('customer.profile'))
+            ->assertSee(route('customer.history'));
+    }
+
+    public function test_unauthenticated_user_cannot_access_profile_or_history(): void
+    {
+        $this->get(route('customer.profile'))
+            ->assertRedirectToRoute('login');
+
+        $this->get(route('customer.history'))
+            ->assertRedirectToRoute('login');
+    }
 }
