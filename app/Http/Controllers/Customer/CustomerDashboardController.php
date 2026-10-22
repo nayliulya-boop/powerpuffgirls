@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Destination;
 use App\Models\Vacation;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -77,6 +78,7 @@ class CustomerDashboardController extends Controller
             'status' => $status,
             'search' => $search,
             'nextTrip' => $nextTrip,
+            'destinations' => Destination::all(),
         ]);
     }
 

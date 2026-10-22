@@ -358,163 +358,63 @@
                 </div>
             </div>
 
-            <!-- Destinations Grid -->
+            <!-- Destinations Grid (Dynamic from Database) -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card 1: Santorini -->
-                <div class="group relative rounded-3xl overflow-hidden bg-white glass-card-hover travel-shadow border border-sky-100/80 flex flex-col">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="{{ asset('images/travel/santorini.jpg') }}" alt="Santorini Caldera" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold bg-white/90 text-sky-900 backdrop-blur-md shadow-sm">
-                            Best Seller
-                        </span>
-                        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                            <span class="text-xs font-medium flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                4.98 (340 reviews)
-                            </span>
-                            <span class="text-xs bg-sky-500/80 backdrop-blur-md px-2 py-0.5 rounded-md font-medium">7 Days</span>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs uppercase font-bold text-sky-600 tracking-wider">Greece • Aegean Sea</div>
-                            <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-sky-600 transition">
-                                Santorini Caldera & Oia Villas
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-2">
-                                Iconic whitewashed cliffside suites, infinity pools, private catamaran sunset cruise, and wine tasting.
-                            </p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-[11px] text-slate-400 block">Starting from</span>
-                                <span class="text-lg font-extrabold text-slate-900">$1,450</span>
-                                <span class="text-xs text-slate-500">/ person</span>
+                @foreach ($destinations as $destination)
+                    @php
+                        $badgeClass = match ($destination->badge) {
+                            'Exclusive' => 'bg-sky-600 text-white shadow-sm',
+                            'VIP Charter' => 'bg-cyan-600 text-white shadow-sm',
+                            default => 'bg-white/90 text-sky-900 backdrop-blur-md shadow-sm',
+                        };
+                        $imageSrc = \Illuminate\Support\Str::startsWith($destination->image_path, ['http://', 'https://'])
+                            ? $destination->image_path
+                            : asset($destination->image_path);
+                    @endphp
+                    <div class="group relative rounded-3xl overflow-hidden bg-white glass-card-hover travel-shadow border border-sky-100/80 flex flex-col">
+                        <div class="relative h-64 overflow-hidden">
+                            <img
+                                src="{{ $imageSrc }}"
+                                alt="{{ $destination->title }}"
+                                class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            @if ($destination->badge)
+                                <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold {{ $badgeClass }}">
+                                    {{ $destination->badge }}
+                                </span>
+                            @endif
+                            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                                <span class="text-xs font-medium flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    {{ number_format($destination->rating, 2) }} ({{ $destination->reviews_count }} reviews)
+                                </span>
+                                <span class="text-xs bg-sky-500/80 backdrop-blur-md px-2 py-0.5 rounded-md font-medium">{{ $destination->duration_days }} Days</span>
                             </div>
-                            <button class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
-                                View Deal
-                            </button>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Maldives -->
-                <div class="group relative rounded-3xl overflow-hidden bg-white glass-card-hover travel-shadow border border-sky-100/80 flex flex-col">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="{{ asset('images/travel/maldives.jpg') }}" alt="Maldives Overwater Resort" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold bg-sky-600 text-white shadow-sm">
-                            Exclusive
-                        </span>
-                        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                            <span class="text-xs font-medium flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                5.0 (480 reviews)
-                            </span>
-                            <span class="text-xs bg-sky-500/80 backdrop-blur-md px-2 py-0.5 rounded-md font-medium">6 Days</span>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs uppercase font-bold text-sky-600 tracking-wider">Indian Ocean • Atoll</div>
-                            <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-sky-600 transition">
-                                Baa Atoll Overwater Villas
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-2">
-                                Private infinity pool over crystal lagoon, seaplane transfer, coral reef diving, and gourmet beach dining.
-                            </p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div class="p-5 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-[11px] text-slate-400 block">Starting from</span>
-                                <span class="text-lg font-extrabold text-slate-900">$2,190</span>
-                                <span class="text-xs text-slate-500">/ person</span>
+                                <div class="text-xs uppercase font-bold text-sky-600 tracking-wider">{{ $destination->location }}</div>
+                                <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-sky-600 transition">
+                                    {{ $destination->title }}
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-2 line-clamp-2">
+                                    {{ $destination->description }}
+                                </p>
                             </div>
-                            <button class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
-                                View Deal
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Swiss Alps -->
-                <div class="group relative rounded-3xl overflow-hidden bg-white glass-card-hover travel-shadow border border-sky-100/80 flex flex-col">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="{{ asset('images/travel/swiss_alps.jpg') }}" alt="Swiss Alps and Lake" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold bg-white/90 text-sky-900 backdrop-blur-md shadow-sm">
-                            Alpine Bliss
-                        </span>
-                        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                            <span class="text-xs font-medium flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                4.96 (210 reviews)
-                            </span>
-                            <span class="text-xs bg-sky-500/80 backdrop-blur-md px-2 py-0.5 rounded-md font-medium">8 Days</span>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs uppercase font-bold text-sky-600 tracking-wider">Switzerland • Interlaken</div>
-                            <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-sky-600 transition">
-                                Lake Brienz & Jungfrau Alps
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-2">
-                                Turquoise glacial waters, scenic cogwheel trains, wooden mountain chalets, and crisp fresh mountain air.
-                            </p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-[11px] text-slate-400 block">Starting from</span>
-                                <span class="text-lg font-extrabold text-slate-900">$1,850</span>
-                                <span class="text-xs text-slate-500">/ person</span>
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <div>
+                                    <span class="text-[11px] text-slate-400 block">Starting from</span>
+                                    <span class="text-lg font-extrabold text-slate-900">${{ number_format($destination->price) }}</span>
+                                    <span class="text-xs text-slate-500">/ person</span>
+                                </div>
+                                <a href="{{ route('login') }}" class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
+                                    View Deal
+                                </a>
                             </div>
-                            <button class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
-                                View Deal
-                            </button>
                         </div>
                     </div>
-                </div>
-
-                <!-- Card 4: Mediterranean Yacht -->
-                <div class="group relative rounded-3xl overflow-hidden bg-white glass-card-hover travel-shadow border border-sky-100/80 flex flex-col">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="{{ asset('images/travel/yacht.jpg') }}" alt="Luxury Yacht Blue Sea" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white shadow-sm">
-                            VIP Charter
-                        </span>
-                        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                            <span class="text-xs font-medium flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                5.0 (125 reviews)
-                            </span>
-                            <span class="text-xs bg-sky-500/80 backdrop-blur-md px-2 py-0.5 rounded-md font-medium">5 Days</span>
-                        </div>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-xs uppercase font-bold text-sky-600 tracking-wider">French Riviera • Monaco</div>
-                            <h3 class="text-lg font-bold text-slate-900 mt-1 group-hover:text-sky-600 transition">
-                                Côte d'Azur Private Yacht Tour
-                            </h3>
-                            <p class="text-xs text-slate-500 mt-2 line-clamp-2">
-                                Private captain, onboard champagne chef, secluded cove swimming, and docking along Saint-Tropez.
-                            </p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-[11px] text-slate-400 block">Starting from</span>
-                                <span class="text-lg font-extrabold text-slate-900">$3,100</span>
-                                <span class="text-xs text-slate-500">/ person</span>
-                            </div>
-                            <button class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
-                                View Deal
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
