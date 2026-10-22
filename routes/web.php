@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
@@ -27,6 +28,13 @@ Route::view('/about', 'about')->name('about');
 
 // Customer Page (VIP club, client activity, and inquiry)
 Route::view('/customer', 'customer')->name('customer');
+
+// Authenticated Customer & Admin Area
+Route::middleware('auth')->group(function (): void {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/vacations/{vacation}/status', [AdminDashboardController::class, 'updateVacationStatus'])->name('admin.vacations.status');
+    Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
+    Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
 
 // Authenticated Area
 Route::middleware('auth')->group(function (): void {
