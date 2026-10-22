@@ -71,10 +71,50 @@ class VacationFactory extends Factory
             'travelers_count' => fake()->numberBetween(1, 4),
             'price' => fake()->randomFloat(2, 2500, 18500),
             'status' => 'upcoming',
+            'payment_status' => 'paid',
             'tier' => $choice['tier'],
             'image_url' => $choice['image_url'],
             'notes' => fake()->sentence(10),
         ];
+    }
+
+    /**
+     * Mark the vacation as pending approval.
+     */
+    public function pendingApproval(): static
+    {
+        return $this->state(fn () => [
+            'status' => 'pending_approval',
+            'payment_status' => 'unpaid',
+            'reviewed_by' => null,
+            'reviewed_at' => null,
+        ]);
+    }
+
+    /**
+     * Mark the vacation as approved and ready for payment.
+     */
+    public function approved(): static
+    {
+        return $this->state(fn () => [
+            'status' => 'approved',
+            'payment_status' => 'unpaid',
+            'admin_notes' => 'Accommodations and private transport confirmed available. Ready for settlement.',
+            'reviewed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark the vacation as rejected.
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn () => [
+            'status' => 'rejected',
+            'payment_status' => 'unpaid',
+            'admin_notes' => 'Selected dates are fully booked with no VIP slots available.',
+            'reviewed_at' => now(),
+        ]);
     }
 
     /**
@@ -84,6 +124,7 @@ class VacationFactory extends Factory
     {
         return $this->state(fn () => [
             'status' => 'completed',
+            'payment_status' => 'paid',
             'start_date' => now()->subMonths(2)->format('Y-m-d'),
             'end_date' => now()->subMonths(2)->addDays(7)->format('Y-m-d'),
         ]);
@@ -96,6 +137,7 @@ class VacationFactory extends Factory
     {
         return $this->state(fn () => [
             'status' => 'ongoing',
+            'payment_status' => 'paid',
             'start_date' => now()->subDays(2)->format('Y-m-d'),
             'end_date' => now()->addDays(5)->format('Y-m-d'),
         ]);
@@ -108,6 +150,7 @@ class VacationFactory extends Factory
     {
         return $this->state(fn () => [
             'status' => 'cancelled',
+            'payment_status' => 'unpaid',
         ]);
     }
 }

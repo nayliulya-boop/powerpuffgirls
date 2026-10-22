@@ -341,6 +341,8 @@
             </div>
         </section>
 
+        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
         <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
         @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
@@ -460,6 +462,20 @@
                         class="px-3.5 py-2 rounded-xl transition {{ $status === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}"
                     >
                         All Escapes ({{ $stats['totalBookings'] }})
+                    </a>
+                    <a
+                        href="{{ route('customer.dashboard', ['status' => 'pending_approval', 'search' => $search]) }}"
+                        class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ $status === 'pending_approval' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100' }}"
+                    >
+                        <span>⏳ Semakan Admin</span>
+                        <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] flex items-center justify-center font-bold">{{ $stats['pendingApprovalCount'] ?? 0 }}</span>
+                    </a>
+                    <a
+                        href="{{ route('customer.dashboard', ['status' => 'approved', 'search' => $search]) }}"
+                        class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ $status === 'approved' ? 'bg-teal-600 text-white shadow-sm' : 'bg-teal-50 text-teal-800 hover:bg-teal-100' }}"
+                    >
+                        <span>✨ Sedia Bayar</span>
+                        <span class="w-5 h-5 rounded-full bg-teal-700 text-white text-[10px] flex items-center justify-center font-bold">{{ $stats['approvedCount'] ?? 0 }}</span>
                     </a>
                     <a
                         href="{{ route('customer.dashboard', ['status' => 'upcoming', 'search' => $search]) }}"
@@ -600,11 +616,32 @@
 
                                     <!-- Status Badge -->
                                     <td class="py-4 px-4 whitespace-nowrap">
-                                        @if ($vacation->status === 'upcoming')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                Upcoming
+                                        @if ($vacation->status === 'pending_approval')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-300">
+                                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                                ⏳ Semakan Admin
                                             </span>
+                                        @elseif ($vacation->status === 'approved')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-teal-50 text-teal-800 border border-teal-300">
+                                                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                                                ✨ Tersedia (Sedia Bayar)
+                                            </span>
+                                        @elseif ($vacation->status === 'rejected')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-300">
+                                                ❌ Tidak Tersedia
+                                            </span>
+                                        @elseif ($vacation->status === 'upcoming')
+                                            @if ($vacation->payment_status === 'paid')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
+                                                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                                                    ✓ Disahkan & Dibayar
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                    Upcoming
+                                                </span>
+                                            @endif
                                         @elseif ($vacation->status === 'ongoing')
                                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
                                                 <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
@@ -624,17 +661,41 @@
                                     <!-- Action Buttons -->
                                     <td class="py-4 px-4 sm:pr-6 whitespace-nowrap text-right">
                                         <div class="inline-flex items-center gap-1.5">
+                                            @if ($vacation->canBePaid())
+                                                <!-- Pay Now Button for Approved Vacations -->
+                                                <a
+                                                    href="{{ route('customer.payment.show', $vacation) }}"
+                                                    class="px-3.5 py-1.5 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm hover:scale-105 transition flex items-center gap-1"
+                                                    title="Make payment for this approved booking"
+                                                >
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                                    <span>Bayar Sekarang</span>
+                                                </a>
+                                            @endif
+
+                                            @if ($vacation->payment_status === 'paid')
+                                                <!-- E-Voucher / Receipt Link -->
+                                                <a
+                                                    href="{{ route('customer.payment.receipt', $vacation) }}"
+                                                    class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition flex items-center gap-1"
+                                                    title="View official e-voucher receipt"
+                                                >
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                    <span>E-Voucher</span>
+                                                </a>
+                                            @endif
+
                                             <!-- View Details Modal Trigger -->
                                             <button
                                                 onclick="openItineraryModal({{ json_encode($vacation) }})"
-                                                class="px-3 py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition"
+                                                class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition"
                                                 title="View itinerary & concierge details"
                                             >
                                                 Details
                                             </button>
 
-                                            <!-- Cancel Vacation Booking (Only if upcoming) -->
-                                            @if ($vacation->status === 'upcoming')
+                                            <!-- Cancel Vacation Booking (Only if upcoming or pending) -->
+                                            @if (in_array($vacation->status, ['upcoming', 'pending_approval', 'approved'], true))
                                                 <form
                                                     method="POST"
                                                     action="{{ route('customer.vacations.cancel', $vacation) }}"

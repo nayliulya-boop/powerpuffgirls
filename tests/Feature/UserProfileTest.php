@@ -210,4 +210,3 @@ class UserProfileTest extends TestCase
         $response->assertSessionHasErrors('current_password');
     }
 }
-
