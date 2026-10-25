@@ -460,20 +460,6 @@
                         {{ __('All Escapes') }} ({{ $stats['totalBookings'] }})
                     </a>
                     <a
-                        href="{{ route('customer.dashboard', ['status' => 'pending_approval', 'search' => $search]) }}"
-                        class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ $status === 'pending_approval' ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100' }}"
-                    >
-                        <span>⏳ {{ __('Admin Review') }}</span>
-                        <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] flex items-center justify-center font-bold">{{ $stats['pendingApprovalCount'] ?? 0 }}</span>
-                    </a>
-                    <a
-                        href="{{ route('customer.dashboard', ['status' => 'approved', 'search' => $search]) }}"
-                        class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ $status === 'approved' ? 'bg-teal-600 text-white shadow-sm' : 'bg-teal-50 text-teal-800 hover:bg-teal-100' }}"
-                    >
-                        <span>✨ {{ __('Available (Ready to Pay)') }}</span>
-                        <span class="w-5 h-5 rounded-full bg-teal-700 text-white text-[10px] flex items-center justify-center font-bold">{{ $stats['approvedCount'] ?? 0 }}</span>
-                    </a>
-                    <a
                         href="{{ route('customer.dashboard', ['status' => 'upcoming', 'search' => $search]) }}"
                         class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ $status === 'upcoming' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100' }}"
                     >
@@ -612,44 +598,28 @@
 
                                     <!-- Status Badge -->
                                     <td class="py-4 px-4 whitespace-nowrap">
-                                        @if ($vacation->status === 'pending_approval')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-300">
-                                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                                                ⏳ {{ __('Admin Review') }}
+                                        @if ($vacation->status === 'completed')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-700 border border-slate-200">
+                                                ✓ {{ __('Completed') }}
                                             </span>
-                                        @elseif ($vacation->status === 'approved')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-teal-50 text-teal-800 border border-teal-300">
-                                                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-                                                ✨ {{ __('Available (Ready to Pay)') }}
+                                        @elseif ($vacation->status === 'cancelled' || $vacation->status === 'rejected')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+                                                ✕ {{ __('Cancelled') }}
                                             </span>
-                                        @elseif ($vacation->status === 'rejected')
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-300">
-                                                ❌ {{ __('Unavailable') }}
-                                            </span>
-                                        @elseif ($vacation->status === 'upcoming')
-                                            @if ($vacation->payment_status === 'paid')
-                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
-                                                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                                                    ✓ {{ __('Confirmed & Paid') }}
-                                                </span>
-                                            @else
-                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                    {{ __('Upcoming') }}
-                                                </span>
-                                            @endif
                                         @elseif ($vacation->status === 'ongoing')
                                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
                                                 <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
                                                 Ongoing Trip
                                             </span>
-                                        @elseif ($vacation->status === 'completed')
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-700 border border-slate-200">
-                                                ✓ {{ __('Completed') }}
+                                        @elseif ($vacation->payment_status === 'paid')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
+                                                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                                                ✓ {{ __('Confirmed & Paid') }}
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
-                                                ✕ {{ __('Cancelled') }}
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                {{ __('Upcoming') }}
                                             </span>
                                         @endif
                                     </td>
@@ -657,22 +627,6 @@
                                     <!-- Action Buttons -->
                                     <td class="py-4 px-4 sm:pr-6 whitespace-nowrap text-right align-middle">
                                         <div class="inline-flex flex-col items-stretch gap-1 w-24 ml-auto">
-                                            @if ($vacation->canBePaid())
-                                                <!-- Pay Now Button for Approved Vacations -->
-                                                <a
-                                                    href="{{ route('customer.payment.show', $vacation) }}"
-                                                    class="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm shadow-emerald-600/20 transition animate-pulse"
-                                                    title="Pakej diluluskan tersedia! Sila buat pembayaran sekarang"
-                                                >
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                                    <span>{{ __('Pay Now') }}</span>
-                                                </a>
-                                            @elseif ($vacation->status === 'pending_approval')
-                                                <span class="w-full px-2 py-1 rounded-lg text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 inline-flex items-center justify-center text-center cursor-help" title="Admin sedang menyemak ketersediaan slot hotel & penerbangan. Bayaran hanya boleh dibuat selepas diluluskan.">
-                                                    <span>⏳ {{ __('Reviewing') }}</span>
-                                                </span>
-                                            @endif
-
                                             @if ($vacation->payment_status === 'paid')
                                                 <!-- Receipt Link -->
                                                 <a

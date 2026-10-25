@@ -35,7 +35,13 @@ class CustomerDashboardController extends Controller
 
         $vacationsQuery = $user->vacations();
 
-        if (in_array($status, ['pending_approval', 'approved', 'rejected', 'upcoming', 'ongoing', 'completed', 'cancelled'], true)) {
+        if ($status === 'upcoming') {
+            $vacationsQuery->whereIn('status', ['upcoming', 'ongoing', 'approved', 'pending_approval']);
+        } elseif ($status === 'completed') {
+            $vacationsQuery->where('status', 'completed');
+        } elseif ($status === 'cancelled') {
+            $vacationsQuery->whereIn('status', ['cancelled', 'rejected']);
+        } elseif (in_array($status, ['pending_approval', 'approved', 'rejected', 'ongoing'], true)) {
             $vacationsQuery->where('status', $status);
         }
 
@@ -115,9 +121,9 @@ class CustomerDashboardController extends Controller
         $totalBookings = $allUserVacations->count();
         $pendingApprovalCount = $allUserVacations->where('status', 'pending_approval')->count();
         $approvedCount = $allUserVacations->where('status', 'approved')->count();
-        $upcomingCount = $allUserVacations->where('status', 'upcoming')->count();
+        $upcomingCount = $allUserVacations->whereIn('status', ['upcoming', 'ongoing', 'approved', 'pending_approval'])->count();
         $completedCount = $allUserVacations->where('status', 'completed')->count();
-        $cancelledCount = $allUserVacations->where('status', 'cancelled')->count();
+        $cancelledCount = $allUserVacations->whereIn('status', ['cancelled', 'rejected'])->count();
         $totalSpend = (float) $allUserVacations->where('payment_status', 'paid')->sum('price');
 
         $loyaltyPoints = (int) round($totalSpend * 1.5);
