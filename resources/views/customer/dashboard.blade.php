@@ -655,21 +655,21 @@
                                     </td>
 
                                     <!-- Action Buttons -->
-                                    <td class="py-4 px-4 sm:pr-6 whitespace-nowrap text-right">
-                                        <div class="inline-flex items-center gap-1.5">
+                                    <td class="py-4 px-4 sm:pr-6 whitespace-nowrap text-right align-middle">
+                                        <div class="inline-flex flex-col items-stretch gap-1 w-24 ml-auto">
                                             @if ($vacation->canBePaid())
                                                 <!-- Pay Now Button for Approved Vacations -->
                                                 <a
                                                     href="{{ route('customer.payment.show', $vacation) }}"
-                                                    class="px-3.5 py-1.5 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-600/20 hover:scale-105 active:scale-95 transition flex items-center gap-1 animate-pulse"
+                                                    class="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm shadow-emerald-600/20 transition animate-pulse"
                                                     title="Pakej diluluskan tersedia! Sila buat pembayaran sekarang"
                                                 >
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                                     <span>{{ __('Pay Now') }}</span>
                                                 </a>
                                             @elseif ($vacation->status === 'pending_approval')
-                                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 inline-flex items-center gap-1 cursor-help" title="Admin sedang menyemak ketersediaan slot hotel & penerbangan. Bayaran hanya boleh dibuat selepas diluluskan.">
-                                                    <span>⏳ Menunggu Kelulusan</span>
+                                                <span class="w-full px-2 py-1 rounded-lg text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 inline-flex items-center justify-center text-center cursor-help" title="Admin sedang menyemak ketersediaan slot hotel & penerbangan. Bayaran hanya boleh dibuat selepas diluluskan.">
+                                                    <span>⏳ {{ __('Reviewing') }}</span>
                                                 </span>
                                             @endif
 
@@ -677,7 +677,7 @@
                                                 <!-- Receipt Link -->
                                                 <a
                                                     href="{{ route('customer.payment.receipt', $vacation) }}"
-                                                    class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition flex items-center gap-1"
+                                                    class="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition"
                                                     title="View official receipt"
                                                 >
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -688,7 +688,7 @@
                                             <!-- View Details Modal Trigger -->
                                             <button
                                                 onclick="openItineraryModal({{ json_encode($vacation) }})"
-                                                class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition"
+                                                class="w-full inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition"
                                                 title="View itinerary & concierge details"
                                             >
                                                 Details
@@ -700,12 +700,12 @@
                                                     method="POST"
                                                     action="{{ route('customer.vacations.cancel', $vacation) }}"
                                                     onsubmit="return confirm('Are you sure you wish to cancel this vacation booking ({{ $vacation->destination }})?');"
-                                                    class="inline"
+                                                    class="w-full block"
                                                 >
                                                     @csrf
                                                     <button
                                                         type="submit"
-                                                        class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition"
+                                                        class="w-full inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition"
                                                         title="Cancel this booking"
                                                     >
                                                         Cancel
