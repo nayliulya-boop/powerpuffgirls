@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerPaymentController;
 use App\Http\Controllers\Customer\CustomerProfileController;
@@ -16,13 +17,26 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index']);
 
+// Language Switcher
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['en', 'ms'], true)) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('lang.switch');
+
 // Authentication Routes
 Route::view('/login', 'welcome')->name('login');
 Route::post('/login', [LoginController::class, 'store'])
     ->middleware('throttle:login')
     ->name('login.store');
 
-Route::view('/signup', 'signup')->name('signup');
+Route::get('/signup', [RegisterController::class, 'create'])->name('signup');
+Route::post('/signup', [RegisterController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('signup.store');
+
 Route::view('/about', 'about')->name('about');
 Route::view('/customer', 'customer')->name('customer');
 
@@ -37,6 +51,12 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/admin/vacations/{vacation}/status', [AdminDashboardController::class, 'updateVacationStatus'])->name('admin.vacations.status');
     Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
     Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
+
+    // Admin Profile Area
+    Route::middleware(EnsureUserIsAdmin::class)->group(function (): void {
+        Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile');
+        Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+    });
 
     // Customer Area
     Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
