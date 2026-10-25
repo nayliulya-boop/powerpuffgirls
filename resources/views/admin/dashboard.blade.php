@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Executive Portal | AzureVoyage Luxury Travel Agency</title>
+    <title>Admin Portal | AzureVoyage Luxury Travel Agency</title>
     <meta name="description" content="AzureVoyage Admin Executive Portal — Manage client bookings, VIP travelers, revenue metrics, and curated luxury destinations.">
 
     <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
@@ -87,9 +87,9 @@
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-40 glass-nav shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 gap-4">
                 <!-- Brand / Logo -->
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group shrink-0">
                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-900 via-sky-700 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
                         <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
@@ -100,7 +100,7 @@
                         <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
                             Azure<span class="text-sky-600">Voyage</span>
                         </span>
-                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1">
+                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1 whitespace-nowrap">
                             Admin Control Center
                         </span>
                     </div>
@@ -117,6 +117,7 @@
                             <span>{{ __('Home') }}</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
+
                     </nav>
 
                     <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
@@ -128,7 +129,7 @@
                             Add Destination
                         </a>
 
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-700 text-xs sm:text-sm font-semibold transition shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
@@ -137,6 +138,9 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </header>
             </div>
         </div>
     </header>

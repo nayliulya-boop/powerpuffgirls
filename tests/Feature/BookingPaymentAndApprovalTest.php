@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Destination;
 use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vacation;
@@ -55,27 +56,44 @@ class BookingPaymentAndApprovalTest extends TestCase
         return $customer;
     }
 
-    public function test_customer_can_create_booking_with_pending_approval_status(): void
+    public function test_customer_can_select_destination_and_immediately_proceed_to_payment(): void
     {
         $customer = $this->createCustomer();
 
-        $response = $this->actingAs($customer)->post(route('customer.vacations.store'), [
-            'destination' => 'Santorini, Greece',
-            'title' => 'Oia Sunset Cliffside Villa',
-            'start_date' => now()->addDays(14)->format('Y-m-d'),
-            'end_date' => now()->addDays(20)->format('Y-m-d'),
-            'travelers_count' => 2,
-            'tier' => 'Platinum Horizon',
-            'notes' => 'Special anniversary champagne upon arrival.',
+        $destination = Destination::create([
+            'title' => 'Pulau Redang Sunset Villa & Marine Sanctuary',
+            'location' => 'Malaysia • Pulau Redang, Terengganu',
+            'badge' => 'Tropical Island',
+            'rating' => 4.97,
+            'reviews_count' => 180,
+            'duration_days' => 4,
+            'description' => 'Beachfront private sunset villa and turtle snorkeling tour.',
+            'price' => 1250.00,
+            'image_path' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+            'is_featured' => true,
         ]);
 
-        $response->assertRedirect(route('customer.dashboard'));
+        $response = $this->actingAs($customer)->post(route('customer.vacations.store'), [
+            'destination_id' => $destination->id,
+            'start_date' => now()->addDays(7)->format('Y-m-d'),
+            'end_date' => now()->addDays(11)->format('Y-m-d'),
+            'travelers_count' => 2,
+            'tier' => 'Platinum Horizon',
+            'notes' => 'Airport boat pickup requested.',
+        ]);
+
+        $vacation = Vacation::where('user_id', $customer->id)->latest()->first();
+
+        $this->assertNotNull($vacation);
+        $response->assertRedirect(route('customer.payment.show', $vacation));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('vacations', [
+            'id' => $vacation->id,
             'user_id' => $customer->id,
-            'destination' => 'Santorini, Greece',
-            'status' => 'pending_approval',
+            'destination' => 'Malaysia • Pulau Redang, Terengganu',
+            'title' => 'Pulau Redang Sunset Villa & Marine Sanctuary',
+            'status' => 'approved',
             'payment_status' => 'unpaid',
             'tier' => 'Platinum Horizon',
         ]);
@@ -160,12 +178,14 @@ class BookingPaymentAndApprovalTest extends TestCase
         ]);
     }
 
-    public function test_customer_cannot_pay_for_booking_until_approved(): void
+    public function test_customer_cannot_pay_for_rejected_or_cancelled_booking(): void
     {
         $customer = $this->createCustomer();
 
-        $vacation = Vacation::factory()->pendingApproval()->create([
+        $vacation = Vacation::factory()->create([
             'user_id' => $customer->id,
+            'status' => 'rejected',
+            'payment_status' => 'unpaid',
         ]);
 
         $response = $this->actingAs($customer)->get(route('customer.payment.show', $vacation));

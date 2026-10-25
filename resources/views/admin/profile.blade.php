@@ -52,25 +52,23 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white">
 
-    <!-- Top Admin Operations Bar -->
-    <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white text-xs sm:text-sm py-2.5 px-4 shadow-sm border-b border-slate-800">
+    <!-- Top Admin Executive Bar -->
+    <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-xs sm:text-sm py-2.5 px-4 shadow-sm border-b border-sky-900/40">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2.5">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950 shadow-sm">
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse"></span>
-                    Administrator Portal
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-400 text-slate-950 shadow-sm whitespace-nowrap">
+                    ⚡ Administrator Portal
                 </span>
-                <span class="text-slate-300">
-                    Staff Identity: <strong class="text-white">{{ $user->name }}</strong>
+                <span class="text-slate-200">
+                    Signed in as Executive Administrator: <strong class="text-white">{{ $user->name }}</strong> ({{ $user->email }})
                 </span>
             </div>
-            <div class="hidden md:flex items-center gap-6 text-xs text-slate-300">
-                <span>Staff ID: <strong class="text-amber-400 font-mono">AV-ADM-{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</strong></span>
-                <span>Role: <strong class="text-sky-300">System Admin</strong></span>
-                <span class="flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    Database Connected
+            <div class="hidden md:flex items-center gap-6 text-xs text-sky-200">
+                <span class="flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Global Concierge Operations: <strong>Active</strong>
                 </span>
+                <span>Role: <strong class="text-amber-300 uppercase tracking-wider">Administrator</strong></span>
             </div>
         </div>
     </div>
@@ -78,20 +76,21 @@
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-40 glass-nav shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 gap-4">
                 <!-- Brand / Logo -->
-                <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-sky-700 flex items-center justify-center text-amber-400 shadow-lg shadow-slate-900/30 group-hover:scale-105 transition-transform duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group shrink-0">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-900 via-sky-700 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
+                        <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
                         </svg>
                     </div>
                     <div>
                         <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
                             Azure<span class="text-sky-600">Voyage</span>
                         </span>
-                        <span class="block text-[10px] uppercase tracking-widest font-bold text-amber-600 -mt-1">
-                            Staff Operations Center
+                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1 whitespace-nowrap">
+                            Admin Control Center
                         </span>
                     </div>
                 </a>
@@ -115,6 +114,7 @@
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                             {{ __('Home') }}
                         </a>
+
                     </nav>
 
                     @include('partials.language-switcher')
@@ -131,7 +131,6 @@
                             </div>
                         </div>
 
-                        <!-- Logout Form -->
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button
@@ -203,22 +202,6 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-3">
-                    <a
-                        href="{{ route('admin.bookings.index') }}"
-                        class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-900 bg-amber-400 hover:bg-amber-300 transition flex items-center gap-2 shadow-lg shadow-amber-400/20"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        <span>Manage Bookings & Availability</span>
-                    </a>
-                    <a
-                        href="{{ route('customer.dashboard') }}"
-                        class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-slate-800 hover:bg-slate-700 transition flex items-center gap-2 border border-slate-700"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <span>Preview Customer Portal</span>
-                    </a>
-                </div>
             </div>
 
             <!-- Admin Agency System Overview Row -->

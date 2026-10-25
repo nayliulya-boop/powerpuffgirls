@@ -140,6 +140,6 @@ class Vacation extends Model
      */
     public function canBePaid(): bool
     {
-        return $this->status === 'approved' && $this->payment_status !== 'paid';
+        return $this->payment_status !== 'paid' && ! in_array($this->status, ['rejected', 'cancelled'], true);
     }
 }

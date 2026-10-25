@@ -27,11 +27,6 @@ class CustomerPaymentController extends Controller
                 ->with('status', 'This booking has already been settled and confirmed. View your receipt and e-voucher below.');
         }
 
-        if ($vacation->isPendingApproval()) {
-            return redirect()->route('customer.dashboard')
-                ->with('info', "⏳ Booking #{$vacation->package_code} is currently undergoing administrator availability review. Once approved, you can complete payment.");
-        }
-
         if ($vacation->isRejected()) {
             return redirect()->route('customer.dashboard')
                 ->with('info', "Booking #{$vacation->package_code} was marked as unavailable. Notes: {$vacation->admin_notes}");
@@ -70,9 +65,9 @@ class CustomerPaymentController extends Controller
             return redirect()->route('customer.payment.receipt', $vacation);
         }
 
-        if (! $vacation->isApproved()) {
+        if ($vacation->isRejected()) {
             return redirect()->route('customer.dashboard')
-                ->with('info', 'Payment cannot be processed until the booking has been confirmed available by an administrator.');
+                ->with('info', 'Payment cannot be processed because this booking was marked as unavailable.');
         }
 
         $validated = $request->validate([

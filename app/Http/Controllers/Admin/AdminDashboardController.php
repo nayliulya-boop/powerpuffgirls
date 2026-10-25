@@ -62,6 +62,9 @@ class AdminDashboardController extends Controller
             });
         }
 
+        // Always display newest bookings first so any recent booking is immediately visible at the top
+        $vacations = $vacationsQuery
+            ->orderBy('created_at', 'desc')
         $statusOrder = "CASE status 
             WHEN 'pending_approval' THEN 1 
             WHEN 'pending' THEN 1 
