@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Destination;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vacation;
 use Carbon\Carbon;
@@ -216,7 +217,7 @@ class CustomerDashboardController extends Controller
         }
         $packageCode = 'AV-'.$prefix.'-'.random_int(100, 999);
 
-        // Created as approved so customer can immediately make payment without waiting for admin check
+        // Save the booking into the vacations database table
         $vacation = $request->user()->vacations()->create([
             'package_code' => $packageCode,
             'destination' => $destination,
@@ -230,11 +231,11 @@ class CustomerDashboardController extends Controller
             'tier' => $validated['tier'],
             'image_url' => $imageUrl,
             'notes' => $validated['notes'] ?? null,
-            'admin_notes' => 'Tempahan segera sedia untuk pembayaran.',
+            'admin_notes' => 'Tempahan pakej berjaya didaftarkan ke dalam pangkalan data. Menunggu bayaran pelanggan.',
         ]);
 
         return redirect()->route('customer.payment.show', $vacation)
-            ->with('success', "✨ Tempahan percutian ke {$title} (#{$packageCode}) telah didaftarkan! Sila pilih kaedah pembayaran anda di bawah.");
+            ->with('success', "✨ Pakej {$title} (#{$packageCode}) berjaya didaftarkan ke dalam pangkalan data (Jadual vacations)! Sila lengkapkan pembayaran di bawah.");
     }
 
     /**
