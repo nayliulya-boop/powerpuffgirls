@@ -136,12 +136,12 @@
                 </div>
                 <div>
                     <span class="text-slate-400 block uppercase font-semibold text-[10px]">Payment Reference</span>
-                    <strong class="text-sky-700 block font-mono text-xs">{{ $payment->transaction_reference ?? 'AV-TXN-OFFLINE' }}</strong>
-                    <span class="text-slate-500 text-[11px]">{{ strtoupper($payment->payment_method ?? 'ONLINE FPX') }}</span>
+                    <strong class="text-sky-700 block font-mono text-xs">{{ $payment?->transaction_reference ?? ('AV-TXN-'.($vacation->package_code ?? $vacation->id)) }}</strong>
+                    <span class="text-slate-500 text-[11px]">{{ strtoupper($payment?->payment_method ?? 'ONLINE FPX') }}</span>
                 </div>
                 <div>
                     <span class="text-slate-400 block uppercase font-semibold text-[10px]">Payment Date</span>
-                    <strong class="text-slate-900 block">{{ $payment?->paid_at ? $payment->paid_at->format('d M Y, H:i') : now()->format('d M Y, H:i') }}</strong>
+                    <strong class="text-slate-900 block">{{ $payment?->paid_at ? $payment->paid_at->format('d M Y, H:i') : ($vacation->created_at ? $vacation->created_at->format('d M Y, H:i') : now()->format('d M Y, H:i')) }}</strong>
                     <span class="text-emerald-600 font-bold text-[11px]">Database Verified</span>
                 </div>
                 <div>
