@@ -84,8 +84,6 @@
                 <!-- Brand / Logo -->
                 <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 group">
                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
-                <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25">
                         <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
                             <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
@@ -96,66 +94,64 @@
                             Azure<span class="text-sky-600">Voyage</span>
                         </span>
                         <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-600 -mt-1">
-                            Customer Portal
+                            {{ __('Luxury Traveler Portal') }}
                         </span>
                     </div>
                 </a>
 
                 <!-- Navigation Links & User Menu -->
                 <div class="flex items-center gap-3 sm:gap-6">
+                    <!-- Navigation Links & User Menu -->
+                <div class="flex items-center gap-3 sm:gap-6">
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                            Dashboard
+                        <a href="{{ route('customer.dashboard') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.dashboard') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('customer.dashboard') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            {{ __('Dashboard') }}
                         </a>
-                        <a href="{{ route('customer.profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                        <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            Profile
+                            {{ __('My Profile') }}
                         </a>
-                        <a href="{{ route('customer.history') }}" class="text-sky-600 font-bold flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            History
+                        <a href="{{ route('customer.history') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.history') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('customer.history') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            {{ __('History') }}
                         </a>
+                        @if ($user->isAdmin())
+                            <a href="{{ route('admin.profile') }}" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-400/20 text-amber-800 border border-amber-300 hover:bg-amber-300 transition flex items-center gap-1">
+                                🛡️ {{ __('Admin Portal') }}
+                            </a>
+                        @endif
                     </nav>
+
+                    @include('partials.language-switcher')
 
                     <!-- User Profile & Sign Out -->
                     <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-sky-500/20">
+                        <a href="{{ route('customer.profile') }}" title="Edit Profile" class="flex items-center gap-2.5 group hover:opacity-90 transition">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </div>
                             <div class="hidden sm:block text-left">
-                                <span class="text-sm font-bold text-slate-900 block leading-tight">{{ $user->name }}</span>
-                                <span class="text-xs font-semibold text-sky-600 block">{{ $user->email }}</span>
+                                <span class="text-sm font-bold text-slate-900 block leading-tight group-hover:text-sky-600 transition">{{ $user->name }}</span>
+                                <span class="text-xs font-semibold text-sky-600 block">Edit Profile →</span>
                             </div>
-                        </div>
+                        </a>
 
                         <!-- Logout Form -->
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button
                                 type="submit"
-                                title="Sign Out"
+                                title="{{ __('Sign Out') }}"
                                 class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition flex items-center gap-1.5"
                             >
-                <div class="flex items-center gap-3 sm:gap-6">
-                    <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition">Dashboard</a>
-                        <a href="{{ route('customer.profile') }}" class="hover:text-sky-600 transition">My Profile</a>
-                        <a href="{{ route('customer.history') }}" class="text-sky-600 font-bold">History</a>
-                    </nav>
-
-                    <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
-                        <span class="hidden sm:inline text-sm font-bold text-slate-900">{{ $user->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition flex items-center gap-1.5">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                <span class="hidden sm:inline">Sign Out</span>
+                                <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                             </button>
                         </form>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </header>
@@ -201,15 +197,9 @@
                                 class="w-full h-full object-cover"
                             >
                             <div class="absolute top-3 left-3">
-                                @if ($vacation->status === 'completed')
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-extrabold uppercase bg-emerald-500 text-white shadow-sm">
-                                        ✓ Completed Journey
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-extrabold uppercase bg-rose-500 text-white shadow-sm">
-                                        Cancelled
-                                    </span>
-                                @endif
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-extrabold uppercase bg-emerald-500 text-white shadow-sm">
+                                    ✓ Completed Journey
+                                </span>
                             </div>
                             <div class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-lg text-white font-extrabold text-xs">
                                 RM {{ number_format($vacation->price, 2) }}
@@ -275,7 +265,7 @@
                     </div>
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                         <span>{{ $vacation->start_date->format('M d, Y') }} – {{ $vacation->end_date->format('M d, Y') }}</span>
-                        <span class="font-extrabold text-slate-900 text-sm">${{ number_format((float) $vacation->price, 2) }}</span>
+                        <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $vacation->price, 2) }}</span>
                     </div>
                 </div>
             @empty

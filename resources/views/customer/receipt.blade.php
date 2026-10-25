@@ -53,19 +53,37 @@
 
     <div class="max-w-3xl mx-auto px-4 sm:px-6 w-full space-y-6">
 
+        @if (auth()->check() && auth()->user()->isAdmin())
+            <!-- Admin Preview Mode Banner -->
+            <div class="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 p-3.5 sm:p-4 rounded-2xl shadow-sm font-semibold flex flex-wrap items-center justify-between gap-3 no-print border border-amber-300">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-950 text-amber-300 uppercase tracking-wider">
+                        🛡️ Mode Pentadbir
+                    </span>
+                    <span class="text-xs sm:text-sm font-bold text-slate-950">
+                        Pratonton Resit Pelanggan: <strong>{{ $user->name }}</strong> (#{{ $vacation->package_code }})
+                    </span>
+                </div>
+                <a href="{{ route('admin.bookings.index') }}" class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-amber-300 hover:text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                    ← Kembali ke Tempahan Admin
+                </a>
+            </div>
+        @endif
+
         <!-- Top Navigation / Action Bar -->
         <div class="flex items-center justify-between no-print">
             <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
-                ← Return to Dashboard
+                ← {{ __('Back to Dashboard') }}
             </a>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                @include('partials.language-switcher')
                 <button
                     onclick="window.print()"
                     class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    <span>Print E-Voucher / Receipt</span>
+                    <span>{{ __('Print Receipt') }}</span>
                 </button>
             </div>
         </div>
@@ -77,7 +95,7 @@
             </div>
         @endif
 
-        <!-- Main Printable E-Voucher Card -->
+        <!-- Main Printable Receipt Card -->
         <div class="printable-card bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl space-y-8 relative overflow-hidden">
 
             <!-- Decorative Watermark / Accent -->

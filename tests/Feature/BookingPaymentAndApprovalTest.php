@@ -279,4 +279,77 @@ class BookingPaymentAndApprovalTest extends TestCase
         ]);
         $processResponse->assertForbidden();
     }
+
+    public function test_admin_can_approve_pending_booking_from_dashboard(): void
+    {
+        $admin = $this->createAdmin();
+        $customer = $this->createCustomer();
+
+        $vacation = Vacation::factory()->pendingApproval()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Bora Bora Overwater Bungalow',
+            'package_code' => 'AV-BOR-555',
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.vacations.status', $vacation), [
+            'status' => 'approved',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('vacations', [
+            'id' => $vacation->id,
+            'status' => 'approved',
+            'reviewed_by' => $admin->id,
+        ]);
+    }
+
+    public function test_admin_can_cancel_pending_booking_from_dashboard(): void
+    {
+        $admin = $this->createAdmin();
+        $customer = $this->createCustomer();
+
+        $vacation = Vacation::factory()->pendingApproval()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Cancun Resort Suite',
+            'package_code' => 'AV-CAN-888',
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.vacations.status', $vacation), [
+            'status' => 'cancelled',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('vacations', [
+            'id' => $vacation->id,
+            'status' => 'cancelled',
+        ]);
+    }
+
+    public function test_admin_can_filter_bookings_by_status_on_dashboard(): void
+    {
+        $admin = $this->createAdmin();
+        $customer = $this->createCustomer();
+
+        Vacation::factory()->pendingApproval()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Pending Tokyo Journey',
+            'package_code' => 'AV-TOK-111',
+        ]);
+
+        Vacation::factory()->completed()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Completed Rome Journey',
+            'package_code' => 'AV-ROM-222',
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard', ['status' => 'pending']));
+        $response->assertOk()
+            ->assertSee('Pending Tokyo Journey')
+            ->assertDontSee('Completed Rome Journey');
+
+        $completedResponse = $this->actingAs($admin)->get(route('admin.dashboard', ['status' => 'completed']));
+        $completedResponse->assertOk()
+            ->assertSee('Completed Rome Journey')
+            ->assertDontSee('Pending Tokyo Journey');
+    }
 }
