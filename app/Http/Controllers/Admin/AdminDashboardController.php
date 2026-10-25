@@ -84,6 +84,7 @@ class AdminDashboardController extends Controller
         $pendingCount = $allVacations->whereIn('status', ['pending', 'pending_approval'])->count();
         $approvedCount = $allVacations->where('status', 'approved')->count();
         $completedCount = $allVacations->where('status', 'completed')->count();
+        $rejectedCount = $allVacations->where('status', 'rejected')->count();
         $cancelledCount = $allVacations->whereIn('status', ['cancelled', 'rejected'])->count();
         $upcomingCount = $allVacations->where('status', 'upcoming')->count();
         $ongoingCount = $allVacations->where('status', 'ongoing')->count();
@@ -113,6 +114,7 @@ class AdminDashboardController extends Controller
             'totalRevenue' => $totalRevenue,
             'totalBookings' => $totalBookings,
             'pendingCount' => $pendingCount,
+            'pendingApprovalCount' => $pendingCount,
             'approvedCount' => $approvedCount,
             'completedCount' => $completedCount,
             'rejectedCount' => $rejectedCount,
