@@ -599,36 +599,38 @@
                                     <!-- Status Badge -->
                                     <td class="py-4 px-4 whitespace-nowrap">
                                         @if ($vacation->status === 'completed')
-                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-700 border border-slate-200">
-                                                ✓ {{ __('Completed') }}
-                                            </span>
+                                            <div class="flex flex-col items-start gap-1">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                                    ✓ {{ __('Completed') }}
+                                                </span>
+                                                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-sky-700">
+                                                    <svg class="w-3 h-3 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                                    <span>{{ __('Confirmed & Paid') }}</span>
+                                                </span>
+                                            </div>
                                         @elseif ($vacation->status === 'cancelled' || $vacation->status === 'rejected')
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
                                                 ✕ {{ __('Cancelled') }}
                                             </span>
-                                        @elseif ($vacation->status === 'ongoing')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
-                                                <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
-                                                Ongoing Trip
-                                            </span>
-                                        @elseif ($vacation->payment_status === 'paid')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
-                                                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                                                ✓ {{ __('Confirmed & Paid') }}
-                                            </span>
                                         @else
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                                {{ __('Upcoming') }}
-                                            </span>
+                                            <div class="flex flex-col items-start gap-1">
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                    {{ __('Upcoming Escapes') }}
+                                                </span>
+                                                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-sky-700">
+                                                    <svg class="w-3 h-3 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                                    <span>{{ __('Confirmed & Paid') }}</span>
+                                                </span>
+                                            </div>
                                         @endif
                                     </td>
 
                                     <!-- Action Buttons -->
                                     <td class="py-4 px-4 sm:pr-6 whitespace-nowrap text-right align-middle">
                                         <div class="inline-flex flex-col items-stretch gap-1 w-24 ml-auto">
-                                            @if ($vacation->payment_status === 'paid')
-                                                <!-- Receipt Link -->
+                                            @if ($vacation->status !== 'cancelled' && $vacation->status !== 'rejected')
+                                                <!-- Receipt Link for Upcoming and Completed -->
                                                 <a
                                                     href="{{ route('customer.payment.receipt', $vacation) }}"
                                                     class="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition"
@@ -648,8 +650,8 @@
                                                 Details
                                             </button>
 
-                                            <!-- Cancel Vacation Booking (Only if upcoming or pending) -->
-                                            @if (in_array($vacation->status, ['upcoming', 'pending_approval', 'approved'], true))
+                                            <!-- Cancel Vacation Booking (Only if upcoming or active) -->
+                                            @if ($vacation->status !== 'completed' && $vacation->status !== 'cancelled' && $vacation->status !== 'rejected')
                                                 <form
                                                     method="POST"
                                                     action="{{ route('customer.vacations.cancel', $vacation) }}"
