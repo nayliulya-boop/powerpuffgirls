@@ -60,4 +60,3 @@ class LanguageSwitcherTest extends TestCase
         $response->assertSee('Semua Tempahan');
     }
 }
-
