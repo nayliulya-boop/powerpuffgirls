@@ -36,17 +36,8 @@ class AdminBookingController extends Controller
             });
         }
 
-        $statusOrder = "CASE status 
-            WHEN 'pending_approval' THEN 1 
-            WHEN 'approved' THEN 2 
-            WHEN 'upcoming' THEN 3 
-            WHEN 'ongoing' THEN 4 
-            WHEN 'completed' THEN 5 
-            WHEN 'rejected' THEN 6 
-            WHEN 'cancelled' THEN 7 
-            ELSE 8 END";
-
-        $bookings = $query->orderByRaw($statusOrder)
+        // Always display newest bookings first so any recent booking is immediately visible at the top
+        $bookings = $query
             ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();

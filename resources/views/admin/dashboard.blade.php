@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Executive Portal | AzureVoyage Luxury Travel Agency</title>
+    <title>Admin Portal | AzureVoyage Luxury Travel Agency</title>
     <meta name="description" content="AzureVoyage Admin Executive Portal — Manage client bookings, VIP travelers, revenue metrics, and curated luxury destinations.">
 
     <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
@@ -87,9 +87,9 @@
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-40 glass-nav shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 gap-4">
                 <!-- Brand / Logo -->
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group shrink-0">
                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-900 via-sky-700 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
                         <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
@@ -100,50 +100,96 @@
                         <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
                             Azure<span class="text-sky-600">Voyage</span>
                         </span>
-                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1">
+                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1 whitespace-nowrap">
                             Admin Control Center
                         </span>
                     </div>
                 </a>
 
                 <!-- Navigation Links & Admin Actions -->
-                <div class="flex items-center gap-3 sm:gap-6">
-                    <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        <a href="{{ route('admin.bookings.index') }}" class="text-amber-800 hover:text-amber-950 font-bold transition flex items-center gap-2 bg-amber-50 hover:bg-amber-100 px-3.5 py-1.5 rounded-xl border border-amber-300 shadow-sm">
-                            <span>📋 Availability & Approvals</span>
-                            @if ($stats['pendingApprovalCount'] > 0)
-                                <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] flex items-center justify-center font-black animate-pulse">
+                <div class="flex items-center gap-2 lg:gap-4 shrink-0">
+                    <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-xs lg:text-sm font-semibold text-slate-600">
+                        <a
+                            href="{{ route('admin.dashboard') }}"
+                            class="px-3 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 transition bg-sky-50 text-sky-700 font-bold border border-sky-200 shadow-sm"
+                        >
+                            <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            <span>Admin Dashboard</span>
+                        </a>
+
+                        <a
+                            href="{{ route('admin.bookings.index') }}"
+                            class="px-3 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 transition hover:text-sky-600 hover:bg-slate-50"
+                        >
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            <span>Manage Bookings</span>
+                            @if (($stats['pendingApprovalCount'] ?? 0) > 0)
+                                <span class="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-black animate-pulse">
                                     {{ $stats['pendingApprovalCount'] }}
                                 </span>
                             @endif
                         </a>
-                        <a href="#bookings-management" class="hover:text-sky-600 transition">Bookings Table</a>
-                        <a href="#clients-directory" class="hover:text-sky-600 transition">VIP Clients</a>
-                        <a href="#destinations-catalog" class="hover:text-sky-600 transition">Destinations</a>
-                        <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition">Admin Profile</a>
-                        <a href="{{ route('home') }}" class="hover:text-sky-600 transition flex items-center gap-1">
-                            <span>Public Site</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+
+                        <a
+                            href="#bookings-management"
+                            class="px-2.5 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 hover:text-sky-600 hover:bg-slate-50 transition"
+                        >
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            <span>Bookings</span>
                         </a>
+
+                        <a
+                            href="#clients-directory"
+                            class="px-2.5 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 hover:text-sky-600 hover:bg-slate-50 transition"
+                        >
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <span>VIP Clients</span>
+                        </a>
+
+                        <a
+                            href="#destinations-catalog"
+                            class="px-2.5 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 hover:text-sky-600 hover:bg-slate-50 transition"
+                        >
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span>Destinations</span>
+                        </a>
+
+                        <a
+                            href="{{ route('admin.profile') }}"
+                            class="px-2.5 py-2 rounded-xl whitespace-nowrap flex items-center gap-1.5 hover:text-sky-600 hover:bg-slate-50 transition"
+                        >
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <span>Admin Profile</span>
+                        </a>
+
                     </nav>
 
                     <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
 
-                    <div class="flex items-center gap-3">
-                        <a href="#new-destination-form" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-sky-500/20 transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            Add Destination
+                    <div class="flex items-center gap-2">
+                        <a
+                            href="#new-destination-form"
+                            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-bold shadow-sm shadow-sky-500/20 transition whitespace-nowrap"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            <span>Add Destination</span>
                         </a>
 
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-700 text-xs sm:text-sm font-semibold transition shadow-sm">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                Sign Out
+                            <button
+                                type="submit"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-700 text-xs font-bold transition shadow-sm whitespace-nowrap"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                <span>Sign Out</span>
                             </button>
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </header>
             </div>
         </div>
     </header>

@@ -48,7 +48,7 @@ class CustomerDashboardController extends Controller
         }
 
         $vacations = $vacationsQuery
-            ->orderBy('start_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $stats = $this->calculateStats($user);
@@ -142,13 +142,14 @@ class CustomerDashboardController extends Controller
     }
 
     /**
-     * Store a new vacation booking for the authenticated customer.
+     * Store a new vacation booking for the authenticated customer and immediately proceed to payment.
      */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'destination' => ['required', 'string', 'max:255'],
-            'title' => ['required', 'string', 'max:255'],
+            'destination_id' => ['required_without:destination', 'nullable', 'integer'],
+            'destination' => ['required_without:destination_id', 'nullable', 'string', 'max:255'],
+            'title' => ['required_without:destination_id', 'nullable', 'string', 'max:255'],
             'start_date' => ['required', 'date', 'after_or_equal:today'],
             'end_date' => ['required', 'date', 'after:start_date'],
             'travelers_count' => ['required', 'integer', 'min:1', 'max:12'],
@@ -156,52 +157,78 @@ class CustomerDashboardController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
+        $destinationModel = null;
+        if (! empty($validated['destination_id'])) {
+            $destinationModel = Destination::find($validated['destination_id']);
+        } elseif (! empty($validated['destination']) || ! empty($validated['title'])) {
+            $search = $validated['destination'] ?? $validated['title'];
+            $destinationModel = Destination::where('location', 'like', "%{$search}%")
+                ->orWhere('title', 'like', "%{$search}%")
+                ->first();
+        }
+
+        $destination = $destinationModel ? $destinationModel->location : ($validated['destination'] ?? 'Luxury Vacation Destination');
+        $title = $destinationModel ? $destinationModel->title : ($validated['title'] ?? 'Luxury Travel Escape');
+        $imageUrl = $destinationModel?->image_path ?: null;
+
         $startDate = Carbon::parse($validated['start_date']);
         $endDate = Carbon::parse($validated['end_date']);
         $nights = max(1, $startDate->diffInDays($endDate));
 
-        $ratePerNight = match ($validated['tier']) {
+        $baseRate = $destinationModel ? (float) $destinationModel->price : match ($validated['tier']) {
             'Diamond Sovereign' => 1850.00,
             'Platinum Horizon' => 1250.00,
             default => 850.00,
         };
 
-        $price = round($ratePerNight * $nights * (1 + ($validated['travelers_count'] - 1) * 0.35), 2);
-
-        $destinationLower = strtolower($validated['destination']);
-        $imageUrl = match (true) {
-            str_contains($destinationLower, 'maldives') => 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
-            str_contains($destinationLower, 'amalfi') || str_contains($destinationLower, 'italy') => 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80',
-            str_contains($destinationLower, 'swiss') || str_contains($destinationLower, 'alps') || str_contains($destinationLower, 'zermatt') => 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?auto=format&fit=crop&w=800&q=80',
-            str_contains($destinationLower, 'santorini') || str_contains($destinationLower, 'greece') => 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80',
-            str_contains($destinationLower, 'japan') || str_contains($destinationLower, 'kyoto') || str_contains($destinationLower, 'tokyo') => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80',
-            str_contains($destinationLower, 'bora') => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-            default => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+        $tierMultiplier = match ($validated['tier']) {
+            'Diamond Sovereign' => 1.35,
+            'Platinum Horizon' => 1.15,
+            default => 1.0,
         };
 
-        $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $validated['destination']), 0, 3));
+        $price = round($baseRate * $nights * $tierMultiplier * (1 + ($validated['travelers_count'] - 1) * 0.35), 2);
+
+        if (! $imageUrl) {
+            $destinationLower = strtolower($destination);
+            $imageUrl = match (true) {
+                str_contains($destinationLower, 'redang') => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+                str_contains($destinationLower, 'langkawi') => 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
+                str_contains($destinationLower, 'maldives') => 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
+                str_contains($destinationLower, 'amalfi') || str_contains($destinationLower, 'italy') => 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80',
+                str_contains($destinationLower, 'swiss') || str_contains($destinationLower, 'alps') || str_contains($destinationLower, 'zermatt') => 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?auto=format&fit=crop&w=800&q=80',
+                str_contains($destinationLower, 'santorini') || str_contains($destinationLower, 'greece') => 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80',
+                default => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+            };
+        } elseif (! str_starts_with($imageUrl, 'http')) {
+            $imageUrl = asset($imageUrl);
+        }
+
+        $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $destination), 0, 3));
         if (strlen($prefix) < 3) {
             $prefix = 'VOY';
         }
         $packageCode = 'AV-'.$prefix.'-'.random_int(100, 999);
 
-        $request->user()->vacations()->create([
+        // Created as approved so customer can immediately make payment without waiting for admin check
+        $vacation = $request->user()->vacations()->create([
             'package_code' => $packageCode,
-            'destination' => $validated['destination'],
-            'title' => $validated['title'],
+            'destination' => $destination,
+            'title' => $title,
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'travelers_count' => $validated['travelers_count'],
             'price' => $price,
-            'status' => 'pending_approval',
+            'status' => 'approved',
             'payment_status' => 'unpaid',
             'tier' => $validated['tier'],
             'image_url' => $imageUrl,
-            'notes' => $validated['notes'],
+            'notes' => $validated['notes'] ?? null,
+            'admin_notes' => 'Tempahan segera sedia untuk pembayaran.',
         ]);
 
-        return redirect()->route('customer.dashboard')
-            ->with('success', "✨ Tempahan percutian anda ke {$validated['destination']} ({$packageCode}) telah berjaya dihantar! Pihak Admin sedang menyemak ketersediaan slot & penginapan. Sila tunggu kelulusan admin untuk membuat bayaran.");
+        return redirect()->route('customer.payment.show', $vacation)
+            ->with('success', "✨ Tempahan percutian ke {$title} (#{$packageCode}) telah didaftarkan! Sila pilih kaedah pembayaran anda di bawah.");
     }
 
     /**

@@ -101,7 +101,10 @@ class CustomerVacationTest extends TestCase
                 'notes' => 'Helicopter arrival and vintage champagne.',
             ]);
 
-        $response->assertRedirectToRoute('customer.dashboard')
+        $vacation = Vacation::where('user_id', $user->id)->first();
+        $this->assertNotNull($vacation);
+
+        $response->assertRedirect(route('customer.payment.show', $vacation))
             ->assertSessionHas('success');
 
         $this->assertDatabaseHas('vacations', [
@@ -109,7 +112,8 @@ class CustomerVacationTest extends TestCase
             'destination' => 'Bora Bora, French Polynesia',
             'title' => 'Mount Otemanu Overwater Villa & Safari',
             'tier' => 'Diamond Sovereign',
-            'status' => 'pending_approval',
+            'status' => 'approved',
+            'payment_status' => 'unpaid',
         ]);
     }
 

@@ -152,7 +152,7 @@
                                 title="Sign Out"
                                 class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition flex items-center gap-1.5"
                             >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 <span class="hidden sm:inline">Sign Out</span>
                             </button>
                         </form>
@@ -632,7 +632,7 @@
                                             @if ($vacation->payment_status === 'paid')
                                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
                                                     <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                                                    ✓ Disahkan & Dibayar
+                                                    ✓ Pengesahan Pembayaran
                                                 </span>
                                             @else
                                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -840,97 +840,131 @@
             <form method="POST" action="{{ route('customer.vacations.store') }}" class="p-6 sm:p-8 space-y-5">
                 @csrf
 
-                <!-- Destination Presets -->
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Popular Luxury Destinations (Click to auto-fill)
-                    </label>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        @forelse ($destinations ?? [] as $dest)
-                            <button
-                                type="button"
-                                onclick="setDestinationPreset('{{ addslashes($dest->location) }}', '{{ addslashes($dest->title) }}')"
-                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                            >
-                                ✈️ {{ $dest->title }}
-                            </button>
-                        @empty
-                            <button
-                                type="button"
-                                onclick="setDestinationPreset('Maldives, South Ari Atoll', 'Overwater Sunset Lagoon Villa & Private Catamaran')"
-                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                            >
-                                🏝️ Maldives Overwater
-                            </button>
-                            <button
-                                type="button"
-                                onclick="setDestinationPreset('Amalfi Coast, Italy', 'Cliffside Luxury Suite & Capri Yacht Odyssey')"
-                                class="px-2.5 py-1 bg-sky-50 text-sky-700 rounded-lg hover:bg-sky-100 border border-sky-100 transition font-semibold"
-                            >
-                                ⛵ Amalfi Coast & Capri
-                            </button>
-                        @endforelse
+                <!-- Destination Selection (Auto-filled from Admin Catalog) -->
+                <div class="space-y-3.5">
+                    <div>
+                        <label for="destinationSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5">
+                                <span>🏝️</span>
+                                <span>Pilih Destinasi Percutian (Ditambah oleh Admin) *</span>
+                            </span>
+                            <span class="text-[11px] font-semibold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100">
+                                {{ count($destinations ?? []) }} Pakej Tersedia
+                            </span>
+                        </label>
+                        <select
+                            id="destinationSelect"
+                            name="destination_id"
+                            required
+                            onchange="onDestinationChange(this)"
+                            class="w-full text-sm font-bold p-3.5 rounded-2xl border-2 border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-sky-50/50 text-slate-900 transition cursor-pointer"
+                        >
+                            @forelse ($destinations ?? [] as $dest)
+                                <option
+                                    value="{{ $dest->id }}"
+                                    data-location="{{ $dest->location }}"
+                                    data-title="{{ $dest->title }}"
+                                    data-price="{{ $dest->price }}"
+                                    data-days="{{ $dest->duration_days ?? 4 }}"
+                                    data-image="{{ $dest->image_path ? (str_starts_with($dest->image_path, 'http') ? $dest->image_path : asset($dest->image_path)) : 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' }}"
+                                    @selected($loop->first)
+                                >
+                                    {{ $dest->title }} — {{ $dest->location }} (RM {{ number_format($dest->price, 2) }} / malam)
+                                </option>
+                            @empty
+                                <option value="" disabled selected>Tiada destinasi ditemui dalam pangkalan data</option>
+                            @endforelse
+                        </select>
                     </div>
+
+                    <!-- Clickable Destination Shortcut Badges -->
+                    <div>
+                        <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                            Atau Klik Terus Destinasi Pilihan:
+                        </span>
+                        <div class="flex flex-wrap gap-2 text-xs">
+                            @foreach ($destinations ?? [] as $dest)
+                                <button
+                                    type="button"
+                                    data-id="{{ $dest->id }}"
+                                    onclick="pickDestinationById({{ $dest->id }})"
+                                    class="dest-chip px-3 py-1.5 rounded-xl border border-sky-200 bg-sky-50 text-sky-800 hover:bg-sky-100 transition font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
+                                >
+                                    <span>📍</span>
+                                    <span>{{ $dest->title }}</span>
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Live Destination Preview Card -->
+                    <div id="selectedDestinationPreview" class="p-4 rounded-2xl bg-gradient-to-r from-sky-50 via-blue-50/60 to-indigo-50 border border-sky-200 shadow-sm flex items-center gap-4">
+                        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-sky-300 shadow-sm relative group">
+                            <img
+                                id="previewDestImg"
+                                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80"
+                                alt="Preview"
+                                class="w-full h-full object-cover group-hover:scale-105 transition"
+                            >
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                    ⚡ Ketersediaan Segera Disahkan
+                                </span>
+                                <span id="previewDestDays" class="text-[11px] font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">
+                                    4 Hari / 3 Malam
+                                </span>
+                            </div>
+                            <h4 id="previewDestTitle" class="text-sm sm:text-base font-extrabold text-slate-900 truncate mt-1">
+                                Pulau Redang Sunset Villa
+                            </h4>
+                            <p id="previewDestLocation" class="text-xs font-semibold text-slate-600 truncate">
+                                Malaysia • Pulau Redang, Terengganu
+                            </p>
+                            <div class="mt-1 text-xs font-extrabold text-sky-900 flex items-center gap-2">
+                                <span id="previewDestPrice">RM 1,250.00 / malam</span>
+                                <span class="text-[10px] font-bold text-slate-400">• Bayaran Terus Dalam Talian</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Inputs for Form Submission (Auto-filled by JS) -->
+                    <input type="hidden" id="destinationInput" name="destination" value="">
+                    <input type="hidden" id="titleInput" name="title" value="">
                 </div>
 
-                <!-- Destination & Title -->
+                <!-- Dates (Departure & Return) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="destinationInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Destination Country / Region *
-                        </label>
-                        <input
-                            type="text"
-                            id="destinationInput"
-                            name="destination"
-                            required
-                            placeholder="e.g. Maldives, South Ari Atoll"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                        >
-                    </div>
-                    <div>
-                        <label for="titleInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Vacation Package Title *
-                        </label>
-                        <input
-                            type="text"
-                            id="titleInput"
-                            name="title"
-                            required
-                            placeholder="e.g. Sunset Lagoon Overwater Villa"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                        >
-                    </div>
-                </div>
-
-                <!-- Dates -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="startDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Departure Date *
+                        <label for="startDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                            <span>Tarikh Bertolak (Departure) *</span>
+                            <span class="text-[10px] font-semibold text-slate-400">Pilih tarikh bertolak</span>
                         </label>
                         <input
                             type="date"
                             id="startDateInput"
                             name="start_date"
                             required
-                            value="{{ now()->addDays(14)->format('Y-m-d') }}"
+                            value="{{ now()->addDays(7)->format('Y-m-d') }}"
                             min="{{ now()->format('Y-m-d') }}"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                            onchange="onStartDateChange()"
+                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
                         >
                     </div>
                     <div>
-                        <label for="endDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Return Date *
+                        <label for="endDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+                            <span>Tarikh Pulang (Return) *</span>
+                            <span class="text-[10px] font-semibold text-emerald-600">Auto-kira ikut durasi pakej</span>
                         </label>
                         <input
                             type="date"
                             id="endDateInput"
                             name="end_date"
                             required
-                            value="{{ now()->addDays(21)->format('Y-m-d') }}"
+                            value="{{ now()->addDays(11)->format('Y-m-d') }}"
                             min="{{ now()->addDay()->format('Y-m-d') }}"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
                         >
                     </div>
                 </div>
@@ -939,33 +973,33 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="travelersCountInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Number of Guests *
+                            Bilangan Tetamu (Guests) *
                         </label>
                         <select
                             id="travelersCountInput"
                             name="travelers_count"
                             required
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
+                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white cursor-pointer"
                         >
-                            <option value="1">1 Traveler (Solo VIP)</option>
-                            <option value="2" selected>2 Travelers (Couples Escape)</option>
-                            <option value="3">3 Travelers</option>
-                            <option value="4">4 Travelers (Family / Friends)</option>
-                            <option value="6">6 Travelers (Private Villa Group)</option>
-                            <option value="8">8 Travelers (Private Estate)</option>
+                            <option value="1">1 Tetamu (Solo VIP)</option>
+                            <option value="2" selected>2 Tetamu (Couples Escape)</option>
+                            <option value="3">3 Tetamu</option>
+                            <option value="4">4 Tetamu (Keluarga / Rakan)</option>
+                            <option value="6">6 Tetamu (Kumpulan Villa Mewah)</option>
+                            <option value="8">8 Tetamu (Private Estate)</option>
                         </select>
                     </div>
                     <div>
                         <label for="tierInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            Experience Tier *
+                            Pakej VIP (Experience Tier) *
                         </label>
                         <select
                             id="tierInput"
                             name="tier"
                             required
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
+                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white cursor-pointer"
                         >
-                            <option value="Diamond Sovereign" selected>Diamond Sovereign (Butler & Yacht)</option>
+                            <option value="Diamond Sovereign" selected>Diamond Sovereign (Butler Peribadi & Yacht)</option>
                             <option value="Platinum Horizon">Platinum Horizon (Chauffeur & Oceanfront)</option>
                             <option value="Signature Gold">Signature Gold (VIP Suite & Concierge)</option>
                         </select>
@@ -975,33 +1009,39 @@
                 <!-- Special Concierge Notes -->
                 <div>
                     <label for="notesInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                        Special Requests / Concierge Instructions
+                        Permintaan Khas / Nota Concierge (Pilihan)
                     </label>
                     <textarea
                         id="notesInput"
                         name="notes"
                         rows="3"
-                        placeholder="e.g. Private airport helicopter transfer, private chef for anniversary dinner, vintage champagne upon arrival..."
-                        class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                        placeholder="Contoh: Pemindahan helikopter dari lapangan terbang, chef peribadi untuk makan malam ulang tahun, champagne kegemaran..."
+                        class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
                     ></textarea>
                 </div>
 
                 <!-- Modal Actions -->
-                <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                    <button
-                        type="button"
-                        onclick="document.getElementById('bookingModal').classList.add('hidden')"
-                        class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        class="px-6 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 shadow-md shadow-sky-600/25 transition flex items-center gap-1.5"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span>Confirm & Book Vacation</span>
-                    </button>
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span>Tiada masa menunggu kelulusan — tempah & terus bayar secara selamat.</span>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button
+                            type="button"
+                            onclick="document.getElementById('bookingModal').classList.add('hidden')"
+                            class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="submit"
+                            class="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-black text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:to-sky-500 shadow-lg shadow-emerald-600/25 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            <span>Pay Now →</span>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -1101,10 +1141,86 @@
 
     <!-- JavaScript for Modals & Presets -->
     <script>
-        function setDestinationPreset(destination, title) {
-            document.getElementById('destinationInput').value = destination;
+        function onDestinationChange(selectEl) {
+            if (!selectEl) return;
+            const selectedOpt = selectEl.options[selectEl.selectedIndex];
+            if (!selectedOpt || !selectedOpt.value) return;
+
+            const loc = selectedOpt.getAttribute('data-location') || '';
+            const title = selectedOpt.getAttribute('data-title') || '';
+            const price = parseFloat(selectedOpt.getAttribute('data-price') || '0');
+            const days = parseInt(selectedOpt.getAttribute('data-days') || '4', 10);
+            const img = selectedOpt.getAttribute('data-image') || '';
+
+            // Auto-fill hidden inputs
+            document.getElementById('destinationInput').value = loc;
             document.getElementById('titleInput').value = title;
+
+            // Update live preview card
+            const previewCard = document.getElementById('selectedDestinationPreview');
+            if (previewCard) {
+                previewCard.classList.remove('hidden');
+                document.getElementById('previewDestTitle').textContent = title;
+                document.getElementById('previewDestLocation').textContent = loc;
+                document.getElementById('previewDestPrice').textContent = 'RM ' + price.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' / malam';
+                document.getElementById('previewDestDays').textContent = days + ' Hari / ' + Math.max(1, days - 1) + ' Malam';
+                if (img) {
+                    document.getElementById('previewDestImg').src = img;
+                }
+            }
+
+            // Highlight matching destination badge
+            document.querySelectorAll('.dest-chip').forEach(chip => {
+                if (chip.getAttribute('data-id') === selectedOpt.value) {
+                    chip.classList.add('ring-2', 'ring-sky-600', 'bg-sky-200', 'text-sky-950', 'font-black');
+                    chip.classList.remove('bg-sky-50', 'text-sky-800');
+                } else {
+                    chip.classList.remove('ring-2', 'ring-sky-600', 'bg-sky-200', 'text-sky-950', 'font-black');
+                    chip.classList.add('bg-sky-50', 'text-sky-800');
+                }
+            });
+
+            // Automatically recalculate return date based on departure date + duration
+            updateEndDateFromDuration(days);
         }
+
+        function pickDestinationById(id) {
+            const selectEl = document.getElementById('destinationSelect');
+            if (!selectEl) return;
+            selectEl.value = id;
+            onDestinationChange(selectEl);
+        }
+
+        function onStartDateChange() {
+            const selectEl = document.getElementById('destinationSelect');
+            if (!selectEl) return;
+            const selectedOpt = selectEl.options[selectEl.selectedIndex];
+            const days = parseInt(selectedOpt?.getAttribute('data-days') || '4', 10);
+            updateEndDateFromDuration(days);
+        }
+
+        function updateEndDateFromDuration(days) {
+            const startInput = document.getElementById('startDateInput');
+            const endInput = document.getElementById('endDateInput');
+            if (startInput && startInput.value && endInput) {
+                const startDate = new Date(startInput.value);
+                if (!isNaN(startDate.getTime())) {
+                    startDate.setDate(startDate.getDate() + (days || 4));
+                    const yyyy = startDate.getFullYear();
+                    const mm = String(startDate.getMonth() + 1).padStart(2, '0');
+                    const dd = String(startDate.getDate()).padStart(2, '0');
+                    endInput.value = `${yyyy}-${mm}-${dd}`;
+                }
+            }
+        }
+
+        // Initialize default selection on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectEl = document.getElementById('destinationSelect');
+            if (selectEl && selectEl.value) {
+                onDestinationChange(selectEl);
+            }
+        });
 
         function openItineraryModal(vacation) {
             document.getElementById('modalImage').src = vacation.image_url || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80';

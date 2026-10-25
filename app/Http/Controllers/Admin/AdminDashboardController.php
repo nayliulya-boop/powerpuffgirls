@@ -58,19 +58,8 @@ class AdminDashboardController extends Controller
             });
         }
 
-        // Prioritize pending approval bookings first, then newest created bookings
-        $statusOrder = "CASE status 
-            WHEN 'pending_approval' THEN 1 
-            WHEN 'approved' THEN 2 
-            WHEN 'upcoming' THEN 3 
-            WHEN 'ongoing' THEN 4 
-            WHEN 'completed' THEN 5 
-            WHEN 'rejected' THEN 6 
-            WHEN 'cancelled' THEN 7 
-            ELSE 8 END";
-
+        // Always display newest bookings first so any recent booking is immediately visible at the top
         $vacations = $vacationsQuery
-            ->orderByRaw($statusOrder)
             ->orderBy('created_at', 'desc')
             ->get();
 

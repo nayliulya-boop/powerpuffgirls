@@ -61,6 +61,30 @@ class DestinationSeeder extends Seeder
                 'image_path' => 'images/travel/yacht.jpg',
                 'is_featured' => true,
             ],
+            [
+                'title' => 'Pulau Redang Sunset Villa & Marine Sanctuary',
+                'location' => 'Malaysia • Pulau Redang, Terengganu',
+                'badge' => 'Tropical Island',
+                'rating' => 4.97,
+                'reviews_count' => 180,
+                'duration_days' => 4,
+                'description' => 'Beachfront private sunset villa, crystal clear waters, turtle snorkeling tour, and island barbecue dinners.',
+                'price' => 1250.00,
+                'image_path' => 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+                'is_featured' => true,
+            ],
+            [
+                'title' => 'Langkawi Luxury Rainforest Retreat & Private Beach',
+                'location' => 'Malaysia • Langkawi, Kedah',
+                'badge' => 'Rainforest Luxury',
+                'rating' => 4.95,
+                'reviews_count' => 140,
+                'duration_days' => 3,
+                'description' => 'Private plunge pool villa amidst ancient rainforest, Andaman sea views, yacht sunset cruise, and spa wellness.',
+                'price' => 1100.00,
+                'image_path' => 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
+                'is_featured' => true,
+            ],
         ];
 
         foreach ($destinations as $destination) {
