@@ -632,7 +632,7 @@
                                             @if ($vacation->payment_status === 'paid')
                                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-sky-50 text-sky-700 border border-sky-200">
                                                     <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                                                    ✓ Pengesahan Pembayaran
+                                                    ✓ Disahkan & Dibayar
                                                 </span>
                                             @else
                                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
