@@ -275,7 +275,7 @@
                     </div>
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                         <span>{{ $vacation->start_date->format('M d, Y') }} – {{ $vacation->end_date->format('M d, Y') }}</span>
-                        <span class="font-extrabold text-slate-900 text-sm">${{ number_format((float) $vacation->price, 2) }}</span>
+                        <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $vacation->price, 2) }}</span>
                     </div>
                 </div>
             @empty

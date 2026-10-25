@@ -184,7 +184,7 @@
                     <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 text-center">
                         <span class="block text-xs text-sky-200 uppercase font-semibold">Active Revenue</span>
                         <span class="text-xl sm:text-2xl font-extrabold text-white mt-1 block">
-                            ${{ number_format($stats['totalRevenue'], 2) }}
+                            RM {{ number_format($stats['totalRevenue'], 2) }}
                         </span>
                     </div>
                     <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 text-center">
@@ -322,7 +322,7 @@
                                     <div class="text-slate-400">to {{ $vacation->end_date->format('M d, Y') }} ({{ $vacation->travelers_count }} {{ Str::plural('guest', $vacation->travelers_count) }})</div>
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap">
-                                    <div class="font-extrabold text-slate-900">${{ number_format((float) $vacation->price, 2) }}</div>
+                                    <div class="font-extrabold text-slate-900">RM {{ number_format((float) $vacation->price, 2) }}</div>
                                     <div class="text-[11px] font-semibold text-amber-600">{{ $vacation->tier }}</div>
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap">
@@ -400,7 +400,7 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-slate-400 block">Active Portfolio Spend</span>
-                                <span class="font-extrabold text-sky-700 text-sm">${{ number_format((float) ($account->total_spend ?? 0), 2) }}</span>
+                                <span class="font-extrabold text-sky-700 text-sm">RM {{ number_format((float) ($account->total_spend ?? 0), 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -436,7 +436,7 @@
                                 </div>
                             </div>
                             <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                                <span class="font-extrabold text-slate-900 text-sm">${{ number_format((float) $destination->price, 2) }}</span>
+                                <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $destination->price, 2) }}</span>
                                 <form method="POST" action="{{ route('admin.destinations.destroy', $destination) }}">
                                     @csrf
                                     @method('DELETE')

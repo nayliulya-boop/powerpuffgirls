@@ -224,7 +224,7 @@
                 </div>
                 <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
                     <span class="block text-xs uppercase font-bold text-sky-300 tracking-wider">Lifetime Spend</span>
-                    <span class="text-xl sm:text-2xl font-extrabold text-white mt-1 block">${{ number_format($stats['totalSpend'], 2) }}</span>
+                    <span class="text-xl sm:text-2xl font-extrabold text-white mt-1 block">RM {{ number_format($stats['totalSpend'], 2) }}</span>
                 </div>
             </div>
         </section>
