@@ -101,15 +101,26 @@
 
                 <!-- Navigation Links & User Menu -->
                 <div class="flex items-center gap-3 sm:gap-6">
+                    <!-- Navigation Links & User Menu -->
+                <div class="flex items-center gap-3 sm:gap-6">
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <a href="{{ route('customer.dashboard') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.dashboard') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('customer.dashboard') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                             {{ __('Dashboard') }}
                         </a>
-                        <a href="{{ route('customer.history') }}" class="text-sky-600 font-bold flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            {{ __('My Profile') }}
+                        </a>
+                        <a href="{{ route('customer.history') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.history') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
+                            <svg class="w-4 h-4 {{ request()->routeIs('customer.history') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             {{ __('History') }}
                         </a>
+                        @if ($user->isAdmin())
+                            <a href="{{ route('admin.profile') }}" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-400/20 text-amber-800 border border-amber-300 hover:bg-amber-300 transition flex items-center gap-1">
+                                🛡️ {{ __('Admin Portal') }}
+                            </a>
+                        @endif
                     </nav>
 
                     @include('partials.language-switcher')
