@@ -163,6 +163,33 @@
             </div>
         @endif
 
+        <!-- High-Priority Notification for New Bookings Needing Approval -->
+        @if ($stats['pendingApprovalCount'] > 0)
+            <div class="rounded-3xl p-6 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 shadow-lg border border-amber-300 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-300">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-950 text-amber-300 flex items-center justify-center text-2xl font-black shrink-0 shadow-md">
+                        ⏳
+                    </div>
+                    <div>
+                        <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-950 text-amber-300 tracking-wider mb-1">
+                            Perlu Tindakan Segera
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black leading-tight text-slate-950">
+                            {{ $stats['pendingApprovalCount'] }} Tempahan Baharu Menunggu Semakan Ketersediaan Admin!
+                        </h3>
+                        <p class="text-xs font-semibold text-slate-900 mt-0.5">
+                            Pelanggan telah membuat tempahan (termasuk <strong>redang</strong> & pakej lain). Sahkan ketersediaan slot hotel & penerbangan agar pelanggan boleh terus membuat bayaran.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <a href="{{ route('admin.bookings.index', ['status' => 'pending_approval']) }}" class="px-5 py-3 rounded-2xl bg-slate-950 hover:bg-slate-900 text-amber-300 hover:text-white text-xs font-black shadow-md transition flex items-center gap-2">
+                        <span>Semak & Luluskan Sekarang →</span>
+                    </a>
+                </div>
+            </div>
+        @endif
+
         <!-- Executive Hero Banner -->
         <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-sky-950 to-blue-950 text-white p-8 sm:p-10 shadow-xl">
             <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-sky-500/20 blur-3xl pointer-events-none"></div>
@@ -183,7 +210,7 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 shrink-0">
                     <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 text-center">
-                        <span class="block text-xs text-sky-200 uppercase font-semibold">Active Revenue</span>
+                        <span class="block text-xs text-sky-200 uppercase font-semibold">Settled Revenue</span>
                         <span class="text-xl sm:text-2xl font-extrabold text-white mt-1 block">
                             RM {{ number_format($stats['totalRevenue'], 2) }}
                         </span>
@@ -278,6 +305,7 @@
                         <option value="pending" @selected($status === 'pending' || $status === 'pending_approval')>Pending ({{ $stats['pendingCount'] }})</option>
                         <option value="approved" @selected($status === 'approved')>Approved ({{ $stats['approvedCount'] }})</option>
                         <option value="completed" @selected($status === 'completed')>Completed ({{ $stats['completedCount'] }})</option>
+                        <option value="rejected" @selected($status === 'rejected')>Rejected ({{ $stats['rejectedCount'] }})</option>
                         <option value="cancelled" @selected($status === 'cancelled')>Cancelled ({{ $stats['cancelledCount'] }})</option>
                     </select>
 
@@ -317,9 +345,11 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-sm">
                         @forelse ($vacations as $vacation)
-                            <tr class="hover:bg-sky-50/30 transition">
-                                <td class="py-4 px-6 font-mono text-xs font-bold text-sky-700 whitespace-nowrap">
-                                    {{ $vacation->package_code }}
+                            <tr class="transition {{ $vacation->status === 'pending_approval' ? 'bg-amber-50/70 hover:bg-amber-100/60 font-semibold' : 'hover:bg-sky-50/30' }}">
+                                <td class="py-4 px-6 font-mono text-xs font-bold whitespace-nowrap">
+                                    <span class="px-2 py-1 rounded {{ $vacation->status === 'pending_approval' ? 'bg-amber-200 text-amber-950 font-black' : 'text-sky-700' }}">
+                                        {{ $vacation->package_code }}
+                                    </span>
                                 </td>
                                 <td class="py-4 px-6">
                                     <div class="font-bold text-slate-900">{{ $vacation->user?->name ?? 'Unknown Client' }}</div>
@@ -359,6 +389,11 @@
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border {{ $badgeClasses }}">
                                         {{ $statusLabel }}
                                     </span>
+                                    @if ($vacation->payment_status === 'paid')
+                                        <span class="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500 text-white mt-1">
+                                            PAID
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap text-right">
                                     @if ($vacation->isPendingApproval())

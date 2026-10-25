@@ -85,6 +85,10 @@
                 <!-- Navigation Links & User Menu -->
                 <div class="flex items-center gap-3 sm:gap-6">
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-300">
+                        <a href="{{ route('admin.dashboard') }}" class="hover:text-amber-400 transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            Executive Dashboard
+                        </a>
                         <a href="{{ route('admin.bookings.index') }}" class="text-amber-400 font-bold transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                             {{ __('Bookings') }}
@@ -426,12 +430,38 @@
                                     <span class="text-xs font-bold text-sky-900 block">✓ Payment Confirmed</span>
                                     <span class="text-[11px] text-sky-700 block mt-0.5">Booking is 100% secured</span>
                                 </div>
+                                <button
+                                    type="button"
+                                    onclick="openReceiptPreviewModal({{ json_encode([
+                                        'package_code' => $booking->package_code,
+                                        'title' => $booking->title,
+                                        'destination' => $booking->destination,
+                                        'tier' => $booking->tier,
+                                        'customer_name' => $booking->user->name,
+                                        'customer_email' => $booking->user->email,
+                                        'customer_phone' => $booking->user->phone ?? 'N/A',
+                                        'travelers_count' => $booking->travelers_count,
+                                        'dates' => ($booking->start_date?->format('d M Y') ?? '-') . ' - ' . ($booking->end_date?->format('d M Y') ?? '-'),
+                                        'amount' => 'RM ' . number_format($booking->price, 2),
+                                        'txn_ref' => $booking->latestPayment?->transaction_reference ?? ('AV-TXN-' . $booking->package_code),
+                                        'payment_method' => strtoupper($booking->latestPayment?->payment_method ?? 'FPX'),
+                                        'bank_name' => $booking->latestPayment?->bank_name ?? ($booking->latestPayment?->card_last_four ? ('Kad Kredit/Debit (•••• ' . $booking->latestPayment->card_last_four . ')') : 'Online Banking'),
+                                        'paid_at' => $booking->latestPayment?->paid_at ? $booking->latestPayment->paid_at->format('d M Y, h:i A') : ($booking->updated_at ? $booking->updated_at->format('d M Y, h:i A') : '-'),
+                                        'admin_notes' => $booking->admin_notes ?? 'Disahkan ketersediaan slot oleh pentadbir.',
+                                        'reviewer' => $booking->reviewer->name ?? 'Admin',
+                                        'receipt_url' => route('customer.payment.receipt', $booking),
+                                    ]) }})"
+                                    class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-extrabold shadow-sm hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-1.5"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    <span>👁️ Preview Resit Pelanggan</span>
+                                </button>
                                 <a
                                     href="{{ route('customer.payment.receipt', $booking) }}"
                                     target="_blank"
-                                    class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center justify-center gap-1.5"
+                                    class="w-full py-1.5 px-3 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-700 text-[11px] font-bold transition flex items-center justify-center gap-1"
                                 >
-                                    <span>View E-Voucher / Receipt ↗</span>
+                                    <span>Buka Resit Penuh ↗</span>
                                 </a>
 
                             @elseif ($booking->status === 'rejected')
@@ -473,6 +503,212 @@
         </div>
     </footer>
 
+    <!-- Admin Customer Receipt Preview Modal -->
+    <div id="receiptPreviewModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6" aria-labelledby="receiptModalTitle" role="dialog" aria-modal="true">
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            
+            <!-- Top Gradient Bar -->
+            <div class="h-3 bg-gradient-to-r from-sky-600 via-amber-400 to-emerald-500"></div>
+
+            <!-- Modal Header -->
+            <div class="p-6 sm:p-8 pb-4 flex items-start justify-between border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl font-extrabold shadow-sm">
+                        🧾
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-wider text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+                                Official Payment Receipt
+                            </span>
+                            <span id="receiptModalCode" class="text-xs font-mono font-bold text-slate-500">
+                                #AV-0000
+                            </span>
+                        </div>
+                        <h2 id="receiptModalTitle" class="text-xl sm:text-2xl font-black text-slate-900 mt-1">
+                            Pratonton Resit Pelanggan
+                        </h2>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="closeReceiptPreviewModal()"
+                    class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition"
+                    title="Tutup Modal"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body Details -->
+            <div class="p-6 sm:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
+                
+                <!-- Status Banner -->
+                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-2 text-emerald-900">
+                        <span class="text-xl">✅</span>
+                        <div>
+                            <strong class="block text-sm font-extrabold">BAYARAN BERJAYA & DISAHKAN</strong>
+                            <span class="text-xs text-emerald-700">Tersimpan dalam pangkalan data MySQL (phpMyAdmin Live)</span>
+                        </div>
+                    </div>
+                    <span id="receiptModalAmount" class="text-xl font-black text-emerald-800 whitespace-nowrap">
+                        RM 0.00
+                    </span>
+                </div>
+
+                <!-- Transaction Reference & Channel Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div>
+                        <span class="text-slate-400 font-bold uppercase block text-[10px]">No. Rujukan Transaksi</span>
+                        <strong id="receiptModalTxnRef" class="font-mono text-sm text-sky-800 select-all block mt-0.5">
+                            AV-TXN-XXXXXXXX
+                        </strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 font-bold uppercase block text-[10px]">Tarikh & Masa Bayaran</span>
+                        <strong id="receiptModalPaidAt" class="text-slate-800 text-sm block mt-0.5">
+                            -
+                        </strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 font-bold uppercase block text-[10px]">Kaedah Pembayaran</span>
+                        <span id="receiptModalMethod" class="inline-block px-2 py-0.5 rounded font-extrabold text-[11px] bg-slate-200 text-slate-800 mt-1">
+                            FPX ONLINE
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 font-bold uppercase block text-[10px]">Saluran / Bank / Kad</span>
+                        <strong id="receiptModalBank" class="text-slate-800 text-xs block mt-1">
+                            -
+                        </strong>
+                    </div>
+                </div>
+
+                <!-- Customer Details Grid -->
+                <div class="p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 block">
+                        Maklumat Pelanggan (Traveler)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div>
+                            <span class="text-slate-400 block font-semibold text-[10px] uppercase">Nama Penuh</span>
+                            <strong id="receiptModalCustomer" class="text-slate-900 text-sm block"></strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block font-semibold text-[10px] uppercase">Alamat Emel</span>
+                            <span id="receiptModalEmail" class="text-slate-700 block text-xs"></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block font-semibold text-[10px] uppercase">No. Telefon</span>
+                            <span id="receiptModalPhone" class="text-slate-700 block text-xs"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package & Itinerary Details -->
+                <div class="p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 block">
+                        Butiran Pakej & Perjalanan
+                    </span>
+                    <div>
+                        <h4 id="receiptModalPackage" class="text-base font-extrabold text-slate-900"></h4>
+                        <p class="text-xs font-semibold text-sky-700 mt-0.5">
+                            📍 <span id="receiptModalDestination"></span> • <span id="receiptModalTier" class="text-amber-700 font-bold"></span>
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-100">
+                        <div>
+                            <span class="text-slate-400 block font-semibold text-[10px] uppercase">Tarikh Perjalanan</span>
+                            <strong id="receiptModalDates" class="text-slate-800"></strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block font-semibold text-[10px] uppercase">Bilangan Pelancong</span>
+                            <strong id="receiptModalGuests" class="text-slate-800"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Approval Sign-off -->
+                <div class="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-950 space-y-1">
+                    <span class="font-extrabold text-amber-900 block text-[11px]">🛡️ Kelulusan Ketersediaan oleh Pentadbir:</span>
+                    <p id="receiptModalNotes" class="italic text-amber-900"></p>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-4 sm:p-6 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                <button
+                    type="button"
+                    onclick="closeReceiptPreviewModal()"
+                    class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-xs transition"
+                >
+                    Tutup
+                </button>
+
+                <div class="flex items-center gap-2">
+                    <a
+                        id="receiptModalLink"
+                        href="#"
+                        target="_blank"
+                        class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs shadow-md transition flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        <span>🖨️ Buka & Cetak Resit Penuh ↗</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal JavaScript -->
+    <script>
+        function openReceiptPreviewModal(data) {
+            document.getElementById('receiptModalCode').textContent = '#' + data.package_code;
+            document.getElementById('receiptModalCustomer').textContent = data.customer_name;
+            document.getElementById('receiptModalEmail').textContent = data.customer_email;
+            document.getElementById('receiptModalPhone').textContent = data.customer_phone;
+            document.getElementById('receiptModalPackage').textContent = data.title;
+            document.getElementById('receiptModalDestination').textContent = data.destination;
+            document.getElementById('receiptModalTier').textContent = data.tier;
+            document.getElementById('receiptModalDates').textContent = data.dates;
+            document.getElementById('receiptModalGuests').textContent = data.travelers_count + ' Orang Pelancong';
+            document.getElementById('receiptModalTxnRef').textContent = data.txn_ref;
+            document.getElementById('receiptModalPaidAt').textContent = data.paid_at;
+            document.getElementById('receiptModalMethod').textContent = data.payment_method;
+            document.getElementById('receiptModalBank').textContent = data.bank_name;
+            document.getElementById('receiptModalAmount').textContent = data.amount;
+            document.getElementById('receiptModalNotes').textContent = data.admin_notes;
+            document.getElementById('receiptModalLink').href = data.receipt_url;
+
+            const modal = document.getElementById('receiptPreviewModal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeReceiptPreviewModal() {
+            const modal = document.getElementById('receiptPreviewModal');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Close on backdrop click
+        document.getElementById('receiptPreviewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReceiptPreviewModal();
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeReceiptPreviewModal();
+            }
+        });
+    </script>
 </body>
 </html>
 

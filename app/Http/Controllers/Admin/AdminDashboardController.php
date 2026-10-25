@@ -40,7 +40,7 @@ class AdminDashboardController extends Controller
         $status = $request->query('status', 'all');
         $search = trim((string) $request->query('search', ''));
 
-        $vacationsQuery = Vacation::with('user');
+        $vacationsQuery = Vacation::with(['user', 'latestPayment']);
 
         if ($status === 'pending' || $status === 'pending_approval') {
             $vacationsQuery->whereIn('status', ['pending', 'pending_approval']);
@@ -115,6 +115,7 @@ class AdminDashboardController extends Controller
             'pendingCount' => $pendingCount,
             'approvedCount' => $approvedCount,
             'completedCount' => $completedCount,
+            'rejectedCount' => $rejectedCount,
             'cancelledCount' => $cancelledCount,
             'upcomingCount' => $upcomingCount,
             'ongoingCount' => $ongoingCount,
