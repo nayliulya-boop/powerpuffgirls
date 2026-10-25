@@ -109,12 +109,12 @@
                 <!-- Navigation Links & Admin Actions -->
                 <div class="flex items-center gap-3 sm:gap-6">
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        <a href="#bookings-management" class="hover:text-sky-600 transition">Bookings</a>
+                        <a href="#bookings-management" class="hover:text-sky-600 transition">{{ __('Bookings') }}</a>
                         <a href="#clients-directory" class="hover:text-sky-600 transition">VIP Clients</a>
-                        <a href="#destinations-catalog" class="hover:text-sky-600 transition">Destinations</a>
-                        <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition">Admin Profile</a>
+                        <a href="#destinations-catalog" class="hover:text-sky-600 transition">{{ __('Destination') }}</a>
+                        <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition">{{ __('Admin Profile') }}</a>
                         <a href="{{ route('home') }}" class="hover:text-sky-600 transition flex items-center gap-1">
-                            <span>Public Site</span>
+                            <span>{{ __('Home') }}</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </nav>
@@ -122,6 +122,7 @@
                     <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
 
                     <div class="flex items-center gap-3">
+                        @include('partials.language-switcher')
                         <a href="#new-destination-form" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-sky-500/20 transition">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                             Add Destination
@@ -131,7 +132,7 @@
                             @csrf
                             <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-700 text-xs sm:text-sm font-semibold transition shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                Sign Out
+                                {{ __('Sign Out') }}
                             </button>
                         </form>
                     </div>

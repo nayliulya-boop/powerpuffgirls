@@ -64,13 +64,14 @@
                     </div>
                 </a>
 
-                <!-- Nav Links -->
-                <nav class="flex items-center gap-6 text-sm font-semibold">
-                    <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition">Home</a>
-                    <a href="{{ route('about') }}" class="text-slate-600 hover:text-sky-600 transition">About</a>
-                    <a href="{{ route('login') }}" class="text-slate-600 hover:text-sky-600 transition">Login</a>
+                <!-- Nav Links & Language Switcher -->
+                <nav class="flex items-center gap-4 sm:gap-6 text-sm font-semibold">
+                    <a href="{{ route('home') }}" class="text-slate-600 hover:text-sky-600 transition">{{ __('Home') }}</a>
+                    <a href="{{ route('about') }}" class="text-slate-600 hover:text-sky-600 transition">{{ __('About') }}</a>
+                    <a href="{{ route('login') }}" class="text-slate-600 hover:text-sky-600 transition">{{ __('Login') }}</a>
+                    @include('partials.language-switcher')
                     <a href="{{ route('signup') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-sky-600 to-blue-600 shadow-md shadow-sky-500/20">
-                        Sign Up
+                        {{ __('Sign Up') }}
                     </a>
                 </nav>
             </div>
@@ -108,7 +109,7 @@
                 @csrf
                 <div>
                     <label for="name" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Full Name <span class="text-rose-500">*</span>
+                        {{ __('Full Name') }} <span class="text-rose-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -124,7 +125,7 @@
 
                 <div>
                     <label for="email" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Email Address <span class="text-rose-500">*</span>
+                        {{ __('Email Address') }} <span class="text-rose-500">*</span>
                     </label>
                     <input
                         type="email"
@@ -140,7 +141,7 @@
 
                 <div>
                     <label for="password" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Password <span class="text-rose-500">*</span>
+                        {{ __('Password') }} <span class="text-rose-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -155,7 +156,7 @@
 
                 <div>
                     <label for="password_confirmation" class="block text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-1.5">
-                        Confirm Password <span class="text-rose-500">*</span>
+                        {{ __('Confirm Password') }} <span class="text-rose-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -172,15 +173,15 @@
                     type="submit"
                     class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 hover:from-sky-500 hover:to-blue-500 text-white font-extrabold text-sm shadow-lg shadow-sky-600/25 hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2"
                 >
-                    <span>Create Account</span>
+                    <span>{{ __('Create Account') }}</span>
                     <span>→</span>
                 </button>
             </form>
 
             <p class="text-center text-sm font-semibold text-slate-600 mt-6 pt-6 border-t border-slate-100">
-                Already have an account?
+                {{ __("Already have an account?") }}
                 <a href="{{ route('login') }}" class="text-sky-600 font-extrabold hover:underline ml-1">
-                    Sign In
+                    {{ __('Sign In') }}
                 </a>
             </p>
         </div>

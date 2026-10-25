@@ -187,4 +187,3 @@ class AdminDashboardController extends Controller
             ->with('info', "Destination '{$title}' was removed from the catalog.");
     }
 }
-
