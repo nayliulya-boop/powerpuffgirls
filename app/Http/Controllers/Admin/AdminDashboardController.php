@@ -42,7 +42,11 @@ class AdminDashboardController extends Controller
 
         $vacationsQuery = Vacation::with('user');
 
-        if (in_array($status, ['upcoming', 'ongoing', 'completed', 'cancelled'], true)) {
+        if ($status === 'pending' || $status === 'pending_approval') {
+            $vacationsQuery->whereIn('status', ['pending', 'pending_approval']);
+        } elseif ($status === 'cancelled') {
+            $vacationsQuery->whereIn('status', ['cancelled', 'rejected']);
+        } elseif (in_array($status, ['approved', 'completed', 'upcoming', 'ongoing'], true)) {
             $vacationsQuery->where('status', $status);
         }
 
@@ -58,18 +62,32 @@ class AdminDashboardController extends Controller
             });
         }
 
+        $statusOrder = "CASE status 
+            WHEN 'pending_approval' THEN 1 
+            WHEN 'pending' THEN 1 
+            WHEN 'approved' THEN 2 
+            WHEN 'upcoming' THEN 3 
+            WHEN 'ongoing' THEN 4 
+            WHEN 'completed' THEN 5 
+            WHEN 'cancelled' THEN 6 
+            WHEN 'rejected' THEN 6 
+            ELSE 7 END";
+
         $vacations = $vacationsQuery
+            ->orderByRaw($statusOrder)
             ->orderBy('start_date', 'desc')
             ->get();
 
         $allVacations = Vacation::all();
 
         $totalBookings = $allVacations->count();
+        $pendingCount = $allVacations->whereIn('status', ['pending', 'pending_approval'])->count();
+        $approvedCount = $allVacations->where('status', 'approved')->count();
+        $completedCount = $allVacations->where('status', 'completed')->count();
+        $cancelledCount = $allVacations->whereIn('status', ['cancelled', 'rejected'])->count();
         $upcomingCount = $allVacations->where('status', 'upcoming')->count();
         $ongoingCount = $allVacations->where('status', 'ongoing')->count();
-        $completedCount = $allVacations->where('status', 'completed')->count();
-        $cancelledCount = $allVacations->where('status', 'cancelled')->count();
-        $totalRevenue = (float) $allVacations->whereIn('status', ['upcoming', 'ongoing', 'completed'])->sum('price');
+        $totalRevenue = (float) $allVacations->whereIn('status', ['upcoming', 'ongoing', 'completed', 'approved'])->sum('price');
 
         $loginRoles = DB::table('login')
             ->whereNull('deleted_at')
@@ -78,7 +96,7 @@ class AdminDashboardController extends Controller
         $customers = User::withCount('vacations')
             ->withSum([
                 'vacations as total_spend' => function ($query): void {
-                    $query->whereIn('status', ['upcoming', 'ongoing', 'completed']);
+                    $query->whereIn('status', ['upcoming', 'ongoing', 'completed', 'approved']);
                 },
             ], 'price')
             ->orderBy('id')
@@ -94,10 +112,12 @@ class AdminDashboardController extends Controller
         $stats = [
             'totalRevenue' => $totalRevenue,
             'totalBookings' => $totalBookings,
-            'upcomingCount' => $upcomingCount,
-            'ongoingCount' => $ongoingCount,
+            'pendingCount' => $pendingCount,
+            'approvedCount' => $approvedCount,
             'completedCount' => $completedCount,
             'cancelledCount' => $cancelledCount,
+            'upcomingCount' => $upcomingCount,
+            'ongoingCount' => $ongoingCount,
             'totalCustomers' => $customers->where('role', 'customer')->count(),
             'totalDestinations' => $destinations->count(),
         ];
@@ -123,15 +143,35 @@ class AdminDashboardController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => ['required', 'string', 'in:upcoming,ongoing,completed,cancelled'],
+            'status' => ['required', 'string', 'in:pending,pending_approval,approved,completed,cancelled,upcoming,ongoing'],
         ]);
 
-        $vacation->update([
-            'status' => $validated['status'],
-        ]);
+        $newStatus = $validated['status'];
+        if ($newStatus === 'pending') {
+            $newStatus = 'pending_approval';
+        }
 
-        return redirect()->route('admin.dashboard')
-            ->with('success', "Booking {$vacation->package_code} ({$vacation->destination}) status updated to ".ucfirst($validated['status']).'.');
+        $updates = [
+            'status' => $newStatus,
+        ];
+
+        if ($newStatus === 'approved') {
+            $updates['reviewed_by'] = $request->user()->id;
+            $updates['reviewed_at'] = now();
+        }
+
+        $vacation->update($updates);
+
+        $statusText = match ($newStatus) {
+            'pending_approval', 'pending' => 'Pending Approval',
+            'approved' => 'Approved',
+            'cancelled' => 'Cancelled',
+            'completed' => 'Completed',
+            default => ucfirst($newStatus),
+        };
+
+        return redirect()->back()
+            ->with('success', "Booking {$vacation->package_code} ({$vacation->destination}) status updated to {$statusText}.");
     }
 
     /**
@@ -187,4 +227,3 @@ class AdminDashboardController extends Controller
             ->with('info', "Destination '{$title}' was removed from the catalog.");
     }
 }
-

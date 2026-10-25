@@ -196,11 +196,17 @@ class CustomerVacationTest extends TestCase
             'destination' => 'Amalfi Coast Villa',
         ]);
 
+        Vacation::factory()->cancelled()->create([
+            'user_id' => $user->id,
+            'destination' => 'Cancelled Tokyo Trip',
+        ]);
+
         $this->actingAs($user)
             ->get(route('customer.history'))
             ->assertOk()
             ->assertSee('Amalfi Coast Villa')
             ->assertSee('Completed Journey')
+            ->assertDontSee('Cancelled Tokyo Trip')
             ->assertSee(route('customer.dashboard'))
             ->assertSee(route('customer.profile'))
             ->assertSee(route('customer.history'));
