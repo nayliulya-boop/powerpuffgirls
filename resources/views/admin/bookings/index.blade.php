@@ -87,27 +87,29 @@
                     <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-300">
                         <a href="{{ route('admin.bookings.index') }}" class="text-amber-400 font-bold transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            Booking Requests
+                            {{ __('Bookings') }}
                         </a>
                         <a href="{{ route('admin.profile') }}" class="hover:text-amber-400 transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            Admin Profile
+                            {{ __('Admin Profile') }}
                         </a>
                         <a href="{{ route('customer.dashboard') }}" target="_blank" class="hover:text-amber-400 transition flex items-center gap-1.5 text-xs text-slate-400 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
                             <span>View Customer Side ↗</span>
                         </a>
                     </nav>
 
+                    @include('partials.language-switcher')
+
                     <!-- Logout Form -->
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button
                             type="submit"
-                            title="Sign Out"
+                            title="{{ __('Sign Out') }}"
                             class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-300 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-slate-700 transition flex items-center gap-1.5"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            <span class="hidden sm:inline">Sign Out</span>
+                            <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                         </button>
                     </form>
                 </div>

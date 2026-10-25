@@ -117,4 +117,3 @@ class UserRegistrationTest extends TestCase
             ->assertRedirectToRoute('profile');
     }
 }
-
