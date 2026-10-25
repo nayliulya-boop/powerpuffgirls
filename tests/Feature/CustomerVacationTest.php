@@ -117,6 +117,55 @@ class CustomerVacationTest extends TestCase
         ]);
     }
 
+    public function test_customer_can_book_vacation_and_proceeds_to_payment_sync(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(route('customer.vacations.store'), [
+                'destination' => 'Santorini Caldera & Oia Villas',
+                'title' => 'Santorini Caldera & Oia Villas',
+                'start_date' => now()->addDays(7)->format('Y-m-d'),
+                'end_date' => now()->addDays(14)->format('Y-m-d'),
+                'travelers_count' => 2,
+                'tier' => 'Diamond Sovereign',
+                'notes' => 'Helicopter transfer from airport.',
+            ]);
+
+        $vacation = Vacation::where('user_id', $user->id)->first();
+        $this->assertNotNull($vacation);
+
+        $response->assertRedirect(route('customer.payment.show', $vacation))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('vacations', [
+            'id' => $vacation->id,
+            'user_id' => $user->id,
+            'destination' => 'Santorini Caldera & Oia Villas',
+            'status' => 'approved',
+            'payment_status' => 'unpaid',
+        ]);
+
+        // Customer completes payment
+        $payResponse = $this->actingAs($user)
+            ->post(route('customer.payment.process', $vacation), [
+                'payment_method' => 'fpx',
+                'bank_name' => 'Maybank2u',
+            ]);
+
+        $payResponse->assertRedirect(route('customer.payment.receipt', $vacation));
+
+        $vacation->refresh();
+        $this->assertSame('upcoming', $vacation->status);
+        $this->assertSame('paid', $vacation->payment_status);
+
+        $this->assertDatabaseHas('payments', [
+            'vacation_id' => $vacation->id,
+            'user_id' => $user->id,
+            'status' => 'completed',
+        ]);
+    }
+
     public function test_booking_validation_requires_mandatory_fields(): void
     {
         $user = User::factory()->create();
