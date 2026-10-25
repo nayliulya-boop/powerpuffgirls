@@ -96,6 +96,21 @@
                     @include('partials.language-switcher')
                     <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
                         ← {{ __('Back to Dashboard') }}
+                <div class="flex items-center gap-6">
+                    <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                        <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('customer.history') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            History
+                        </a>
+                    </nav>
+
+                    <!-- Back link -->
+                    <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
+                        ← Back to Dashboard
                     </a>
                 </div>
             </div>

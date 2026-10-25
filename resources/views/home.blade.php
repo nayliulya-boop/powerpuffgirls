@@ -420,7 +420,7 @@
                             <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
                                 <div>
                                     <span class="text-[11px] text-slate-400 block">Starting from</span>
-                                    <span class="text-lg font-extrabold text-slate-900">${{ number_format($destination->price) }}</span>
+                                    <span class="text-lg font-extrabold text-slate-900">RM {{ number_format($destination->price) }}</span>
                                     <span class="text-xs text-slate-500">/ person</span>
                                 </div>
                                 <a href="{{ route('login') }}" class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white font-semibold text-xs transition duration-200">
@@ -547,7 +547,7 @@
                     <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-slate-400 block">Total per person</span>
-                            <span class="text-2xl font-black text-slate-900">$2,499</span>
+                            <span class="text-2xl font-black text-slate-900">RM 2,499</span>
                         </div>
                         <button class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-sky-600 hover:bg-sky-700 transition">
                             Book Package
@@ -589,7 +589,7 @@
                     <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-sky-300/70 block">Total per person</span>
-                            <span class="text-2xl font-black text-white">$2,150</span>
+                            <span class="text-2xl font-black text-white">RM 2,150</span>
                         </div>
                         <button class="px-5 py-2.5 rounded-xl font-bold text-xs text-slate-950 bg-gradient-to-r from-cyan-300 to-sky-300 hover:from-cyan-200 hover:to-sky-200 transition shadow-md shadow-sky-400/20">
                             Book Package
@@ -628,7 +628,7 @@
                     <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-slate-400 block">Total per person</span>
-                            <span class="text-2xl font-black text-slate-900">$2,790</span>
+                            <span class="text-2xl font-black text-slate-900">RM 2,790</span>
                         </div>
                         <button class="px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-sky-600 hover:bg-sky-700 transition">
                             Book Package
