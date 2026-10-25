@@ -455,53 +455,6 @@
             </div>
         </section>
 
-        <!-- Curated Destinations Catalog & Add New Destination -->
-        <section id="destinations-catalog" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            <!-- Left 2 Columns: Existing Destinations -->
-            <div class="lg:col-span-2 glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-sky-600">Curated Collection</span>
-                        <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Luxury Destinations ({{ $destinations->count() }})</h2>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    @forelse ($destinations as $destination)
-                        <div class="rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div class="h-40 bg-slate-100 relative overflow-hidden">
-                                    <img src="{{ $destination->image_path }}" alt="{{ $destination->title }}" class="w-full h-full object-cover">
-                                    <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-900/80 text-white backdrop-blur-sm">
-                                        {{ $destination->badge }}
-                                    </span>
-                                </div>
-                                <div class="p-4 space-y-1.5">
-                                    <div class="text-xs font-bold text-sky-600">{{ $destination->location }} • {{ $destination->duration_days }} Days</div>
-                                    <h3 class="font-bold text-slate-900 text-base">{{ $destination->title }}</h3>
-                                    <p class="text-xs text-slate-500 line-clamp-2">{{ $destination->description }}</p>
-                                </div>
-                            </div>
-                            <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                                <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $destination->price, 2) }}</span>
-                                <form method="POST" action="{{ route('admin.destinations.destroy', $destination) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-rose-600 hover:text-rose-800">
-                                        Remove
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-span-2 py-8 text-center text-slate-500 text-sm">
-                            No destinations in catalog yet.
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Right Column: Add New Destination Form -->
         <!-- Catalog Builder: Add New Destination -->
         <section id="destinations-catalog" class="max-w-2xl mx-auto w-full">
             <!-- Add New Destination Form -->
