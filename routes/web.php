@@ -28,7 +28,7 @@ Route::view('/customer', 'customer')->name('customer');
 
 // Authenticated Area (Admin & Customer)
 Route::middleware('auth')->group(function (): void {
-    
+
     // Role Dispatcher / Common Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

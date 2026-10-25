@@ -341,10 +341,8 @@
             </div>
         </section>
 
-        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
-        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
         <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
-        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
                 <div class="md:col-span-4 h-64 md:h-auto relative overflow-hidden group">
                     <img
@@ -665,23 +663,27 @@
                                                 <!-- Pay Now Button for Approved Vacations -->
                                                 <a
                                                     href="{{ route('customer.payment.show', $vacation) }}"
-                                                    class="px-3.5 py-1.5 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm hover:scale-105 transition flex items-center gap-1"
-                                                    title="Make payment for this approved booking"
+                                                    class="px-3.5 py-1.5 rounded-lg text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-600/20 hover:scale-105 active:scale-95 transition flex items-center gap-1 animate-pulse"
+                                                    title="Pakej diluluskan tersedia! Sila buat pembayaran sekarang"
                                                 >
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                                    <span>Bayar Sekarang</span>
+                                                    <span>Bayar Sekarang →</span>
                                                 </a>
+                                            @elseif ($vacation->status === 'pending_approval')
+                                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 inline-flex items-center gap-1 cursor-help" title="Admin sedang menyemak ketersediaan slot hotel & penerbangan. Bayaran hanya boleh dibuat selepas diluluskan.">
+                                                    <span>⏳ Menunggu Kelulusan</span>
+                                                </span>
                                             @endif
 
                                             @if ($vacation->payment_status === 'paid')
-                                                <!-- E-Voucher / Receipt Link -->
+                                                <!-- Receipt Link -->
                                                 <a
                                                     href="{{ route('customer.payment.receipt', $vacation) }}"
                                                     class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition flex items-center gap-1"
-                                                    title="View official e-voucher receipt"
+                                                    title="View official receipt"
                                                 >
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                                    <span>E-Voucher</span>
+                                                    <span>Receipt</span>
                                                 </a>
                                             @endif
 

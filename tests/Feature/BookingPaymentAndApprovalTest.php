@@ -279,4 +279,140 @@ class BookingPaymentAndApprovalTest extends TestCase
         ]);
         $processResponse->assertForbidden();
     }
+
+    public function test_admin_can_preview_and_view_customer_payment_receipt(): void
+    {
+        $admin = $this->createAdmin();
+        $customer = $this->createCustomer();
+
+        $vacation = Vacation::factory()->approved()->create([
+            'user_id' => $customer->id,
+            'package_code' => 'AV-MLD-999',
+            'title' => 'Water Villa Maldives Sanctuary',
+            'destination' => 'Maldives',
+            'price' => 8800.00,
+            'status' => 'upcoming',
+            'payment_status' => 'paid',
+        ]);
+
+        $payment = Payment::factory()->create([
+            'vacation_id' => $vacation->id,
+            'user_id' => $customer->id,
+            'amount' => 8800.00,
+            'payment_method' => 'fpx',
+            'bank_name' => 'Maybank2u',
+            'transaction_reference' => 'AV-TXN-20261025-MALDIVES',
+            'paid_at' => now(),
+        ]);
+
+        // 1. Admin booking management shows preview button & modal data
+        $dashboardResponse = $this->actingAs($admin)->get(route('admin.bookings.index'));
+        $dashboardResponse->assertOk()
+            ->assertSee('Preview Resit Pelanggan')
+            ->assertSee('AV-TXN-20261025-MALDIVES')
+            ->assertSee('8,800.00')
+            ->assertSee($customer->name);
+
+        // 2. Admin can directly access and preview the customer's full receipt without 403 Forbidden
+        $receiptResponse = $this->actingAs($admin)->get(route('customer.payment.receipt', $vacation));
+        $receiptResponse->assertOk()
+            ->assertSee('Mode Pentadbir')
+            ->assertSee($customer->name)
+            ->assertSee('AV-MLD-999')
+            ->assertSee('AV-TXN-20261025-MALDIVES')
+            ->assertSee('Kembali ke Tempahan Admin');
+    }
+
+    public function test_customer_can_process_card_payment(): void
+    {
+        $customer = $this->createCustomer();
+
+        $vacation = Vacation::factory()->approved()->create([
+            'user_id' => $customer->id,
+            'price' => 3500.00,
+        ]);
+
+        $response = $this->actingAs($customer)->post(route('customer.payment.process', $vacation), [
+            'payment_method' => 'card',
+            'card_name' => 'Sophia Montgomery',
+            'card_number' => '4111 2222 3333 4242',
+            'card_expiry' => '12/28',
+            'card_cvv' => '888',
+        ]);
+
+        $response->assertRedirect(route('customer.payment.receipt', $vacation));
+
+        $this->assertDatabaseHas('payments', [
+            'vacation_id' => $vacation->id,
+            'user_id' => $customer->id,
+            'payment_method' => 'card',
+            'card_last_four' => '4242',
+            'amount' => 3500.00,
+            'status' => 'completed',
+        ]);
+
+        $this->assertDatabaseHas('vacations', [
+            'id' => $vacation->id,
+            'status' => 'upcoming',
+            'payment_status' => 'paid',
+        ]);
+    }
+
+    public function test_customer_can_process_qr_payment(): void
+    {
+        $customer = $this->createCustomer();
+
+        $vacation = Vacation::factory()->approved()->create([
+            'user_id' => $customer->id,
+            'price' => 1990.00,
+        ]);
+
+        $response = $this->actingAs($customer)->post(route('customer.payment.process', $vacation), [
+            'payment_method' => 'qr',
+        ]);
+
+        $response->assertRedirect(route('customer.payment.receipt', $vacation));
+
+        $this->assertDatabaseHas('payments', [
+            'vacation_id' => $vacation->id,
+            'user_id' => $customer->id,
+            'payment_method' => 'qr',
+            'bank_name' => 'DuitNow QR',
+            'amount' => 1990.00,
+            'status' => 'completed',
+        ]);
+    }
+
+    public function test_admin_dashboard_prioritizes_pending_approval_bookings_at_the_top(): void
+    {
+        $admin = $this->createAdmin();
+        $customer = $this->createCustomer();
+
+        // Older upcoming trip with later start date
+        Vacation::factory()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Bora Bora',
+            'status' => 'upcoming',
+            'start_date' => now()->addDays(30),
+            'created_at' => now()->subDays(5),
+        ]);
+
+        // Brand new booking requiring admin availability check
+        $pendingBooking = Vacation::factory()->pendingApproval()->create([
+            'user_id' => $customer->id,
+            'destination' => 'Redang Island Sanctuary',
+            'package_code' => 'AV-RED-999',
+            'start_date' => now()->addDays(10),
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertOk()
+            ->assertSee('Perlu Tindakan Segera')
+            ->assertSee('Redang Island Sanctuary')
+            ->assertSee('AV-RED-999')
+            ->assertSee('Pending Check')
+            ->assertSee('Sahkan (Approve)');
+    }
 }
