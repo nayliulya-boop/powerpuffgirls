@@ -29,7 +29,7 @@ class CustomerVacationTest extends TestCase
             ->assertSee('My Vacations')
             ->assertSee('AV-MLD-902')
             ->assertSee('Maldives, South Ari Atoll')
-            ->assertSee('$8,450.00')
+            ->assertSee('RM 8,450.00')
             ->assertSee('Upcoming');
     }
 

@@ -223,6 +223,45 @@
         </div>
     </footer>
 
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-sky-600">Travel Archive</span>
+            <h1 class="text-3xl font-extrabold text-slate-900 mt-1">Completed & Past Journeys</h1>
+            <p class="text-sm text-slate-500">Review your completed luxury itineraries and archived bookings.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @forelse ($vacations as $vacation)
+                <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm flex flex-col justify-between gap-4">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <span class="font-mono text-xs font-bold text-sky-600">{{ $vacation->package_code }}</span>
+                            <h3 class="text-lg font-extrabold text-slate-900 mt-0.5">{{ $vacation->destination }}</h3>
+                            <p class="text-sm text-slate-600">{{ $vacation->title }}</p>
+                        </div>
+                        @if ($vacation->status === 'completed')
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                Completed Journey
+                            </span>
+                        @else
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+                                Cancelled
+                            </span>
+                        @endif
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>{{ $vacation->start_date->format('M d, Y') }} – {{ $vacation->end_date->format('M d, Y') }}</span>
+                        <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $vacation->price, 2) }}</span>
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-2 rounded-2xl bg-white border border-slate-200 p-10 text-center text-slate-500">
+                    No past or completed journeys recorded yet.
+                </div>
+            @endforelse
+        </div>
+    </main>
+
     @include('partials.logout-toastr')
 </body>
 </html>

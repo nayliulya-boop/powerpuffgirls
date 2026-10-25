@@ -306,7 +306,7 @@
                     <span class="text-xs font-semibold text-slate-500">Memories</span>
                 </div>
                 <div class="mt-2 text-xs font-medium text-slate-500">
-                    Total investment: ${{ number_format($stats['totalSpend'], 2) }}
+                    Total spent: RM {{ number_format($stats['totalSpend'], 2) }}
                 </div>
             </div>
 
@@ -328,6 +328,8 @@
             </div>
         </section>
 
+        <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
         <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
         @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
@@ -384,7 +386,7 @@
                             <div>
                                 <span class="text-xs font-bold text-slate-400 uppercase block">Investment</span>
                                 <span class="text-sm font-bold text-slate-900 block mt-0.5">
-                                    ${{ number_format($nextTrip->price, 2) }}
+                                    RM {{ number_format($nextTrip->price, 2) }}
                                 </span>
                             </div>
                         </div>
@@ -523,6 +525,8 @@
                                 <th class="py-4 px-4 sm:px-6">Destination & Package</th>
                                 <th class="py-4 px-4">Travel Dates</th>
                                 <th class="py-4 px-4">Guests</th>
+                                <th class="py-4 px-4">VIP Tier</th>
+                                <th class="py-4 px-4">Price</th>
                                 <th class="py-4 px-4">Investment</th>
                                 <th class="py-4 px-4">Status</th>
                                 <th class="py-4 px-4 text-right sm:pr-6">Actions</th>
@@ -584,7 +588,7 @@
                                     <!-- Price -->
                                     <td class="py-4 px-4 whitespace-nowrap">
                                         <span class="font-extrabold text-slate-900 text-sm block">
-                                            ${{ number_format($vacation->price, 2) }}
+                                            RM {{ number_format($vacation->price, 2) }}
                                         </span>
                                         <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block">
                                             All-Inclusive VIP
@@ -981,7 +985,7 @@
                         <span id="modalTier" class="font-extrabold text-amber-700 block mt-0.5"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 font-bold block uppercase text-[10px]">Total Investment</span>
+                        <span class="text-slate-400 font-bold block uppercase text-[10px]">Total Price</span>
                         <span id="modalPrice" class="font-extrabold text-slate-900 block mt-0.5"></span>
                     </div>
                 </div>
@@ -1044,7 +1048,7 @@
             document.getElementById('modalDates').textContent = vacation.start_date + ' to ' + vacation.end_date;
             document.getElementById('modalGuests').textContent = vacation.travelers_count + ' Guests';
             document.getElementById('modalTier').textContent = vacation.tier || 'Signature Gold';
-            document.getElementById('modalPrice').textContent = '$' + Number(vacation.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('modalPrice').textContent = 'RM ' + Number(vacation.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
             document.getElementById('modalNotes').textContent = vacation.notes || 'No custom notes submitted. Standard luxury itinerary perks apply.';
 
             document.getElementById('itineraryModal').classList.remove('hidden');
