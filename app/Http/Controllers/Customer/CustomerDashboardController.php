@@ -92,7 +92,7 @@ class CustomerDashboardController extends Controller
         $stats = $this->calculateStats($user);
 
         $vacations = $user->vacations()
-            ->whereIn('status', ['completed', 'cancelled'])
+            ->where('status', 'completed')
             ->orderBy('start_date', 'desc')
             ->get();
 

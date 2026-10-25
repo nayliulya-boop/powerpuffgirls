@@ -72,23 +72,18 @@
 
         <!-- Top Navigation / Action Bar -->
         <div class="flex items-center justify-between no-print">
-            @if (auth()->check() && auth()->user()->isAdmin())
-                <a href="{{ route('admin.bookings.index') }}" class="text-xs sm:text-sm font-bold text-amber-800 hover:text-amber-950 flex items-center gap-1.5 transition">
-                    ← Kembali ke Senarai Tempahan
-                </a>
-            @else
-                <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
-                    ← Return to Dashboard
-                </a>
-            @endif
+            <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
+                ← {{ __('Back to Dashboard') }}
+            </a>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                @include('partials.language-switcher')
                 <button
                     onclick="window.print()"
                     class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    <span>Print Receipt</span>
+                    <span>{{ __('Print Receipt') }}</span>
                 </button>
             </div>
         </div>
