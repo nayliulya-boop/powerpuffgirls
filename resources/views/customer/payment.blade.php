@@ -93,7 +93,6 @@
 
                 <!-- Back link & Language Switcher -->
                 <div class="flex items-center gap-3">
-                    @include('partials.language-switcher')
                     <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
                         ← {{ __('Back to Dashboard') }}
                 <div class="flex items-center gap-6">
@@ -112,6 +111,7 @@
                     <a href="{{ route('customer.dashboard') }}" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-sky-600 flex items-center gap-1.5 transition">
                         ← Back to Dashboard
                     </a>
+                    @include('partials.language-switcher')
                 </div>
             </div>
         </div>
