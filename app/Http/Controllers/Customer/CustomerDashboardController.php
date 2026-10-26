@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class CustomerDashboardController extends Controller
@@ -65,6 +66,11 @@ class CustomerDashboardController extends Controller
             ->orderBy('start_date')
             ->first();
 
+        $destinationsQuery = Destination::query();
+        if (Schema::hasColumn('destinations', 'is_active')) {
+            $destinationsQuery->where('is_active', true);
+        }
+
         return view('customer.dashboard', [
             'user' => $user,
             'vacations' => $vacations,
@@ -72,7 +78,7 @@ class CustomerDashboardController extends Controller
             'status' => $status,
             'search' => $search,
             'nextTrip' => $nextTrip,
-            'destinations' => Destination::where('is_active', true)->get(),
+            'destinations' => $destinationsQuery->get(),
         ]);
     }
 
