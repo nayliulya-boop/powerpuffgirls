@@ -314,8 +314,7 @@
                             <th class="py-3 px-4">Package</th>
                             <th class="py-3 px-4">Location</th>
                             <th class="py-3 px-4">Duration & Capacity</th>
-                            <th class="py-3 px-4">Travel Dates Window</th>
-                            <th class="py-3 px-4">Amenities</th>
+                            <th class="py-3 px-4">Dates</th>
                             <th class="py-3 px-4">Price (RM)</th>
                             <th class="py-3 px-4">Status</th>
                             <th class="py-3 px-4 text-right">Actions</th>
@@ -342,14 +341,11 @@
                                 </td>
                                 <td class="py-3.5 px-4 text-xs text-slate-600 whitespace-nowrap">
                                     @if ($pkg->start_date && $pkg->end_date)
-                                        <div>{{ $pkg->start_date->format('M d, Y') }}</div>
-                                        <div class="text-slate-400">to {{ $pkg->end_date->format('M d, Y') }}</div>
+                                        <div><span class="text-slate-400 font-medium">Start:</span> <span class="font-bold text-slate-800">{{ $pkg->start_date->format('M d, Y') }}</span></div>
+                                        <div class="mt-0.5"><span class="text-slate-400 font-medium">End:</span> <span class="font-bold text-slate-800">{{ $pkg->end_date->format('M d, Y') }}</span></div>
                                     @else
                                         <span class="text-slate-400 italic">Open Booking</span>
                                     @endif
-                                </td>
-                                <td class="py-3.5 px-4 text-xs text-slate-600 max-w-xs truncate" title="{{ $pkg->amenities ?? 'Standard VIP Amenities' }}">
-                                    {{ $pkg->amenities ?: 'Standard Luxury Amenities' }}
                                 </td>
                                 <td class="py-3.5 px-4 font-extrabold text-slate-900 whitespace-nowrap">
                                     RM {{ number_format((float) $pkg->price, 2) }}
@@ -402,7 +398,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="py-8 text-center text-slate-500">
+                                <td colspan="7" class="py-8 text-center text-slate-500">
                                     No vacation packages found in database catalog. Click "Add New Package" above to create one.
                                 </td>
                             </tr>
@@ -427,7 +423,6 @@
                 <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-wrap items-center gap-3">
                     <select name="status" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
                         <option value="all" @selected($status === 'all')>All Bookings ({{ $stats['totalBookings'] }})</option>
-                        <option value="pending" @selected($status === 'pending' || $status === 'pending_approval')>Pending Approval ({{ $stats['pendingCount'] }})</option>
                         <option value="upcoming" @selected($status === 'upcoming')>Upcoming Escapes ({{ $stats['upcomingCount'] }})</option>
                         <option value="completed" @selected($status === 'completed')>Completed Trips ({{ $stats['completedCount'] }})</option>
                         <option value="cancelled" @selected($status === 'cancelled')>Cancelled ({{ $stats['cancelledCount'] }})</option>
@@ -466,7 +461,7 @@
                             <th class="py-3.5 px-4">Tier & Price</th>
                             <th class="py-3.5 px-4">Booking Status</th>
                             <th class="py-3.5 px-4">Payment Status</th>
-                            <th class="py-3.5 px-4 text-right">Actions & Status</th>
+                            <th class="py-3.5 px-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-sm">
@@ -499,18 +494,16 @@
                                 <td class="py-4 px-4 whitespace-nowrap">
                                     @php
                                         $bookingBadge = match ($vacation->status) {
-                                            'pending', 'pending_approval' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                            'upcoming', 'pending', 'pending_approval' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
                                             'approved' => 'bg-sky-100 text-sky-800 border-sky-200',
-                                            'upcoming' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
                                             'ongoing' => 'bg-blue-100 text-blue-800 border-blue-200',
                                             'completed' => 'bg-purple-100 text-purple-800 border-purple-200',
                                             'cancelled', 'rejected' => 'bg-rose-100 text-rose-800 border-rose-200',
                                             default => 'bg-slate-100 text-slate-700 border-slate-200',
                                         };
                                         $bookingLabel = match ($vacation->status) {
-                                            'pending', 'pending_approval' => 'Pending Review',
+                                            'upcoming', 'pending', 'pending_approval' => 'Upcoming',
                                             'approved' => 'Approved',
-                                            'upcoming' => 'Upcoming',
                                             'ongoing' => 'Ongoing',
                                             'completed' => 'Completed',
                                             'cancelled', 'rejected' => 'Cancelled',
@@ -537,47 +530,14 @@
                                     @endif
                                 </td>
                                 <td class="py-4 px-4 text-right whitespace-nowrap">
-                                    <div class="inline-flex items-center gap-2">
-                                        <!-- Details Button -->
-                                        <button
-                                            type="button"
-                                            onclick='openBookingDetailsModal(@json($vacation), @json($vacation->user), @json($vacation->latestPayment))'
-                                            class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition shadow-sm"
-                                        >
-                                            Details
-                                        </button>
-
-                                        <!-- Direct Status Update Form -->
-                                        @if ($vacation->isPendingApproval())
-                                            <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline">
-                                                @csrf
-                                                <input type="hidden" name="status" value="approved">
-                                                <button type="submit" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm">
-                                                    Approve
-                                                </button>
-                                            </form>
-                                            <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline" onsubmit="return confirm('Cancel this booking?')">
-                                                @csrf
-                                                <input type="hidden" name="status" value="cancelled">
-                                                <button type="submit" class="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-sm">
-                                                    Cancel
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline-flex items-center gap-1.5">
-                                                @csrf
-                                                <select name="status" class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-500">
-                                                    <option value="upcoming" @selected($vacation->status === 'upcoming')>Upcoming</option>
-                                                    <option value="ongoing" @selected($vacation->status === 'ongoing')>Ongoing</option>
-                                                    <option value="completed" @selected($vacation->status === 'completed')>Completed</option>
-                                                    <option value="cancelled" @selected($vacation->status === 'cancelled' || $vacation->status === 'rejected')>Cancelled</option>
-                                                </select>
-                                                <button type="submit" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-sky-600 text-white text-xs font-bold transition">
-                                                    Save
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
+                                    <button
+                                        type="button"
+                                        onclick='openBookingDetailsModal(@json($vacation), @json($vacation->user), @json($vacation->latestPayment))'
+                                        class="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-sky-50 hover:text-sky-700 hover:border-sky-300 text-slate-700 text-xs font-bold transition shadow-sm inline-flex items-center gap-1.5"
+                                    >
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        View Details
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -690,7 +650,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="py-8 text-center text-slate-500">
+                                <td colspan="7" class="py-8 text-center text-slate-500">
                                     No payment records found in database.
                                 </td>
                             </tr>
@@ -814,16 +774,6 @@
                                     <div class="h-full bg-rose-500 rounded-full" style="width: {{ $stats['totalBookings'] > 0 ? ($stats['cancelledCount'] / $stats['totalBookings']) * 100 : 0 }}%"></div>
                                 </div>
                             </div>
-
-                            <div>
-                                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                                    <span>Pending Approval</span>
-                                    <span>{{ $stats['pendingCount'] }} ({{ $stats['totalBookings'] > 0 ? round(($stats['pendingCount'] / $stats['totalBookings']) * 100) : 0 }}%)</span>
-                                </div>
-                                <div class="w-full h-2.5 rounded-full bg-slate-200 overflow-hidden">
-                                    <div class="h-full bg-amber-500 rounded-full" style="width: {{ $stats['totalBookings'] > 0 ? ($stats['pendingCount'] / $stats['totalBookings']) * 100 : 0 }}%"></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -935,11 +885,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Amenities & Facilities</label>
-                    <input type="text" name="amenities" placeholder="e.g., Private Infinity Pool, Yacht Tour, Michelin Butler, Airport Helicopter" class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
-                </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Badge Label</label>
@@ -1030,11 +975,6 @@
                         <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Available End Date</label>
                         <input type="date" id="edit-end-date" name="end_date" class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Amenities & Facilities</label>
-                    <input type="text" id="edit-amenities" name="amenities" class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1219,7 +1159,6 @@
             document.getElementById('edit-price').value = pkg.price || 0;
             document.getElementById('edit-start-date').value = pkg.start_date ? pkg.start_date.substring(0, 10) : '';
             document.getElementById('edit-end-date').value = pkg.end_date ? pkg.end_date.substring(0, 10) : '';
-            document.getElementById('edit-amenities').value = pkg.amenities || '';
             document.getElementById('edit-badge').value = pkg.badge || '';
             document.getElementById('edit-image').value = pkg.image_path || '';
             document.getElementById('edit-description').value = pkg.description || '';
