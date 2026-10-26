@@ -1,24 +1,21 @@
 @php
     $currentLocale = app()->getLocale();
 @endphp
-<div data-no-translate="true" class="inline-flex items-center rounded-xl bg-slate-100/90 border border-slate-200/80 p-1 text-xs font-extrabold shadow-sm shrink-0">
-    <a
-        href="{{ route('lang.switch', 'en') }}"
-        title="Switch to English"
-        class="px-2.5 py-1 rounded-lg transition flex items-center gap-1 {{ $currentLocale === 'en' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-500 hover:text-slate-900' }}"
-    >
-        <span>🇬🇧</span>
-        <span>EN</span>
-    </a>
-    <a
-        href="{{ route('lang.switch', 'ms') }}"
-        title="Tukar ke Bahasa Melayu"
-        class="px-2.5 py-1 rounded-lg transition flex items-center gap-1 {{ $currentLocale === 'ms' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-500 hover:text-slate-900' }}"
-    >
-        <span>🇲🇾</span>
-        <span>BM</span>
-    </a>
-</div>
+<a
+    href="{{ route('settings', ['return_to' => request()->fullUrl()]) }}"
+    title="{{ $currentLocale === 'ms' ? 'Tetapan & Bahasa' : 'Settings & Language' }}"
+    aria-label="{{ $currentLocale === 'ms' ? 'Tetapan & Bahasa' : 'Settings & Language' }}"
+    data-no-translate="true"
+    class="inline-flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:text-sky-700 hover:border-sky-300 text-slate-700 text-xs sm:text-sm font-semibold transition shadow-sm whitespace-nowrap group shrink-0"
+>
+    <svg class="w-4 h-4 text-slate-500 group-hover:text-sky-600 group-hover:rotate-45 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+    </svg>
+    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-black {{ $currentLocale === 'ms' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-sky-100 text-sky-800 border border-sky-200' }}">
+        {{ strtoupper($currentLocale) }}
+    </span>
+</a>
 
 @once
 @php
@@ -30,7 +27,13 @@
     const currentLocale = @json($currentLocale);
     const baseEnToMs = @json($enToMsDictionary);
 
-    // Additional page titles & inline fragments across all 13 pages
+    try {
+        localStorage.setItem('azurevoyage_locale', currentLocale);
+    } catch (e) {
+        // LocalStorage may be blocked
+    }
+
+    // Additional page titles, navbar fragments & inline phrases across all pages
     const extraEnToMs = {
         "AzureVoyage — Luxury Travel & Curated Escapes": "AzureVoyage — Pelancongan Mewah & Percutian Terpilih",
         "About Us — AzureVoyage | Luxury Travel & Curated Escapes": "Tentang Kami — AzureVoyage | Pelancongan Mewah & Percutian Terpilih",
@@ -45,9 +48,32 @@
         "Admin Portal | AzureVoyage Luxury Travel Agency": "Portal Admin | Agensi Pelancongan Mewah AzureVoyage",
         "Administrator Profile & Security | AzureVoyage Luxury Travel Agency": "Profil & Keselamatan Pentadbir | Agensi Pelancongan Mewah AzureVoyage",
         "Customer Bookings & Availability Review | AzureVoyage Admin": "Semakan Tempahan & Ketersediaan Pelanggan | Admin AzureVoyage",
+        "Settings & Preferences | AzureVoyage Luxury Travel Agency": "Tetapan & Keutamaan | Agensi Pelancongan Mewah AzureVoyage",
         "Official Receipt / Tax Invoice": "Resit Rasmi / Invois Cukai",
         "Description": "Butiran",
         "Customer": "Pelanggan",
+        "Settings": "Tetapan",
+        "System Settings": "Tetapan Sistem",
+        "Settings & Language": "Tetapan & Bahasa",
+        "Portal Settings & Language": "Tetapan Portal & Bahasa",
+        "Language & Localization": "Bahasa & Penyetempatan",
+        "Back to Dashboard": "Kembali ke Papan Pemuka",
+        "Add Destination": "Tambah Destinasi",
+        "Settled Revenue": "Hasil Selesai",
+        "VIP Clients": "Pelanggan VIP",
+        "Needs Check": "Perlu Semakan",
+        "Needs Availability Check": "Perlu Semakan Ketersediaan",
+        "Approved & Available": "Diluluskan & Tersedia",
+        "Upcoming Trips": "Perjalanan Akan Datang",
+        "Global Reservation Desk": "Meja Tempahan Global",
+        "All Client Bookings": "Semua Tempahan Pelanggan",
+        "All Statuses": "Semua Status",
+        "Availability & Approvals": "Ketersediaan & Kelulusan",
+        "Bookings Table": "Jadual Tempahan",
+        "Action Required Immediately": "Perlu Tindakan Segera",
+        "Admin Verification": "Semakan Admin",
+        "Ready to Pay": "Sedia Bayar",
+        "Confirmed & Paid": "Disahkan & Dibayar",
         "1 Guest (Solo Luxury)": "1 Tetamu (Mewah Solo)",
         "2 Guests (Couple)": "2 Tetamu (Pasangan)",
         "3 Guests": "3 Tetamu",

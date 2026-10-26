@@ -10,20 +10,31 @@ use App\Http\Controllers\Customer\CustomerPaymentController;
 use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Public Pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index']);
 
+// Settings Page
+Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+
 // Language Switcher
-Route::get('/lang/{locale}', function (string $locale) {
+Route::get('/lang/{locale}', function (Request $request, string $locale) {
     if (in_array($locale, ['en', 'ms'], true)) {
         session(['locale' => $locale]);
+        app()->setLocale($locale);
+        cookie()->queue(cookie('locale', $locale, 60 * 24 * 365));
     }
 
-    return redirect()->back();
+    if ($request->filled('return_to')) {
+        return redirect($request->input('return_to'))->with('status', $locale === 'ms' ? 'Bahasa berjaya ditukar ke Bahasa Melayu' : 'Language successfully switched to English');
+    }
+
+    return redirect()->back()->with('status', $locale === 'ms' ? 'Bahasa berjaya ditukar ke Bahasa Melayu' : 'Language successfully switched to English');
 })->name('lang.switch');
 
 // Authentication Routes
