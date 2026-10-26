@@ -120,11 +120,11 @@
 
                 <!-- Navigation Links for 5 Requirements -->
                 <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold text-slate-600">
-                    <a href="#overview-section" class="hover:text-sky-600 transition">1. Dashboard</a>
-                    <a href="#packages-section" class="hover:text-sky-600 transition">2. Manage Packages</a>
-                    <a href="#bookings-section" class="hover:text-sky-600 transition">3. Manage Bookings</a>
-                    <a href="#payments-section" class="hover:text-sky-600 transition">4. Manage Payments</a>
-                    <a href="#customers-reports-section" class="hover:text-sky-600 transition">5. Customers & Reports</a>
+                    <a href="#overview-section" class="hover:text-sky-600 transition">Dashboard</a>
+                    <a href="#packages-section" class="hover:text-sky-600 transition">Manage Packages</a>
+                    <a href="#bookings-section" class="hover:text-sky-600 transition">Manage Bookings</a>
+                    <a href="#payments-section" class="hover:text-sky-600 transition">Manage Payments</a>
+                    <a href="#customers-reports-section" class="hover:text-sky-600 transition">Customers & Reports</a>
                 </nav>
 
                 <!-- Actions -->

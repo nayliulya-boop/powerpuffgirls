@@ -144,10 +144,9 @@ class AdminManagementSuiteTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Welcome Admin')
-            ->assertSee('1. Dashboard')
-            ->assertSee('2. Manage Packages')
-            ->assertSee('3. Manage Bookings')
-            ->assertSee('4. Manage Payments')
+            ->assertSee('Manage Packages')
+            ->assertSee('Manage Bookings')
+            ->assertSee('Manage Payments')
             ->assertSee('Customers & Reports', false)
             ->assertSee('Total Bookings')
             ->assertSee('Successful Payments')

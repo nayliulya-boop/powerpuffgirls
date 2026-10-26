@@ -125,7 +125,9 @@ class AdminDashboardController extends Controller
                 $account->setAttribute('role', $loginRoles[$account->id] ?? 'customer');
 
                 return $account;
-            });
+            })
+            ->filter(fn (User $account): bool => $account->role !== 'admin')
+            ->values();
 
         // Destinations catalog
         $destinations = Destination::orderByDesc('is_featured')->orderBy('id', 'desc')->get();
