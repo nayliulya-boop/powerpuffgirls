@@ -186,7 +186,7 @@
                     <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 text-center">
                         <span class="block text-xs text-sky-200 uppercase font-semibold">Active Revenue</span>
                         <span class="text-xl sm:text-2xl font-extrabold text-white mt-1 block">
-                            ${{ number_format($stats['totalRevenue'], 2) }}
+                            RM {{ number_format($stats['totalRevenue'], 2) }}
                         </span>
                     </div>
                     <div class="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 p-4 text-center">
@@ -206,49 +206,60 @@
         </section>
 
         <!-- Agency KPI Cards -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="glass-card rounded-2xl p-6 shadow-sm">
+        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="glass-card rounded-2xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Bookings</span>
-                    <span class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold">
+                    <span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-xs">
                         {{ $stats['totalBookings'] }}
                     </span>
                 </div>
-                <p class="text-3xl font-extrabold text-slate-900 mt-3">{{ $stats['totalBookings'] }}</p>
-                <p class="text-xs text-slate-500 mt-1">All recorded agency reservations</p>
+                <p class="text-2xl font-extrabold text-slate-900 mt-2">{{ $stats['totalBookings'] }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">All reservations</p>
             </div>
 
-            <div class="glass-card rounded-2xl p-6 shadow-sm">
+            <div class="glass-card rounded-2xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Upcoming Trips</span>
-                    <span class="w-10 h-10 rounded-xl bg-sky-100/80 text-sky-700 flex items-center justify-center font-bold">
-                        {{ $stats['upcomingCount'] }}
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Pending</span>
+                    <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">
+                        {{ $stats['pendingCount'] }}
                     </span>
                 </div>
-                <p class="text-3xl font-extrabold text-slate-900 mt-3">{{ $stats['upcomingCount'] }}</p>
-                <p class="text-xs text-slate-500 mt-1">Confirmed future departures</p>
+                <p class="text-2xl font-extrabold text-amber-600 mt-2">{{ $stats['pendingCount'] }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Awaiting review</p>
             </div>
 
-            <div class="glass-card rounded-2xl p-6 shadow-sm">
+            <div class="glass-card rounded-2xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Completed Journeys</span>
-                    <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                    <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Approved</span>
+                    <span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-xs">
+                        {{ $stats['approvedCount'] }}
+                    </span>
+                </div>
+                <p class="text-2xl font-extrabold text-sky-600 mt-2">{{ $stats['approvedCount'] }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Confirmed available</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Completed</span>
+                    <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
                         {{ $stats['completedCount'] }}
                     </span>
                 </div>
-                <p class="text-3xl font-extrabold text-slate-900 mt-3">{{ $stats['completedCount'] }}</p>
-                <p class="text-xs text-slate-500 mt-1">Fulfilled luxury itineraries</p>
+                <p class="text-2xl font-extrabold text-emerald-600 mt-2">{{ $stats['completedCount'] }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Fulfilled trips</p>
             </div>
 
-            <div class="glass-card rounded-2xl p-6 shadow-sm">
+            <div class="col-span-2 sm:col-span-1 glass-card rounded-2xl p-5 shadow-sm">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Cancelled</span>
-                    <span class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
+                    <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs">
                         {{ $stats['cancelledCount'] }}
                     </span>
                 </div>
-                <p class="text-3xl font-extrabold text-slate-900 mt-3">{{ $stats['cancelledCount'] }}</p>
-                <p class="text-xs text-slate-500 mt-1">Archived or revoked bookings</p>
+                <p class="text-2xl font-extrabold text-rose-600 mt-2">{{ $stats['cancelledCount'] }}</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Archived bookings</p>
             </div>
         </section>
 
@@ -265,8 +276,8 @@
                 <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-wrap items-center gap-3">
                     <select name="status" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
                         <option value="all" @selected($status === 'all')>All Statuses ({{ $stats['totalBookings'] }})</option>
-                        <option value="upcoming" @selected($status === 'upcoming')>Upcoming ({{ $stats['upcomingCount'] }})</option>
-                        <option value="ongoing" @selected($status === 'ongoing')>Ongoing ({{ $stats['ongoingCount'] }})</option>
+                        <option value="pending" @selected($status === 'pending' || $status === 'pending_approval')>Pending ({{ $stats['pendingCount'] }})</option>
+                        <option value="approved" @selected($status === 'approved')>Approved ({{ $stats['approvedCount'] }})</option>
                         <option value="completed" @selected($status === 'completed')>Completed ({{ $stats['completedCount'] }})</option>
                         <option value="cancelled" @selected($status === 'cancelled')>Cancelled ({{ $stats['cancelledCount'] }})</option>
                     </select>
@@ -324,36 +335,72 @@
                                     <div class="text-slate-400">to {{ $vacation->end_date->format('M d, Y') }} ({{ $vacation->travelers_count }} {{ Str::plural('guest', $vacation->travelers_count) }})</div>
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap">
-                                    <div class="font-extrabold text-slate-900">${{ number_format((float) $vacation->price, 2) }}</div>
+                                    <div class="font-extrabold text-slate-900">RM {{ number_format((float) $vacation->price, 2) }}</div>
                                     <div class="text-[11px] font-semibold text-amber-600">{{ $vacation->tier }}</div>
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap">
                                     @php
                                         $badgeClasses = match ($vacation->status) {
-                                            'upcoming' => 'bg-sky-100 text-sky-800 border-sky-200',
-                                            'ongoing' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                                            'pending', 'pending_approval' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                            'approved' => 'bg-sky-100 text-sky-800 border-sky-200',
+                                            'upcoming' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                                            'ongoing' => 'bg-blue-100 text-blue-800 border-blue-200',
                                             'completed' => 'bg-emerald-100 text-emerald-800 border-emerald-200',
-                                            'cancelled' => 'bg-rose-100 text-rose-800 border-rose-200',
+                                            'cancelled', 'rejected' => 'bg-rose-100 text-rose-800 border-rose-200',
                                             default => 'bg-slate-100 text-slate-700 border-slate-200',
+                                        };
+                                        $statusLabel = match ($vacation->status) {
+                                            'pending', 'pending_approval' => 'Pending',
+                                            'approved' => 'Approved',
+                                            'completed' => 'Completed',
+                                            'cancelled', 'rejected' => 'Cancelled',
+                                            default => ucfirst($vacation->status),
                                         };
                                     @endphp
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border {{ $badgeClasses }}">
-                                        {{ ucfirst($vacation->status) }}
+                                        {{ $statusLabel }}
                                     </span>
                                 </td>
                                 <td class="py-4 px-6 whitespace-nowrap text-right">
-                                    <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline-flex items-center gap-2">
-                                        @csrf
-                                        <select name="status" class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                                            <option value="upcoming" @selected($vacation->status === 'upcoming')>Upcoming</option>
-                                            <option value="ongoing" @selected($vacation->status === 'ongoing')>Ongoing</option>
-                                            <option value="completed" @selected($vacation->status === 'completed')>Completed</option>
-                                            <option value="cancelled" @selected($vacation->status === 'cancelled')>Cancelled</option>
-                                        </select>
-                                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-sky-600 text-white text-xs font-semibold transition">
-                                            Save
-                                        </button>
-                                    </form>
+                                    @if ($vacation->isPendingApproval())
+                                        <div class="inline-flex items-center gap-1.5 justify-end">
+                                            <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline">
+                                                @csrf
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm" title="Approve booking">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                    Approve
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline" onsubmit="return confirm('Cancel this booking?')">
+                                                @csrf
+                                                <input type="hidden" name="status" value="cancelled">
+                                                <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm" title="Cancel booking">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.vacations.status', $vacation) }}" class="inline-flex items-center gap-2">
+                                            @csrf
+                                            <select name="status" class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                                <option value="pending_approval" @selected($vacation->status === 'pending_approval' || $vacation->status === 'pending')>Pending</option>
+                                                <option value="approved" @selected($vacation->status === 'approved')>Approved</option>
+                                                <option value="completed" @selected($vacation->status === 'completed')>Completed</option>
+                                                <option value="cancelled" @selected($vacation->status === 'cancelled' || $vacation->status === 'rejected')>Cancelled</option>
+                                                @if ($vacation->status === 'upcoming')
+                                                    <option value="upcoming" selected>Upcoming</option>
+                                                @endif
+                                                @if ($vacation->status === 'ongoing')
+                                                    <option value="ongoing" selected>Ongoing</option>
+                                                @endif
+                                            </select>
+                                            <button type="submit" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-sky-600 text-white text-xs font-semibold transition">
+                                                Save
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -372,7 +419,7 @@
         <section id="clients-directory" class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
             <div>
                 <span class="text-xs font-bold uppercase tracking-widest text-sky-600">Member Registry</span>
-                <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Registered Accounts & VIP Clients</h2>
+                <h2 class="text-2xl font-extrabold text-slate-900 mt-1">Registered Accounts</h2>
                 <p class="text-sm text-slate-500">Overview of all portal users, their assigned login role, total bookings, and cumulative luxury spend.</p>
             </div>
 
@@ -402,7 +449,7 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-slate-400 block">Active Portfolio Spend</span>
-                                <span class="font-extrabold text-sky-700 text-sm">${{ number_format((float) ($account->total_spend ?? 0), 2) }}</span>
+                                <span class="font-extrabold text-sky-700 text-sm">RM {{ number_format((float) ($account->total_spend ?? 0), 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -438,7 +485,7 @@
                                 </div>
                             </div>
                             <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-                                <span class="font-extrabold text-slate-900 text-sm">${{ number_format((float) $destination->price, 2) }}</span>
+                                <span class="font-extrabold text-slate-900 text-sm">RM {{ number_format((float) $destination->price, 2) }}</span>
                                 <form method="POST" action="{{ route('admin.destinations.destroy', $destination) }}">
                                     @csrf
                                     @method('DELETE')
@@ -457,6 +504,9 @@
             </div>
 
             <!-- Right Column: Add New Destination Form -->
+        <!-- Catalog Builder: Add New Destination -->
+        <section id="destinations-catalog" class="max-w-2xl mx-auto w-full">
+            <!-- Add New Destination Form -->
             <div id="new-destination-form" class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
                 <div>
                     <span class="text-xs font-bold uppercase tracking-widest text-sky-600">Catalog Builder</span>

@@ -86,6 +86,32 @@ class VacationSeeder extends Seeder
                 'image_url' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80',
                 'notes' => 'Client requested rescheduling due to personal itinerary shift.',
             ],
+            [
+                'package_code' => 'AV-TOK-550',
+                'destination' => 'Hakone & Mount Fuji, Japan',
+                'title' => 'Panoramic Onsen Estate & Traditional Kaiseki Dining',
+                'start_date' => '2026-11-28',
+                'end_date' => '2026-12-05',
+                'travelers_count' => 2,
+                'price' => 8900.00,
+                'status' => 'pending_approval',
+                'tier' => 'Platinum Horizon',
+                'image_url' => 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80',
+                'notes' => 'Pending availability verification for private onsen villa.',
+            ],
+            [
+                'package_code' => 'AV-PAR-210',
+                'destination' => 'Paris & French Riviera, France',
+                'title' => 'Eiffel Penthouse Suite & Private Yacht Day Charter',
+                'start_date' => '2026-12-10',
+                'end_date' => '2026-12-18',
+                'travelers_count' => 2,
+                'price' => 10800.00,
+                'status' => 'approved',
+                'tier' => 'Diamond Sovereign',
+                'image_url' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
+                'notes' => 'Approved booking awaiting client payment settlement.',
+            ],
         ];
 
         foreach ($sampleVacations as $vacationData) {

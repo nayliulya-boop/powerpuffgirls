@@ -113,10 +113,6 @@
                             <svg class="w-4 h-4 {{ request()->routeIs('customer.dashboard') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                             {{ __('Dashboard') }}
                         </a>
-                        <a href="{{ route('customer.profile') }}" class="transition flex items-center gap-1.5 {{ request()->routeIs('customer.profile') ? 'text-sky-600 font-bold' : 'hover:text-sky-600' }}">
-                            <svg class="w-4 h-4 {{ request()->routeIs('customer.profile') ? 'text-sky-600' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                            {{ __('Profile') }}
-                        </a>
                         <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             {{ __('My Profile') }}
@@ -321,7 +317,7 @@
                     <span class="text-xs font-semibold text-slate-500">Memories</span>
                 </div>
                 <div class="mt-2 text-xs font-medium text-slate-500">
-                    Total investment: ${{ number_format($stats['totalSpend'], 2) }}
+                    Total spent: RM {{ number_format($stats['totalSpend'], 2) }}
                 </div>
             </div>
 
@@ -345,6 +341,8 @@
 
         <!-- Next Journey Spotlight (If upcoming vacation exists, viewing all or upcoming, and not searching) -->
         @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && $search === '')
+        <!-- Next Journey Spotlight (If upcoming vacation exists and viewing all or upcoming, with no active search) -->
+        @if ($nextTrip && in_array($status, ['all', 'upcoming'], true) && empty($search))
             <section class="rounded-3xl overflow-hidden glass-card shadow-md border border-sky-100 grid grid-cols-1 md:grid-cols-12 bg-white">
                 <div class="md:col-span-4 h-64 md:h-auto relative overflow-hidden group">
                     <img
@@ -399,7 +397,7 @@
                             <div>
                                 <span class="text-xs font-bold text-slate-400 uppercase block">Investment</span>
                                 <span class="text-sm font-bold text-slate-900 block mt-0.5">
-                                    ${{ number_format($nextTrip->price, 2) }}
+                                    RM {{ number_format($nextTrip->price, 2) }}
                                 </span>
                             </div>
                         </div>
@@ -539,6 +537,7 @@
                                 <th class="py-4 px-4">Travel Dates</th>
                                 <th class="py-4 px-4">Guests</th>
                                 <th class="py-4 px-4">VIP Tier</th>
+                                <th class="py-4 px-4">Price</th>
                                 <th class="py-4 px-4">Investment</th>
                                 <th class="py-4 px-4">Status</th>
                                 <th class="py-4 px-4 text-right sm:pr-6">Actions</th>
@@ -597,17 +596,10 @@
                                         </div>
                                     </td>
 
-                                    <!-- Tier -->
-                                    <td class="py-4 px-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold {{ $vacation->tier === 'Diamond Sovereign' ? 'bg-amber-100 text-amber-800 border border-amber-200' : ($vacation->tier === 'Platinum Horizon' ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-slate-100 text-slate-800 border border-slate-200') }}">
-                                            ★ {{ $vacation->tier }}
-                                        </span>
-                                    </td>
-
                                     <!-- Price -->
                                     <td class="py-4 px-4 whitespace-nowrap">
                                         <span class="font-extrabold text-slate-900 text-sm block">
-                                            ${{ number_format($vacation->price, 2) }}
+                                            RM {{ number_format($vacation->price, 2) }}
                                         </span>
                                         <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block">
                                             All-Inclusive VIP
@@ -717,7 +709,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="py-12 px-6 text-center">
+                                    <td colspan="6" class="py-12 px-6 text-center">
                                         <div class="max-w-md mx-auto space-y-3">
                                             <div class="w-16 h-16 rounded-3xl bg-sky-50 text-sky-600 mx-auto flex items-center justify-center">
                                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -762,51 +754,6 @@
                             24/7 Global Concierge Guarantee
                         </span>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIP Membership Benefits & Concierge Hotline Section -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Dedicated Concierge -->
-            <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200 space-y-3">
-                <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                </div>
-                <h4 class="font-extrabold text-lg text-slate-900">Your Private Concierge</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Assigned Travel Director: <strong>Lady Eleanor Vance</strong>. Direct telephone line and WhatsApp support active 24/7 for bespoke requests, private jet charters, and Michelin reservations.
-                </p>
-                <div class="pt-2 text-xs font-bold text-sky-600">
-                    Hotline: +1 (800) 429-8732
-                </div>
-            </div>
-
-            <!-- Priority Boarding & Transfers -->
-            <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200 space-y-3">
-                <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                </div>
-                <h4 class="font-extrabold text-lg text-slate-900">VIP Transfers & Lounge</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    All upcoming vacations automatically include tarmac luxury limousine transfers, access to first-class airline lounges worldwide, and complimentary luggage courier service.
-                </p>
-                <div class="pt-2 text-xs font-bold text-amber-600">
-                    Included with {{ $stats['vipTier'] }}
-                </div>
-            </div>
-
-            <!-- Bespoke Custom Itineraries -->
-            <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200 space-y-3">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                </div>
-                <h4 class="font-extrabold text-lg text-slate-900">100% Tailored Flexibility</h4>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Need to modify dates or switch private villas? Changes made up to 14 days prior to departure incur zero amendment fees for verified AzureVoyage members.
-                </p>
-                <div class="pt-2 text-xs font-bold text-emerald-600">
-                    Flexible Travel Guarantee
                 </div>
             </div>
         </section>
@@ -1049,7 +996,7 @@
                         <span id="modalTier" class="font-extrabold text-amber-700 block mt-0.5"></span>
                     </div>
                     <div>
-                        <span class="text-slate-400 font-bold block uppercase text-[10px]">Total Investment</span>
+                        <span class="text-slate-400 font-bold block uppercase text-[10px]">Total Price</span>
                         <span id="modalPrice" class="font-extrabold text-slate-900 block mt-0.5"></span>
                     </div>
                 </div>
@@ -1112,7 +1059,7 @@
             document.getElementById('modalDates').textContent = vacation.start_date + ' to ' + vacation.end_date;
             document.getElementById('modalGuests').textContent = vacation.travelers_count + ' Guests';
             document.getElementById('modalTier').textContent = vacation.tier || 'Signature Gold';
-            document.getElementById('modalPrice').textContent = '$' + Number(vacation.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('modalPrice').textContent = 'RM ' + Number(vacation.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
             document.getElementById('modalNotes').textContent = vacation.notes || 'No custom notes submitted. Standard luxury itinerary perks apply.';
 
             document.getElementById('itineraryModal').classList.remove('hidden');

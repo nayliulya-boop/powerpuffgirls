@@ -92,7 +92,7 @@ class Vacation extends Model
      */
     public function isPendingApproval(): bool
     {
-        return $this->status === 'pending_approval';
+        return $this->status === 'pending_approval' || $this->status === 'pending';
     }
 
     /**
@@ -101,6 +101,22 @@ class Vacation extends Model
     public function isApproved(): bool
     {
         return $this->status === 'approved';
+    }
+
+    /**
+     * Check if the booking has been completed.
+     */
+    public function isCompleted(): bool
+    {
+        return $this->status === 'completed';
+    }
+
+    /**
+     * Check if the booking was cancelled or rejected.
+     */
+    public function isCancelled(): bool
+    {
+        return $this->status === 'cancelled' || $this->status === 'rejected';
     }
 
     /**
