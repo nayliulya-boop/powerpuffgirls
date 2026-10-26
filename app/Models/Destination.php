@@ -14,10 +14,15 @@ use Illuminate\Database\Eloquent\Model;
     'rating',
     'reviews_count',
     'duration_days',
+    'capacity',
+    'amenities',
+    'start_date',
+    'end_date',
     'description',
     'price',
     'image_path',
     'is_featured',
+    'is_active',
 ])]
 class Destination extends Model
 {
@@ -35,8 +40,12 @@ class Destination extends Model
             'rating' => 'decimal:2',
             'reviews_count' => 'integer',
             'duration_days' => 'integer',
+            'capacity' => 'integer',
+            'start_date' => 'date',
+            'end_date' => 'date',
             'price' => 'decimal:2',
             'is_featured' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 }

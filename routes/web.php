@@ -50,7 +50,10 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/vacations/{vacation}/status', [AdminDashboardController::class, 'updateVacationStatus'])->name('admin.vacations.status');
     Route::post('/admin/destinations', [AdminDashboardController::class, 'storeDestination'])->name('admin.destinations.store');
+    Route::put('/admin/destinations/{destination}', [AdminDashboardController::class, 'updateDestination'])->name('admin.destinations.update');
+    Route::post('/admin/destinations/{destination}/toggle', [AdminDashboardController::class, 'toggleDestinationActive'])->name('admin.destinations.toggle');
     Route::delete('/admin/destinations/{destination}', [AdminDashboardController::class, 'destroyDestination'])->name('admin.destinations.destroy');
+    Route::post('/admin/payments/{payment}/refund', [AdminDashboardController::class, 'refundPayment'])->name('admin.payments.refund');
 
     // Admin Profile Area
     Route::middleware(EnsureUserIsAdmin::class)->group(function (): void {
