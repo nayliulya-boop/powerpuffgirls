@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Destination;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vacation;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +28,7 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Display the Admin Executive Dashboard with agency-wide metrics, bookings, customers, and destinations.
+     * Display the Admin Executive Dashboard with agency-wide metrics, bookings, customers, payments, and packages.
      */
     public function index(Request $request): View|RedirectResponse
     {
@@ -75,7 +76,7 @@ class AdminDashboardController extends Controller
 
         $vacations = $vacationsQuery
             ->orderByRaw($statusOrder)
-            ->orderBy('start_date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $allVacations = Vacation::all();
@@ -88,31 +89,64 @@ class AdminDashboardController extends Controller
         $cancelledCount = $allVacations->whereIn('status', ['cancelled', 'rejected'])->count();
         $upcomingCount = $allVacations->where('status', 'upcoming')->count();
         $ongoingCount = $allVacations->where('status', 'ongoing')->count();
-        $totalRevenue = (float) $allVacations->whereIn('status', ['upcoming', 'ongoing', 'completed', 'approved'])->sum('price');
 
+        // Payments records & statistics
+        $payments = Payment::with(['vacation', 'user'])
+            ->orderBy('paid_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $successfulPaymentsCount = $payments->where('status', 'completed')->count();
+        $successfulPaymentsTotal = (float) $payments->where('status', 'completed')->sum('amount');
+        $totalRevenue = $successfulPaymentsTotal > 0 ? $successfulPaymentsTotal : (float) $allVacations->whereIn('status', ['upcoming', 'ongoing', 'completed', 'approved'])->sum('price');
+
+        // Customer Registry & history
         $loginRoles = DB::table('login')
             ->whereNull('deleted_at')
             ->pluck('role', 'user_id');
 
-        $customers = User::withCount('vacations')
+        $customersQuery = User::withCount('vacations')
             ->withSum([
                 'vacations as total_spend' => function ($query): void {
                     $query->whereIn('status', ['upcoming', 'ongoing', 'completed', 'approved']);
                 },
             ], 'price')
-            ->orderBy('id')
+            ->orderBy('id');
+
+        if ($status === 'all') {
+            $customersQuery->with(['vacations' => function ($query): void {
+                $query->with('latestPayment')->orderBy('created_at', 'desc');
+            }]);
+        }
+
+        $customers = $customersQuery
             ->get()
             ->map(function (User $account) use ($loginRoles): User {
                 $account->setAttribute('role', $loginRoles[$account->id] ?? 'customer');
 
                 return $account;
-            });
+            })
+            ->filter(fn (User $account): bool => $account->role !== 'admin')
+            ->values();
 
-        $destinations = Destination::orderByDesc('is_featured')->orderBy('id')->get();
+        // Destinations catalog
+        $destinations = Destination::orderByDesc('is_featured')->orderBy('id', 'desc')->get();
+
+        // Popular packages report (only generated on default overview to preserve status filter isolation)
+        $popularPackages = $status === 'all' && $search === ''
+            ? DB::table('vacations')
+                ->select('destination', 'title', DB::raw('count(*) as booking_count'), DB::raw('sum(price) as total_revenue'))
+                ->groupBy('destination', 'title')
+                ->orderByDesc('booking_count')
+                ->limit(5)
+                ->get()
+            : collect();
 
         $stats = [
             'totalRevenue' => $totalRevenue,
             'totalBookings' => $totalBookings,
+            'successfulPaymentsCount' => $successfulPaymentsCount,
+            'successfulPaymentsTotal' => $successfulPaymentsTotal,
             'pendingCount' => $pendingCount,
             'pendingApprovalCount' => $pendingCount,
             'approvedCount' => $approvedCount,
@@ -123,6 +157,7 @@ class AdminDashboardController extends Controller
             'ongoingCount' => $ongoingCount,
             'totalCustomers' => $customers->where('role', 'customer')->count(),
             'totalDestinations' => $destinations->count(),
+            'activeDestinations' => $destinations->where('is_active', true)->count(),
         ];
 
         return view('admin.dashboard', [
@@ -133,6 +168,8 @@ class AdminDashboardController extends Controller
             'search' => $search,
             'customers' => $customers,
             'destinations' => $destinations,
+            'payments' => $payments,
+            'popularPackages' => $popularPackages,
         ]);
     }
 
@@ -191,27 +228,99 @@ class AdminDashboardController extends Controller
             'location' => ['required', 'string', 'max:255'],
             'badge' => ['nullable', 'string', 'max:100'],
             'duration_days' => ['required', 'integer', 'min:1', 'max:60'],
-            'price' => ['required', 'numeric', 'min:100'],
+            'capacity' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'amenities' => ['nullable', 'string', 'max:500'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'price' => ['required', 'numeric', 'min:0'],
             'description' => ['required', 'string', 'max:1000'],
             'image_path' => ['nullable', 'url', 'max:500'],
             'is_featured' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'boolean'],
         ]);
 
         Destination::create([
             'title' => $validated['title'],
             'location' => $validated['location'],
-            'badge' => $validated['badge'] ?: 'Exclusive Sanctuary',
+            'badge' => ($validated['badge'] ?? null) ?: 'Exclusive Sanctuary',
             'rating' => 4.95,
             'reviews_count' => random_int(45, 180),
             'duration_days' => $validated['duration_days'],
+            'capacity' => $validated['capacity'] ?? 2,
+            'amenities' => $validated['amenities'] ?? null,
+            'start_date' => $validated['start_date'] ?? null,
+            'end_date' => $validated['end_date'] ?? null,
             'price' => $validated['price'],
             'description' => $validated['description'],
-            'image_path' => $validated['image_path'] ?: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+            'image_path' => ($validated['image_path'] ?? null) ?: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
             'is_featured' => $request->boolean('is_featured'),
+            'is_active' => $request->boolean('is_active', true),
         ]);
 
         return redirect()->route('admin.dashboard')
-            ->with('success', "New luxury destination '{$validated['title']}' has been published to the AzureVoyage catalog.");
+            ->with('success', "New luxury destination '{$validated['title']}' has been published to the catalog.");
+    }
+
+    /**
+     * Update an existing package's info, price, dates, capacity, amenities, and status.
+     */
+    public function updateDestination(Request $request, Destination $destination): RedirectResponse
+    {
+        if (! $this->isAdmin($request->user())) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'badge' => ['nullable', 'string', 'max:100'],
+            'duration_days' => ['required', 'integer', 'min:1', 'max:60'],
+            'capacity' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'amenities' => ['nullable', 'string', 'max:500'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'description' => ['required', 'string', 'max:1000'],
+            'image_path' => ['nullable', 'url', 'max:500'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        $destination->update([
+            'title' => $validated['title'],
+            'location' => $validated['location'],
+            'badge' => ($validated['badge'] ?? null) ?: $destination->badge,
+            'duration_days' => $validated['duration_days'],
+            'capacity' => $validated['capacity'] ?? $destination->capacity,
+            'amenities' => $validated['amenities'] ?? $destination->amenities,
+            'start_date' => $validated['start_date'] ?? $destination->start_date,
+            'end_date' => $validated['end_date'] ?? $destination->end_date,
+            'price' => $validated['price'],
+            'description' => $validated['description'],
+            'image_path' => ($validated['image_path'] ?? null) ?: $destination->image_path,
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        return redirect()->back()
+            ->with('success', "Package '{$destination->title}' updated successfully.");
+    }
+
+    /**
+     * Activate or deactivate a destination package.
+     */
+    public function toggleDestinationActive(Request $request, Destination $destination): RedirectResponse
+    {
+        if (! $this->isAdmin($request->user())) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $destination->update([
+            'is_active' => ! $destination->is_active,
+        ]);
+
+        $status = $destination->is_active ? 'Activated' : 'Deactivated';
+
+        return redirect()->back()
+            ->with('success', "Package '{$destination->title}' has been {$status}.");
     }
 
     /**
@@ -228,5 +337,33 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.dashboard')
             ->with('info', "Destination '{$title}' was removed from the catalog.");
+    }
+
+    /**
+     * Manage and issue a payment refund.
+     */
+    public function refundPayment(Request $request, Payment $payment): RedirectResponse
+    {
+        if (! $this->isAdmin($request->user())) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $timestamp = now()->format('M d, Y H:i');
+
+        $payment->update([
+            'status' => 'refunded',
+            'notes' => trim(($payment->notes ? $payment->notes."\n" : '')."Refunded by Admin on {$timestamp}"),
+        ]);
+
+        if ($payment->vacation) {
+            $payment->vacation->update([
+                'payment_status' => 'refunded',
+                'status' => 'cancelled',
+                'admin_notes' => trim(($payment->vacation->admin_notes ? $payment->vacation->admin_notes."\n" : '')."Payment refunded and reservation cancelled by Admin on {$timestamp}"),
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', "Payment {$payment->transaction_reference} (RM ".number_format((float) $payment->amount, 2).') refunded successfully. Reservation status updated to Cancelled.');
     }
 }

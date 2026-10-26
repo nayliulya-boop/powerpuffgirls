@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class LanguageSwitcherTest extends TestCase
@@ -58,5 +59,54 @@ class LanguageSwitcherTest extends TestCase
         $response->assertOk();
         $response->assertSee('Papan Pemuka');
         $response->assertSee('Semua Tempahan');
+    }
+
+    public function test_settings_page_can_be_rendered(): void
+    {
+        $response = $this->get(route('settings'));
+
+        $response->assertOk();
+        $response->assertSee('Portal Settings & Language');
+        $response->assertSee('English');
+        $response->assertSee('Bahasa Melayu');
+    }
+
+    public function test_settings_page_supports_return_to_url(): void
+    {
+        $response = $this->get(route('settings', ['return_to' => route('customer.dashboard')]));
+
+        $response->assertOk();
+        $response->assertSee(route('customer.dashboard'));
+    }
+
+    public function test_navbar_gear_icon_links_to_settings(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertOk();
+        $response->assertSee(route('settings'));
+    }
+
+    public function test_admin_settings_page_renders_exact_admin_dashboard_topbar(): void
+    {
+        $admin = User::factory()->create([
+            'name' => 'Agency Administrator',
+            'email' => 'admin@azurevoyage.test',
+        ]);
+
+        DB::table('login')->insert([
+            'user_id' => $admin->id,
+            'email' => $admin->email,
+            'password' => $admin->password,
+            'role' => 'admin',
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('settings'));
+
+        $response->assertOk();
+        $response->assertSee('ADMIN COMMAND CENTER');
+        $response->assertSee('Admin Control Center');
+        $response->assertSee('Add Destination');
     }
 }
