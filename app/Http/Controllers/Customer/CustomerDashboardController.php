@@ -72,7 +72,7 @@ class CustomerDashboardController extends Controller
             'status' => $status,
             'search' => $search,
             'nextTrip' => $nextTrip,
-            'destinations' => Destination::all(),
+            'destinations' => Destination::where('is_active', true)->get(),
         ]);
     }
 
