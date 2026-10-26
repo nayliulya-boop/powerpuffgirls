@@ -59,4 +59,30 @@ class LanguageSwitcherTest extends TestCase
         $response->assertSee('Papan Pemuka');
         $response->assertSee('Semua Tempahan');
     }
+
+    public function test_settings_page_can_be_rendered(): void
+    {
+        $response = $this->get(route('settings'));
+
+        $response->assertOk();
+        $response->assertSee('Portal Settings & Language');
+        $response->assertSee('English');
+        $response->assertSee('Bahasa Melayu');
+    }
+
+    public function test_settings_page_supports_return_to_url(): void
+    {
+        $response = $this->get(route('settings', ['return_to' => route('customer.dashboard')]));
+
+        $response->assertOk();
+        $response->assertSee(route('customer.dashboard'));
+    }
+
+    public function test_navbar_gear_icon_links_to_settings(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertOk();
+        $response->assertSee(route('settings'));
+    }
 }
