@@ -49,7 +49,6 @@ Route::post('/signup', [RegisterController::class, 'store'])
     ->name('signup.store');
 
 Route::view('/about', 'about')->name('about');
-Route::view('/customer', 'customer')->name('customer');
 
 // Authenticated Area (Admin & Customer)
 Route::middleware('auth')->group(function (): void {
