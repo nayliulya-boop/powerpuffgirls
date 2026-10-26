@@ -769,10 +769,13 @@
                                     data-title="{{ $dest->title }}"
                                     data-price="{{ $dest->price }}"
                                     data-days="{{ $dest->duration_days ?? 4 }}"
+                                    data-start="{{ $dest->start_date ? $dest->start_date->format('Y-m-d') : '' }}"
+                                    data-end="{{ $dest->end_date ? $dest->end_date->format('Y-m-d') : '' }}"
+                                    data-dates-label="{{ $dest->start_date && $dest->end_date ? $dest->start_date->format('d M Y') . ' — ' . $dest->end_date->format('d M Y') : ($dest->duration_days ? $dest->duration_days . ' Days Trip' : 'Open Booking') }}"
                                     data-image="{{ $dest->image_path ? (str_starts_with($dest->image_path, 'http') ? $dest->image_path : asset($dest->image_path)) : 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' }}"
                                     @selected($loop->first)
                                 >
-                                    {{ $dest->title }} — {{ $dest->location }} (RM {{ number_format($dest->price, 2) }} / malam)
+                                    {{ $dest->title }} — {{ $dest->location }} (RM {{ number_format($dest->price, 2) }})
                                 </option>
                             @empty
                                 <option value="" disabled selected>Tiada destinasi ditemui dalam pangkalan data</option>
@@ -795,6 +798,7 @@
                                 >
                                     <span>📍</span>
                                     <span>{{ $dest->title }}</span>
+                                    <span class="text-[10px] font-extrabold text-sky-700 bg-white px-1.5 py-0.5 rounded-md border border-sky-200">RM {{ number_format($dest->price, 2) }}</span>
                                 </button>
                             @endforeach
                         </div>
@@ -825,9 +829,14 @@
                             <p id="previewDestLocation" class="text-xs font-semibold text-slate-600 truncate">
                                 Malaysia • Pulau Redang, Terengganu
                             </p>
-                            <div class="mt-1 text-xs font-extrabold text-sky-900 flex items-center gap-2">
-                                <span id="previewDestPrice">RM 1,250.00 / malam</span>
-                                <span class="text-[10px] font-bold text-slate-400">• Bayaran Terus Dalam Talian</span>
+                            <div class="mt-2 flex flex-wrap items-center gap-2">
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-sm font-extrabold text-xs">
+                                    <span class="text-[10px] uppercase font-bold text-sky-100 tracking-wider">Package Price:</span>
+                                    <span id="previewDestPrice">RM 1,250.00</span>
+                                </div>
+                                <span id="previewDestSchedule" class="text-[11px] font-bold text-slate-700 bg-white/90 border border-sky-200 px-2.5 py-1 rounded-xl shadow-xs">
+                                    📅 Open Booking
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -835,39 +844,8 @@
                     <!-- Hidden Inputs for Form Submission (Auto-filled by JS) -->
                     <input type="hidden" id="destinationInput" name="destination" value="">
                     <input type="hidden" id="titleInput" name="title" value="">
-                </div>
-
-                <!-- Dates (Departure & Return) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="startDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            {{ __('Departure Date') }} *
-                        </label>
-                        <input
-                            type="date"
-                            id="startDateInput"
-                            name="start_date"
-                            required
-                            value="{{ now()->addDays(7)->format('Y-m-d') }}"
-                            min="{{ now()->format('Y-m-d') }}"
-                            onchange="onStartDateChange()"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
-                        >
-                    </div>
-                    <div>
-                        <label for="endDateInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            {{ __('Return Date') }} *
-                        </label>
-                        <input
-                            type="date"
-                            id="endDateInput"
-                            name="end_date"
-                            required
-                            value="{{ now()->addDays(11)->format('Y-m-d') }}"
-                            min="{{ now()->addDay()->format('Y-m-d') }}"
-                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white"
-                        >
-                    </div>
+                    <input type="hidden" id="startDateInput" name="start_date" value="">
+                    <input type="hidden" id="endDateInput" name="end_date" value="">
                 </div>
 
                 <!-- Guests & Tier -->
@@ -1046,10 +1024,19 @@
             const price = parseFloat(selectedOpt.getAttribute('data-price') || '0');
             const days = parseInt(selectedOpt.getAttribute('data-days') || '4', 10);
             const img = selectedOpt.getAttribute('data-image') || '';
+            const startDate = selectedOpt.getAttribute('data-start') || '';
+            const endDate = selectedOpt.getAttribute('data-end') || '';
+            const datesLabel = selectedOpt.getAttribute('data-dates-label') || '';
 
             // Auto-fill hidden inputs
             document.getElementById('destinationInput').value = loc;
             document.getElementById('titleInput').value = title;
+            if (document.getElementById('startDateInput')) {
+                document.getElementById('startDateInput').value = startDate;
+            }
+            if (document.getElementById('endDateInput')) {
+                document.getElementById('endDateInput').value = endDate;
+            }
 
             // Update live preview card
             const previewCard = document.getElementById('selectedDestinationPreview');
@@ -1057,8 +1044,12 @@
                 previewCard.classList.remove('hidden');
                 document.getElementById('previewDestTitle').textContent = title;
                 document.getElementById('previewDestLocation').textContent = loc;
-                document.getElementById('previewDestPrice').textContent = 'RM ' + price.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' / malam';
+                document.getElementById('previewDestPrice').textContent = 'RM ' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
                 document.getElementById('previewDestDays').textContent = days + ' Hari / ' + Math.max(1, days - 1) + ' Malam';
+                const schedEl = document.getElementById('previewDestSchedule');
+                if (schedEl) {
+                    schedEl.textContent = '📅 ' + (datesLabel || 'Ditetapkan oleh Admin');
+                }
                 if (img) {
                     document.getElementById('previewDestImg').src = img;
                 }
@@ -1074,9 +1065,6 @@
                     chip.classList.add('bg-sky-50', 'text-sky-800');
                 }
             });
-
-            // Automatically recalculate return date based on departure date + duration
-            updateEndDateFromDuration(days);
         }
 
         function pickDestinationById(id) {
@@ -1084,29 +1072,6 @@
             if (!selectEl) return;
             selectEl.value = id;
             onDestinationChange(selectEl);
-        }
-
-        function onStartDateChange() {
-            const selectEl = document.getElementById('destinationSelect');
-            if (!selectEl) return;
-            const selectedOpt = selectEl.options[selectEl.selectedIndex];
-            const days = parseInt(selectedOpt?.getAttribute('data-days') || '4', 10);
-            updateEndDateFromDuration(days);
-        }
-
-        function updateEndDateFromDuration(days) {
-            const startInput = document.getElementById('startDateInput');
-            const endInput = document.getElementById('endDateInput');
-            if (startInput && startInput.value && endInput) {
-                const startDate = new Date(startInput.value);
-                if (!isNaN(startDate.getTime())) {
-                    startDate.setDate(startDate.getDate() + (days || 4));
-                    const yyyy = startDate.getFullYear();
-                    const mm = String(startDate.getMonth() + 1).padStart(2, '0');
-                    const dd = String(startDate.getDate()).padStart(2, '0');
-                    endInput.value = `${yyyy}-${mm}-${dd}`;
-                }
-            }
         }
 
         // Initialize default selection on page load
