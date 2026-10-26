@@ -63,98 +63,158 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white overflow-x-hidden">
 
-    <!-- Top VIP Notification Bar -->
-    <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-xs sm:text-sm py-2 px-4 shadow-sm border-b border-sky-900/40">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-900 shadow-sm">
-                    ⚙️ {{ __('System Settings') }}
-                </span>
-                <span class="text-slate-200">
-                    {{ __('AzureVoyage Global Localization & Preferences Control Desk') }}
-                </span>
-            </div>
-            <div class="hidden md:flex items-center gap-6 text-xs text-sky-200">
-                <span class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    {{ __('Language Engine') }}: <strong class="text-white">{{ strtoupper(app()->getLocale()) }}</strong>
-                </span>
-                <span>24/7 {{ __('Dedicated Concierge') }}: <strong>+1 (800) 429-8732</strong></span>
+    @if ($user && $user->isAdmin())
+        <!-- Top Admin Executive Bar -->
+        <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-xs sm:text-sm py-2.5 px-4 shadow-sm border-b border-sky-900/40">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-400 text-slate-950 shadow-sm">
+                        ⚡ ADMIN COMMAND CENTER
+                    </span>
+                    <span class="text-slate-200">
+                        Signed in as Executive Administrator: <strong class="text-white">{{ $user->name }}</strong> ({{ $user->email }})
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center gap-6 text-xs text-sky-200">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Global Concierge Operations: <strong>Active</strong>
+                    </span>
+                    <span>Role: <strong class="text-amber-300 uppercase tracking-wider">Administrator</strong></span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Main Navigation Bar -->
-    <header class="sticky top-0 z-40 glass-nav shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Brand / Logo -->
-                <a href="{{ $user ? ($user->isAdmin() ? route('admin.dashboard') : route('customer.dashboard')) : route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
-                        <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                            <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
-                            Azure<span class="text-sky-600">Voyage</span>
-                        </span>
-                        <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-600 -mt-1">
-                            {{ __('Luxury Traveler Portal') }}
-                        </span>
-                    </div>
-                </a>
-
-                <!-- Navigation Links & User Menu -->
-                <div class="flex items-center gap-3 sm:gap-6">
-                    <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                        @if ($user)
-                            @if ($user->isAdmin())
-                                <a href="{{ route('admin.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                                    {{ __('Dashboard') }}
-                                </a>
-                                <a href="{{ route('admin.bookings.index') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                                    {{ __('Bookings') }}
-                                </a>
-                                <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    {{ __('Admin Profile') }}
-                                </a>
-                            @else
-                                <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                                    {{ __('Dashboard') }}
-                                </a>
-                                <a href="{{ route('customer.profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    {{ __('My Profile') }}
-                                </a>
-                                <a href="{{ route('customer.history') }}" class="hover:text-sky-600 transition flex items-center gap-1.5 whitespace-nowrap">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    {{ __('History') }}
-                                </a>
-                            @endif
-                        @else
-                            <a href="{{ route('home') }}" class="hover:text-sky-600 transition">{{ __('Home') }}</a>
-                            <a href="{{ route('about') }}" class="hover:text-sky-600 transition">{{ __('About') }}</a>
-                            <a href="{{ route('login') }}" class="hover:text-sky-600 transition">{{ __('Login') }}</a>
-                        @endif
-                    </nav>
-
-                    <!-- Active Settings Indicator -->
-                    <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200 shadow-sm">
-                            <svg class="w-4 h-4 text-sky-600 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <!-- Main Navigation Bar -->
+        <header class="sticky top-0 z-40 glass-nav shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20 gap-4">
+                    <!-- Brand / Logo -->
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group shrink-0">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-900 via-sky-700 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                                <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
                             </svg>
-                            <span>{{ __('Settings') }}</span>
-                        </span>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
+                                Azure<span class="text-sky-600">Voyage</span>
+                            </span>
+                            <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-700 -mt-1 whitespace-nowrap">
+                                Admin Control Center
+                            </span>
+                        </div>
+                    </a>
 
-                        @if ($user)
+                    <!-- Navigation Links & Admin Actions -->
+                    <div class="flex items-center gap-3 sm:gap-6">
+                        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                            <a href="{{ route('admin.dashboard') }}#bookings-management" class="hover:text-sky-600 transition">{{ __('Bookings') }}</a>
+                            <a href="{{ route('admin.dashboard') }}#clients-directory" class="hover:text-sky-600 transition">VIP Clients</a>
+                            <a href="{{ route('admin.dashboard') }}#destinations-catalog" class="hover:text-sky-600 transition">{{ __('Destination') }}</a>
+                            <a href="{{ route('admin.profile') }}" class="hover:text-sky-600 transition">{{ __('Admin Profile') }}</a>
+                            <a href="{{ route('home') }}" class="hover:text-sky-600 transition flex items-center gap-1">
+                                <span>{{ __('Home') }}</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                            </a>
+                        </nav>
+
+                        <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('admin.dashboard') }}#new-destination-form" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-sky-500/20 transition whitespace-nowrap">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Add Destination
+                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-700 text-xs sm:text-sm font-semibold transition shadow-sm whitespace-nowrap">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    {{ __('Sign Out') }}
+                                </button>
+                            </form>
+
+                            @include('partials.language-switcher')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    @elseif ($user)
+        <!-- Top Customer Executive Bar -->
+        <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-xs sm:text-sm py-2.5 px-4 shadow-sm border-b border-sky-900/40">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-900 shadow-sm">
+                        ★ VIP TRAVELER
+                    </span>
+                    <span class="text-slate-200">
+                        Welcome to your private traveler sanctuary, <strong class="text-white">{{ $user->name }}</strong>.
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center gap-6 text-xs text-sky-200">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        24/7 Dedicated Concierge Online: <strong>+1 (800) 429-8732</strong>
+                    </span>
+                    <span>Passport ID: <strong class="text-white">AV-{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Customer Navigation Bar -->
+        <header class="sticky top-0 z-40 glass-nav shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Brand / Logo -->
+                    <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                                <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
+                                Azure<span class="text-sky-600">Voyage</span>
+                            </span>
+                            <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-600 -mt-1">
+                                Luxury Traveler Portal
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links & User Menu -->
+                    <div class="flex items-center gap-3 sm:gap-6">
+                        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                            <a href="{{ route('customer.dashboard') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                {{ __('Dashboard') }}
+                            </a>
+                            <a href="{{ route('profile') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                {{ __('My Profile') }}
+                            </a>
+                            <a href="{{ route('customer.history') }}" class="hover:text-sky-600 transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                {{ __('History') }}
+                            </a>
+                        </nav>
+
+                        <!-- User Profile & Sign Out -->
+                        <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
+                            <a href="{{ route('profile') }}" title="{{ __('Edit Profile') }}" class="flex items-center gap-2.5 group hover:opacity-90 transition">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-700 text-white font-extrabold flex items-center justify-center text-sm shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                </div>
+                                <div class="hidden sm:block text-left">
+                                    <span class="text-sm font-bold text-slate-900 block leading-tight group-hover:text-sky-600 transition">{{ $user->name }}</span>
+                                    <span class="text-xs font-semibold text-sky-600 block">{{ __('Edit Profile') . ' →' }}</span>
+                                </div>
+                            </a>
+
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
                                 <button
@@ -166,12 +226,69 @@
                                     <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                                 </button>
                             </form>
-                        @endif
+
+                            @include('partials.language-switcher')
+                        </div>
                     </div>
                 </div>
             </div>
+        </header>
+    @else
+        <!-- Top Guest Bar -->
+        <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white text-xs sm:text-sm py-2 px-4 shadow-sm border-b border-sky-900/40">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-900 shadow-sm">
+                        ⚙️ {{ __('System Settings') }}
+                    </span>
+                    <span class="text-slate-200">
+                        {{ __('AzureVoyage Global Localization & Preferences Control Desk') }}
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center gap-6 text-xs text-sky-200">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        {{ __('Language Engine') }}: <strong class="text-white">{{ strtoupper(app()->getLocale()) }}</strong>
+                    </span>
+                    <span>24/7 {{ __('Dedicated Concierge') }}: <strong>+1 (800) 429-8732</strong></span>
+                </div>
+            </div>
         </div>
-    </header>
+
+        <header class="sticky top-0 z-40 glass-nav shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-sky-500/25 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-6 h-6 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                                <polygon points="12 4 15 12 12 20 9 12" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center whitespace-nowrap">
+                                Azure<span class="text-sky-600">Voyage</span>
+                            </span>
+                            <span class="block text-[10px] uppercase tracking-widest font-bold text-sky-600 -mt-1">
+                                Luxury Travel Agency
+                            </span>
+                        </div>
+                    </a>
+
+                    <div class="flex items-center gap-3 sm:gap-6">
+                        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                            <a href="{{ route('home') }}" class="hover:text-sky-600 transition">{{ __('Home') }}</a>
+                            <a href="{{ route('about') }}" class="hover:text-sky-600 transition">{{ __('About') }}</a>
+                            <a href="{{ route('login') }}" class="hover:text-sky-600 transition">{{ __('Login') }}</a>
+                        </nav>
+                        <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
+                            @include('partials.language-switcher')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    @endif
 
     <!-- Main Container -->
     <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1 w-full space-y-8">

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class LanguageSwitcherTest extends TestCase
@@ -84,5 +85,28 @@ class LanguageSwitcherTest extends TestCase
 
         $response->assertOk();
         $response->assertSee(route('settings'));
+    }
+
+    public function test_admin_settings_page_renders_exact_admin_dashboard_topbar(): void
+    {
+        $admin = User::factory()->create([
+            'name' => 'Agency Administrator',
+            'email' => 'admin@azurevoyage.test',
+        ]);
+
+        DB::table('login')->insert([
+            'user_id' => $admin->id,
+            'email' => $admin->email,
+            'password' => $admin->password,
+            'role' => 'admin',
+            'created_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('settings'));
+
+        $response->assertOk();
+        $response->assertSee('ADMIN COMMAND CENTER');
+        $response->assertSee('Admin Control Center');
+        $response->assertSee('Add Destination');
     }
 }
