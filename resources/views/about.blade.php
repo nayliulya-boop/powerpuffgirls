@@ -122,10 +122,6 @@
                         <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>{{ __('About') }}</span>
                     </a>
-                    <a href="{{ route('customer') }}" class="text-slate-600 hover:text-sky-600 transition flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        <span>{{ __('Customer') }}</span>
-                    </a>
                 </nav>
 
                 <!-- Actions / Login & Logout & Language Switcher -->
@@ -172,10 +168,6 @@
             <a href="{{ route('about') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-base font-semibold text-sky-600 bg-sky-50">
                 <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span>{{ __('About') }}</span>
-            </a>
-            <a href="{{ route('customer') }}" class="flex items-center gap-2.5 py-2.5 px-3 rounded-xl text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-sky-600 transition">
-                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span>{{ __('Customer') }}</span>
             </a>
             <div class="pt-3 border-t border-slate-100">
                 <a href="{{ url('/login') }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 shadow-md shadow-sky-500/20 transition gap-2">
@@ -623,7 +615,6 @@
                 <div class="flex items-center gap-6 text-xs font-semibold text-slate-300">
                     <a href="{{ route('home') }}" class="hover:text-white transition">Home</a>
                     <a href="{{ route('about') }}" class="text-sky-400 font-bold">About</a>
-                    <a href="{{ route('customer') }}" class="hover:text-white transition">Customer</a>
                     <a href="{{ url('/login') }}" class="hover:text-white transition">Login</a>
                 </div>
             </div>
