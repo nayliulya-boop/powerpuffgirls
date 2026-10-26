@@ -131,20 +131,20 @@
 
                     </nav>
 
-                    @include('partials.language-switcher')
-
                     <!-- Logout Form -->
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button
                             type="submit"
                             title="{{ __('Sign Out') }}"
-                            class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-300 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-slate-700 transition flex items-center gap-1.5"
+                            class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-300 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-slate-700 transition flex items-center gap-1.5 whitespace-nowrap"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                             <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                         </button>
                     </form>
+
+                    @include('partials.language-switcher')
                 </div>
             </div>
         </div>

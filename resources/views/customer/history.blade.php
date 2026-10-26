@@ -128,8 +128,6 @@
                         @endif
                     </nav>
 
-                    @include('partials.language-switcher')
-
                     <!-- User Profile & Sign Out -->
                     <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
                         <a href="{{ route('customer.profile') }}" title="{{ __('Edit Profile') }}" class="flex items-center gap-2.5 group hover:opacity-90 transition">
@@ -154,6 +152,8 @@
                                 <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                             </button>
                         </form>
+
+                        @include('partials.language-switcher')
                     </div>
                 </div>
             </div>
