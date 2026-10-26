@@ -54,15 +54,15 @@
         };
 
         @if (session('status'))
-            toastr.success(@json(session('status')), 'Notification');
+            toastr.success(@json(session('status')), @json(__('Notification')));
         @endif
 
         @if (session('success'))
-            toastr.success(@json(session('success')), 'Success');
+            toastr.success(@json(session('success')), @json(__('Success')));
         @endif
 
         @if (session('info'))
-            toastr.info(@json(session('info')), 'Notice');
+            toastr.info(@json(session('info')), @json(__('Notice')));
         @endif
 
         // Attach Toastr confirmation popup to all logout forms
@@ -77,18 +77,18 @@
                 toastr.clear();
 
                 const confirmHtml = `
-                    <div>Are you sure you want to log out of your account?</div>
+                    <div>{{ __('Are you sure you want to log out of your account?') }}</div>
                     <div style="margin-top: 12px; display: flex; gap: 8px;">
                         <button type="button" id="toastr-confirm-logout-btn" style="background: #ef4444; color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer;">
-                            Yes, Log Out
+                            {{ __('Yes, Log Out') }}
                         </button>
                         <button type="button" id="toastr-cancel-logout-btn" style="background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer;">
-                            Cancel
+                            {{ __('Cancel') }}
                         </button>
                     </div>
                 `;
 
-                const $toast = toastr.warning(confirmHtml, 'Confirm Logout', {
+                const $toast = toastr.warning(confirmHtml, @json(__('Confirm Logout')), {
                     timeOut: 0,
                     extendedTimeOut: 0,
                     closeButton: true,
@@ -102,7 +102,7 @@
                     $toast.on('click', '#toastr-confirm-logout-btn', function () {
                         form.dataset.confirmed = 'true';
                         toastr.clear($toast, { force: true });
-                        toastr.info('Signing you out safely...', 'Logging Out', {
+                        toastr.info(@json(__('Signing you out safely...')), @json(__('Logging Out')), {
                             timeOut: 2000,
                             progressBar: true,
                             positionClass: 'toast-top-right'
