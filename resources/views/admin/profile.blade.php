@@ -117,8 +117,6 @@
                         </a>
                     </nav>
 
-                    @include('partials.language-switcher')
-
                     <!-- User Profile & Sign Out -->
                     <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
                         <div class="flex items-center gap-2.5">
@@ -137,12 +135,14 @@
                             <button
                                 type="submit"
                                 title="{{ __('Sign Out') }}"
-                                class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition flex items-center gap-1.5"
+                                class="p-2 sm:px-3 sm:py-2 text-xs font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl border border-slate-200 hover:border-red-200 transition flex items-center gap-1.5 whitespace-nowrap"
                             >
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 <span class="hidden sm:inline">{{ __('Sign Out') }}</span>
                             </button>
                         </form>
+
+                        @include('partials.language-switcher')
                     </div>
                 </div>
             </div>
