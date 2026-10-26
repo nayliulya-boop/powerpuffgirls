@@ -157,8 +157,8 @@ class CustomerDashboardController extends Controller
             'destination_id' => ['required_without:destination', 'nullable', 'integer'],
             'destination' => ['required_without:destination_id', 'nullable', 'string', 'max:255'],
             'title' => ['required_without:destination_id', 'nullable', 'string', 'max:255'],
-            'start_date' => ['required', 'date', 'after_or_equal:today'],
-            'end_date' => ['required', 'date', 'after:start_date'],
+            'start_date' => ['required_without:destination_id', 'nullable', 'date'],
+            'end_date' => ['required_without:destination_id', 'nullable', 'date'],
             'travelers_count' => ['required', 'integer', 'min:1', 'max:12'],
             'tier' => ['required', 'string', 'in:Signature Gold,Platinum Horizon,Diamond Sovereign'],
             'notes' => ['nullable', 'string', 'max:1000'],
@@ -178,23 +178,38 @@ class CustomerDashboardController extends Controller
         $title = $destinationModel ? $destinationModel->title : ($validated['title'] ?? 'Luxury Travel Escape');
         $imageUrl = $destinationModel?->image_path ?: null;
 
-        $startDate = Carbon::parse($validated['start_date']);
-        $endDate = Carbon::parse($validated['end_date']);
-        $nights = max(1, $startDate->diffInDays($endDate));
+        if ($destinationModel) {
+            $startDate = ! empty($validated['start_date'])
+                ? Carbon::parse($validated['start_date'])
+                : ($destinationModel->start_date ? Carbon::parse($destinationModel->start_date) : now()->addDays(7));
 
-        $baseRate = $destinationModel ? (float) $destinationModel->price : match ($validated['tier']) {
-            'Diamond Sovereign' => 1850.00,
-            'Platinum Horizon' => 1250.00,
-            default => 850.00,
-        };
+            $endDate = ! empty($validated['end_date'])
+                ? Carbon::parse($validated['end_date'])
+                : ($destinationModel->end_date
+                    ? Carbon::parse($destinationModel->end_date)
+                    : (clone $startDate)->addDays($destinationModel->duration_days ?: 4));
 
-        $tierMultiplier = match ($validated['tier']) {
-            'Diamond Sovereign' => 1.35,
-            'Platinum Horizon' => 1.15,
-            default => 1.0,
-        };
+            // Use exact package price set by admin
+            $price = (float) $destinationModel->price;
+        } else {
+            $startDate = Carbon::parse($validated['start_date'] ?? now()->addDays(7));
+            $endDate = Carbon::parse($validated['end_date'] ?? (clone $startDate)->addDays(4));
+            $nights = max(1, $startDate->diffInDays($endDate));
 
-        $price = round($baseRate * $nights * $tierMultiplier * (1 + ($validated['travelers_count'] - 1) * 0.35), 2);
+            $baseRate = match ($validated['tier']) {
+                'Diamond Sovereign' => 1850.00,
+                'Platinum Horizon' => 1250.00,
+                default => 850.00,
+            };
+
+            $tierMultiplier = match ($validated['tier']) {
+                'Diamond Sovereign' => 1.35,
+                'Platinum Horizon' => 1.15,
+                default => 1.0,
+            };
+
+            $price = round($baseRate * $nights * $tierMultiplier * (1 + ($validated['travelers_count'] - 1) * 0.35), 2);
+        }
 
         if (! $imageUrl) {
             $destinationLower = strtolower($destination);
@@ -222,8 +237,8 @@ class CustomerDashboardController extends Controller
             'package_code' => $packageCode,
             'destination' => $destination,
             'title' => $title,
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
             'travelers_count' => $validated['travelers_count'],
             'price' => $price,
             'status' => 'approved',
