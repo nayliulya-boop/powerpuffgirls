@@ -17,6 +17,22 @@ class VoucherPdfService
     {
         $vacation->loadMissing(['user', 'latestPayment', 'reviewer']);
 
+        if (! class_exists('TCPDF')) {
+            $tcpdfFile = base_path('vendor/tecnickcom/tcpdf/tcpdf.php');
+            if (file_exists($tcpdfFile)) {
+                require_once $tcpdfFile;
+            }
+        }
+
+        if (! class_exists('TCPDF')) {
+            $html = $this->buildHtml($vacation);
+            $printJs = ($mode === 'print') ? '<script>window.onload=function(){window.print();};</script>' : '';
+
+            return response('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Voucher #'.($vacation->package_code ?? $vacation->id).'</title><style>body{font-family:sans-serif;margin:20px;}</style></head><body>'.$html.$printJs.'</body></html>', 200, [
+                'Content-Type' => 'text/html; charset=UTF-8',
+            ]);
+        }
+
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // Document Metadata
