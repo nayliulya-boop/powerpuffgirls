@@ -174,7 +174,7 @@
             <div class="rounded-[1.6rem] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
 
                 <!-- Left Frosted Glass Showcase Panel -->
-                <div class="lg:col-span-5 glass-showcase text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+                <div class="lg:col-span-5 glass-showcase text-white p-8 sm:p-10 flex flex-col relative overflow-hidden">
                     <!-- Specular Light Highlight -->
                     <div class="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-cyan-300/25 blur-2xl pointer-events-none"></div>
                     <div class="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-sky-400/20 blur-2xl pointer-events-none"></div>
@@ -202,8 +202,8 @@
                         </span>
                     </div>
 
-                    <!-- Center Editorial Copy -->
-                    <div class="relative z-10 my-10 space-y-5">
+                    <!-- Centered Editorial Copy -->
+                    <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center py-8 space-y-5">
                         <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-bold text-cyan-100 tracking-wide">
                             <span>🌴</span>
                             <span>Instant Horizon Silver Status</span>
@@ -211,38 +211,9 @@
                         <h2 class="font-extrabold text-3xl sm:text-4xl leading-tight text-white drop-shadow-sm">
                             Begin Your Journey Into Effortless Luxury.
                         </h2>
-                        <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed">
+                        <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed max-w-xs">
                             Create your personal <strong>AzureVoyage</strong> account to unlock private villa rates, bespoke itinerary curation, and 24/7 dedicated concierge service.
                         </p>
-
-                        <!-- Floating Glass Perks -->
-                        <div class="space-y-2.5 pt-2">
-                            <div class="glass-pill rounded-2xl p-3.5 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm shrink-0">🎁</span>
-                                <div>
-                                    <div class="text-xs font-extrabold text-white">$150 Welcome Travel Credit</div>
-                                    <div class="text-[11px] text-sky-100/85">Automatically applied toward your first escape</div>
-                                </div>
-                            </div>
-                            <div class="glass-pill rounded-2xl p-3.5 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm shrink-0">🛎️</span>
-                                <div>
-                                    <div class="text-xs font-extrabold text-white">24/7 White-Glove Concierge</div>
-                                    <div class="text-[11px] text-sky-100/85">Dedicated specialist for flights, yachts & villas</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Glass Destination Badge -->
-                    <div class="relative z-10 glass-pill rounded-2xl p-4 flex items-center justify-between gap-3">
-                        <div>
-                            <div class="text-[11px] font-bold uppercase tracking-widest text-cyan-200">Trusted Worldwide</div>
-                            <div class="text-sm font-extrabold text-white mt-0.5">42,800+ Verified Luxury Travelers</div>
-                        </div>
-                        <span class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
-                            ✈️
-                        </span>
                     </div>
                 </div>
 
@@ -290,7 +261,7 @@
                                         value="{{ old('name') }}"
                                         required
                                         autocomplete="name"
-                                        placeholder="Jane Doe"
+                                        placeholder="Nayla Izzati Boolat"
                                         class="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none"
                                     >
                                 </div>
@@ -311,7 +282,7 @@
                                         value="{{ old('email') }}"
                                         required
                                         autocomplete="email"
-                                        placeholder="traveler@azurevoyage.com"
+                                        placeholder="izzatiboolat@gmail.com"
                                         class="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none"
                                     >
                                 </div>
