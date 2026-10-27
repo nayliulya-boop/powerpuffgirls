@@ -174,7 +174,7 @@
             <div class="rounded-[1.6rem] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
 
                 <!-- Left Frosted Glass Showcase Panel -->
-                <div class="lg:col-span-5 glass-showcase text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+                <div class="lg:col-span-5 glass-showcase text-white p-8 sm:p-10 flex flex-col relative overflow-hidden">
                     <!-- Specular Light Highlight -->
                     <div class="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-cyan-300/25 blur-2xl pointer-events-none"></div>
                     <div class="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-sky-400/20 blur-2xl pointer-events-none"></div>
@@ -202,8 +202,8 @@
                         </span>
                     </div>
 
-                    <!-- Center Editorial Copy -->
-                    <div class="relative z-10 my-10 space-y-5">
+                    <!-- Centered Editorial Copy -->
+                    <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center py-8 space-y-5">
                         <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-xs font-bold text-cyan-100 tracking-wide">
                             <span>✨</span>
                             <span>Explorer Member Club</span>
@@ -211,7 +211,7 @@
                         <h1 class="font-extrabold text-3xl sm:text-4xl leading-tight text-white drop-shadow-sm">
                             Where Blue Skies Meet Crystal Horizons.
                         </h1>
-                        <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed">
+                        <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed max-w-xs">
                             Sign in to your <strong>AzureVoyage</strong> account to manage your flight tickets, overwater villas, and 24/7 concierge requests.
                         </p>
                     </div>
@@ -256,7 +256,7 @@
                                         id="email"
                                         name="email"
                                         value="{{ old('email') }}"
-                                        placeholder="traveler@azurevoyage.com"
+                                        placeholder="ulyaboolat@gmail.com"
                                         autocomplete="email"
                                         required
                                         class="w-full pl-12 pr-4 py-3.5 rounded-2xl glass-input text-sm sm:text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none"
