@@ -194,7 +194,7 @@
                             AzureVoyage Executive Portal
                         </div>
                         <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                            Welcome Admin, {{ $user->name }}
+                            Welcome Admin, 
                         </h1>
                         <p class="text-sky-100/80 text-sm sm:text-base leading-relaxed">
                             Comprehensive travel agency management suite: oversee real-time client reservations, packages catalog, payment settlements, customer histories, and performance analytics.
