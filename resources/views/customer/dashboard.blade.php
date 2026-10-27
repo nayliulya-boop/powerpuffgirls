@@ -851,6 +851,24 @@
                 <!-- Guests & Tier -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
+                        <label for="travelersCountInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                            {{ __('Guests') }} *
+                        </label>
+                        <select
+                            id="travelersCountInput"
+                            name="travelers_count"
+                            required
+                            class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white cursor-pointer"
+                        >
+                            <option value="1">1 Tetamu (Solo VIP)</option>
+                            <option value="2" selected>2 Tetamu (Couples Escape)</option>
+                            <option value="3">3 Tetamu</option>
+                            <option value="4">4 Tetamu (Keluarga / Rakan)</option>
+                            <option value="6">6 Tetamu (Kumpulan Villa Mewah)</option>
+                            <option value="8">8 Tetamu (Private Estate)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label for="tierInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                             Pakej VIP (Experience Tier) *
                         </label>
