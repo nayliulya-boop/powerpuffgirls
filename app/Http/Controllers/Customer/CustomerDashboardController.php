@@ -184,6 +184,11 @@ class CustomerDashboardController extends Controller
         $title = $destinationModel ? $destinationModel->title : ($validated['title'] ?? 'Luxury Travel Escape');
         $imageUrl = $destinationModel?->image_path ?: null;
 
+        $travelersCount = max(1, (int) ($validated['travelers_count'] ?? 1));
+        if ($destinationModel && $destinationModel->capacity && $travelersCount > (int) $destinationModel->capacity) {
+            $travelersCount = (int) $destinationModel->capacity;
+        }
+
         if ($destinationModel) {
             $startDate = ! empty($validated['start_date'])
                 ? Carbon::parse($validated['start_date'])
@@ -195,8 +200,8 @@ class CustomerDashboardController extends Controller
                     ? Carbon::parse($destinationModel->end_date)
                     : (clone $startDate)->addDays($destinationModel->duration_days ?: 4));
 
-            // Use exact package price set by admin
-            $price = (float) $destinationModel->price;
+            // Price is for 1 capacity, auto-calculated based on capacity chosen by customer
+            $price = round((float) $destinationModel->price * $travelersCount, 2);
         } else {
             $startDate = Carbon::parse($validated['start_date'] ?? now()->addDays(7));
             $endDate = Carbon::parse($validated['end_date'] ?? (clone $startDate)->addDays(4));
@@ -214,7 +219,7 @@ class CustomerDashboardController extends Controller
                 default => 1.0,
             };
 
-            $price = round($baseRate * $nights * $tierMultiplier * (1 + ($validated['travelers_count'] - 1) * 0.35), 2);
+            $price = round($baseRate * $nights * $tierMultiplier * (1 + ($travelersCount - 1) * 0.35), 2);
         }
 
         if (! $imageUrl) {
@@ -245,7 +250,7 @@ class CustomerDashboardController extends Controller
             'title' => $title,
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
-            'travelers_count' => $validated['travelers_count'],
+            'travelers_count' => $travelersCount,
             'price' => $price,
             'status' => 'approved',
             'payment_status' => 'unpaid',

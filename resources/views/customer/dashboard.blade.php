@@ -768,6 +768,7 @@
                                     data-location="{{ $dest->location }}"
                                     data-title="{{ $dest->title }}"
                                     data-price="{{ $dest->price }}"
+                                    data-capacity="{{ $dest->capacity ?? 2 }}"
                                     data-days="{{ $dest->duration_days ?? 4 }}"
                                     data-start="{{ $dest->start_date ? $dest->start_date->format('Y-m-d') : '' }}"
                                     data-end="{{ $dest->end_date ? $dest->end_date->format('Y-m-d') : '' }}"
@@ -775,7 +776,7 @@
                                     data-image="{{ $dest->image_path ? (str_starts_with($dest->image_path, 'http') ? $dest->image_path : asset($dest->image_path)) : 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' }}"
                                     @selected($loop->first)
                                 >
-                                    {{ $dest->title }} — {{ $dest->location }} (RM {{ number_format($dest->price, 2) }})
+                                    {{ $dest->title }} — {{ $dest->location }} (RM {{ number_format($dest->price, 2) }} / org • Max {{ $dest->capacity ?? 2 }} Pax)
                                 </option>
                             @empty
                                 <option value="" disabled selected>Tiada destinasi ditemui dalam pangkalan data</option>
@@ -798,7 +799,7 @@
                                 >
                                     <span>📍</span>
                                     <span>{{ $dest->title }}</span>
-                                    <span class="text-[10px] font-extrabold text-sky-700 bg-white px-1.5 py-0.5 rounded-md border border-sky-200">RM {{ number_format($dest->price, 2) }}</span>
+                                    <span class="text-[10px] font-extrabold text-sky-700 bg-white px-1.5 py-0.5 rounded-md border border-sky-200">RM {{ number_format($dest->price, 2) }} / org</span>
                                 </button>
                             @endforeach
                         </div>
@@ -830,10 +831,13 @@
                                 Malaysia • Pulau Redang, Terengganu
                             </p>
                             <div class="mt-2 flex flex-wrap items-center gap-2">
-                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-sm font-extrabold text-xs">
-                                    <span class="text-[10px] uppercase font-bold text-sky-100 tracking-wider">Package Price:</span>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-sm font-extrabold text-xs">
+                                    <span class="text-[10px] uppercase font-bold text-sky-100 tracking-wider">Total Price:</span>
                                     <span id="previewDestPrice">RM 1,250.00</span>
                                 </div>
+                                <span id="previewPriceRate" class="text-[11px] font-bold text-sky-800 bg-sky-100/90 border border-sky-200 px-2.5 py-1 rounded-xl shadow-xs">
+                                    RM 1,250.00 / org × 1 Tetamu
+                                </span>
                                 <span id="previewDestSchedule" class="text-[11px] font-bold text-slate-700 bg-white/90 border border-sky-200 px-2.5 py-1 rounded-xl shadow-xs">
                                     📅 Open Booking
                                 </span>
@@ -851,22 +855,25 @@
                 <!-- Guests & Tier -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="travelersCountInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                            {{ __('Guests') }} *
-                        </label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="travelersCountInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                                {{ __('Guests / Capacity') }} *
+                            </label>
+                            <span id="capacityBadge" class="text-[10px] font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">
+                                Max: 2 Tetamu
+                            </span>
+                        </div>
                         <select
                             id="travelersCountInput"
                             name="travelers_count"
                             required
+                            onchange="onTravelersChange()"
                             class="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white cursor-pointer"
                         >
-                            <option value="1">1 Tetamu (Solo VIP)</option>
+                            <option value="1">1 Tetamu (Solo)</option>
                             <option value="2" selected>2 Tetamu (Couples Escape)</option>
-                            <option value="3">3 Tetamu</option>
-                            <option value="4">4 Tetamu (Keluarga / Rakan)</option>
-                            <option value="6">6 Tetamu (Kumpulan Villa Mewah)</option>
-                            <option value="8">8 Tetamu (Private Estate)</option>
                         </select>
+                        <p class="text-[11px] text-slate-400 mt-1">Harga pakej dikira secara automatik berdasarkan kapasiti tetamu.</p>
                     </div>
                     <div>
                         <label for="tierInput" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
@@ -1022,6 +1029,7 @@
             const loc = selectedOpt.getAttribute('data-location') || '';
             const title = selectedOpt.getAttribute('data-title') || '';
             const price = parseFloat(selectedOpt.getAttribute('data-price') || '0');
+            const capacity = parseInt(selectedOpt.getAttribute('data-capacity') || '2', 10);
             const days = parseInt(selectedOpt.getAttribute('data-days') || '4', 10);
             const img = selectedOpt.getAttribute('data-image') || '';
             const startDate = selectedOpt.getAttribute('data-start') || '';
@@ -1038,13 +1046,37 @@
                 document.getElementById('endDateInput').value = endDate;
             }
 
-            // Update live preview card
+            // Dynamically populate guest capacity options up to the package's max capacity
+            const travelersSelect = document.getElementById('travelersCountInput');
+            if (travelersSelect) {
+                const prevVal = parseInt(travelersSelect.value, 10) || 1;
+                travelersSelect.innerHTML = '';
+                for (let i = 1; i <= capacity; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    let label = i + ' Tetamu';
+                    if (i === 1) label += ' (Solo)';
+                    else if (i === 2) label += ' (Couples Escape)';
+                    else if (i === capacity) label += ' (Maksimum Pakej)';
+                    opt.textContent = label;
+                    if (i === prevVal || (prevVal > capacity && i === capacity)) {
+                        opt.selected = true;
+                    }
+                    travelersSelect.appendChild(opt);
+                }
+            }
+
+            const capacityBadge = document.getElementById('capacityBadge');
+            if (capacityBadge) {
+                capacityBadge.textContent = 'Max: ' + capacity + ' Tetamu';
+            }
+
+            // Update live preview card details
             const previewCard = document.getElementById('selectedDestinationPreview');
             if (previewCard) {
                 previewCard.classList.remove('hidden');
                 document.getElementById('previewDestTitle').textContent = title;
                 document.getElementById('previewDestLocation').textContent = loc;
-                document.getElementById('previewDestPrice').textContent = 'RM ' + price.toLocaleString('en-US', { minimumFractionDigits: 2 });
                 document.getElementById('previewDestDays').textContent = days + ' Hari / ' + Math.max(1, days - 1) + ' Malam';
                 const schedEl = document.getElementById('previewDestSchedule');
                 if (schedEl) {
@@ -1054,6 +1086,9 @@
                     document.getElementById('previewDestImg').src = img;
                 }
             }
+
+            // Calculate price based on selected capacity
+            calculateDynamicPrice();
 
             // Highlight matching destination badge
             document.querySelectorAll('.dest-chip').forEach(chip => {
@@ -1065,6 +1100,32 @@
                     chip.classList.add('bg-sky-50', 'text-sky-800');
                 }
             });
+        }
+
+        function onTravelersChange() {
+            calculateDynamicPrice();
+        }
+
+        function calculateDynamicPrice() {
+            const selectEl = document.getElementById('destinationSelect');
+            if (!selectEl) return;
+            const selectedOpt = selectEl.options[selectEl.selectedIndex];
+            if (!selectedOpt) return;
+
+            const pricePerPerson = parseFloat(selectedOpt.getAttribute('data-price') || '0');
+            const travelersSelect = document.getElementById('travelersCountInput');
+            const count = parseInt(travelersSelect ? travelersSelect.value : '1', 10) || 1;
+            const totalPrice = pricePerPerson * count;
+
+            const previewPrice = document.getElementById('previewDestPrice');
+            if (previewPrice) {
+                previewPrice.textContent = 'RM ' + totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            }
+
+            const previewRate = document.getElementById('previewPriceRate');
+            if (previewRate) {
+                previewRate.textContent = 'RM ' + pricePerPerson.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' / org × ' + count + ' Tetamu';
+            }
         }
 
         function pickDestinationById(id) {
