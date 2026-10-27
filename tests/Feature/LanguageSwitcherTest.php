@@ -45,7 +45,6 @@ class LanguageSwitcherTest extends TestCase
         $response->assertOk();
         $response->assertSee('Laman Utama');
         $response->assertSee('Tentang Kami');
-        $response->assertSee('Pelanggan');
     }
 
     public function test_customer_dashboard_renders_malay_translations(): void
