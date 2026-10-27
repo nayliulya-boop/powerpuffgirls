@@ -19,11 +19,11 @@ class LoginSeeder extends Seeder
         }
 
         $sampleUsers = [
-            ['name' => 'Demo Admin', 'email' => 'admin@example.test', 'role' => 'admin'],
-            ['name' => 'Demo Customer One', 'email' => 'customer1@example.test', 'role' => 'customer'],
-            ['name' => 'Demo Customer Two', 'email' => 'customer2@example.test', 'role' => 'customer'],
-            ['name' => 'Demo Customer Three', 'email' => 'customer3@example.test', 'role' => 'customer'],
-            ['name' => 'Demo Customer Four', 'email' => 'customer4@example.test', 'role' => 'customer'],
+            ['name' => 'Admin', 'email' => 'admin@example.test', 'role' => 'admin'],
+            ['name' => 'Customer One', 'email' => 'customer1@example.test', 'role' => 'customer'],
+            ['name' => 'Customer Two', 'email' => 'customer2@example.test', 'role' => 'customer'],
+            ['name' => 'Customer Three', 'email' => 'customer3@example.test', 'role' => 'customer'],
+            ['name' => 'Customer Four', 'email' => 'customer4@example.test', 'role' => 'customer'],
         ];
 
         foreach ($sampleUsers as $sampleUser) {
