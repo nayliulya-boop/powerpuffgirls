@@ -407,15 +407,25 @@
                             class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-sky-600 hover:bg-sky-700 shadow-md shadow-sky-600/20 transition flex items-center gap-1.5"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            View Comprehensive Itinerary
+                            {{ __('View Comprehensive Itinerary') }}
                         </button>
-                        <button
-                            onclick="window.print()"
+                        <a
+                            href="{{ route('customer.payment.receipt.pdf', ['vacation' => $nextTrip, 'print' => 1]) }}"
+                            target="_blank"
                             class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition flex items-center gap-1.5"
+                            title="{{ __('Print voucher via TCPDF') }}"
                         >
                             <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                            Print Travel Voucher
-                        </button>
+                            {{ __('Print') }}
+                        </a>
+                        <a
+                            href="{{ route('customer.payment.receipt.pdf', ['vacation' => $nextTrip, 'download' => 1]) }}"
+                            class="px-4 py-2.5 rounded-xl text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition flex items-center gap-1.5"
+                            title="{{ __('Download voucher PDF generated via TCPDF') }}"
+                        >
+                            <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            {{ __('Download') }}
+                        </a>
                     </div>
                 </div>
             </section>
@@ -638,6 +648,15 @@
                                                 >
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                                     <span>Receipt</span>
+                                                </a>
+                                                <!-- Download PDF Voucher via TCPDF -->
+                                                <a
+                                                    href="{{ route('customer.payment.receipt.pdf', ['vacation' => $vacation, 'download' => 1]) }}"
+                                                    class="w-full inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition"
+                                                    title="{{ __('Download official PDF generated via TCPDF') }}"
+                                                >
+                                                    <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                                    <span>PDF</span>
                                                 </a>
                                             @endif
 
@@ -986,14 +1005,24 @@
                     </p>
                 </div>
 
-                <div class="pt-2 flex items-center justify-end gap-2">
-                    <button
-                        type="button"
-                        onclick="window.print()"
-                        class="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                <div class="pt-2 flex flex-wrap items-center justify-end gap-2">
+                    <a
+                        id="modalPdfDownloadBtn"
+                        href="#"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 transition flex items-center gap-1.5"
                     >
-                        Print
-                    </button>
+                        <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Download PDF
+                    </a>
+                    <a
+                        id="modalPdfPrintBtn"
+                        href="#"
+                        target="_blank"
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition flex items-center gap-1.5"
+                    >
+                        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        Print PDF
+                    </a>
                     <button
                         type="button"
                         onclick="document.getElementById('itineraryModal').classList.add('hidden')"
@@ -1153,6 +1182,17 @@
             document.getElementById('modalTier').textContent = vacation.tier || 'Signature Gold';
             document.getElementById('modalPrice').textContent = 'RM ' + Number(vacation.price).toLocaleString('en-US', { minimumFractionDigits: 2 });
             document.getElementById('modalNotes').textContent = vacation.notes || 'No custom notes submitted. Standard luxury itinerary perks apply.';
+
+            const downloadBtn = document.getElementById('modalPdfDownloadBtn');
+            const printBtn = document.getElementById('modalPdfPrintBtn');
+            if (vacation && vacation.id) {
+                if (downloadBtn) {
+                    downloadBtn.href = '/customer/bookings/' + vacation.id + '/pdf?download=1';
+                }
+                if (printBtn) {
+                    printBtn.href = '/customer/bookings/' + vacation.id + '/pdf?print=1';
+                }
+            }
 
             document.getElementById('itineraryModal').classList.remove('hidden');
         }
