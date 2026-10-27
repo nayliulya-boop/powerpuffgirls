@@ -228,6 +228,23 @@
                                 <span>{{ $vacation->start_date?->format('M d, Y') }} - {{ $vacation->end_date?->format('M d, Y') }}</span>
                                 <span>{{ $vacation->travelers_count }} {{ __('Guests') }}</span>
                             </div>
+
+                            <div class="pt-2 flex items-center justify-between gap-2">
+                                <a
+                                    href="{{ route('customer.payment.receipt', $vacation) }}"
+                                    class="text-xs font-bold text-sky-600 hover:text-sky-700 transition"
+                                >
+                                    {{ __('View Receipt') }} &rarr;
+                                </a>
+                                <a
+                                    href="{{ route('customer.payment.receipt.pdf', ['vacation' => $vacation, 'download' => 1]) }}"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                                    title="{{ __('Download official PDF generated via TCPDF') }}"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                    <span>PDF</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @endforeach

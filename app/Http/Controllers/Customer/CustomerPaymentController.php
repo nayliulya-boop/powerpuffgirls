@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Vacation;
+use App\Services\VoucherPdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -128,5 +130,26 @@ class CustomerPaymentController extends Controller
             'payment' => $vacation->latestPayment,
             'user' => $vacation->user,
         ]);
+    }
+
+    /**
+     * Generate official E-Voucher and payment receipt PDF via TCPDF.
+     */
+    public function pdf(Vacation $vacation, Request $request, VoucherPdfService $pdfService): Response
+    {
+        if ($vacation->user_id !== $request->user()->id && ! $request->user()->isAdmin()) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $mode = 'stream';
+        if ($request->has('download')) {
+            $mode = 'download';
+        } elseif ($request->has('print')) {
+            $mode = 'print';
+        } elseif ($request->filled('mode')) {
+            $mode = (string) $request->input('mode');
+        }
+
+        return $pdfService->render($vacation, $mode);
     }
 }

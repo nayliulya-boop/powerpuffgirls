@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/customer/bookings/{vacation}/payment', [CustomerPaymentController::class, 'show'])->name('customer.payment.show');
     Route::post('/customer/bookings/{vacation}/payment', [CustomerPaymentController::class, 'process'])->name('customer.payment.process');
     Route::get('/customer/bookings/{vacation}/receipt', [CustomerPaymentController::class, 'receipt'])->name('customer.payment.receipt');
+    Route::get('/customer/bookings/{vacation}/pdf', [CustomerPaymentController::class, 'pdf'])->name('customer.payment.receipt.pdf');
 
     // Admin Area (Protected by Administrator Privilege Middleware)
     Route::middleware(EnsureUserIsAdmin::class)->group(function (): void {

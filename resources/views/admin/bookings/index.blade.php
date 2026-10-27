@@ -479,6 +479,8 @@
                                         'admin_notes' => $booking->admin_notes ?? 'Disahkan ketersediaan slot oleh pentadbir.',
                                         'reviewer' => $booking->reviewer->name ?? 'Admin',
                                         'receipt_url' => route('customer.payment.receipt', $booking),
+                                        'pdf_download_url' => route('customer.payment.receipt.pdf', ['vacation' => $booking, 'download' => 1]),
+                                        'pdf_print_url' => route('customer.payment.receipt.pdf', ['vacation' => $booking, 'print' => 1]),
                                     ]) }})"
                                     class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-700 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-extrabold shadow-sm hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-1.5"
                                 >
@@ -671,15 +673,31 @@
                     Tutup
                 </button>
 
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <a
+                        id="receiptModalPdfDownload"
+                        href="#"
+                        class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-sm shadow-sky-600/20 transition flex items-center gap-1.5"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <span>Muat Turun PDF</span>
+                    </a>
+                    <a
+                        id="receiptModalPdfPrint"
+                        href="#"
+                        target="_blank"
+                        class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs shadow-md transition flex items-center gap-1.5"
+                    >
+                        <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        <span>Cetak PDF</span>
+                    </a>
                     <a
                         id="receiptModalLink"
                         href="#"
                         target="_blank"
-                        class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs shadow-md transition flex items-center gap-2"
+                        class="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1.5"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                        <span>Cetak</span>
+                        <span>E-Voucher Penuh ↗</span>
                     </a>
                 </div>
             </div>
@@ -706,6 +724,13 @@
             document.getElementById('receiptModalAmount').textContent = data.amount;
             document.getElementById('receiptModalNotes').textContent = data.admin_notes;
             document.getElementById('receiptModalLink').href = data.receipt_url;
+
+            if (document.getElementById('receiptModalPdfDownload') && data.pdf_download_url) {
+                document.getElementById('receiptModalPdfDownload').href = data.pdf_download_url;
+            }
+            if (document.getElementById('receiptModalPdfPrint') && data.pdf_print_url) {
+                document.getElementById('receiptModalPdfPrint').href = data.pdf_print_url;
+            }
 
             const modal = document.getElementById('receiptPreviewModal');
             modal.classList.remove('hidden');
