@@ -214,29 +214,6 @@
                         <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed">
                             Sign in to your <strong>AzureVoyage</strong> account to manage your flight tickets, overwater villas, and 24/7 concierge requests.
                         </p>
-
-                        <!-- Floating Glass Feature Pills -->
-                        <div class="grid grid-cols-2 gap-3 pt-2">
-                            <div class="glass-pill rounded-2xl p-3.5">
-                                <div class="text-cyan-200 text-xs font-extrabold uppercase tracking-wider">VIP Perks</div>
-                                <div class="text-xs font-semibold text-white/95 mt-1">Suite upgrades & private transfers</div>
-                            </div>
-                            <div class="glass-pill rounded-2xl p-3.5">
-                                <div class="text-amber-300 text-xs font-extrabold uppercase tracking-wider">Protected</div>
-                                <div class="text-xs font-semibold text-white/95 mt-1">100% ATOL & IATA financial bonding</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Glass Destination Spotlight -->
-                    <div class="relative z-10 glass-pill rounded-2xl p-4 flex items-center justify-between gap-3">
-                        <div>
-                            <div class="text-[11px] font-bold uppercase tracking-widest text-cyan-200">Featured Member Sanctuary</div>
-                            <div class="text-sm font-extrabold text-white mt-0.5">Overwater Sunset Villa • Baa Atoll, Maldives</div>
-                        </div>
-                        <span class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
-                            🏝️
-                        </span>
                     </div>
                 </div>
 

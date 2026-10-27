@@ -214,35 +214,6 @@
                         <p class="text-sm sm:text-base font-medium text-sky-100/90 leading-relaxed">
                             Create your personal <strong>AzureVoyage</strong> account to unlock private villa rates, bespoke itinerary curation, and 24/7 dedicated concierge service.
                         </p>
-
-                        <!-- Floating Glass Perks -->
-                        <div class="space-y-2.5 pt-2">
-                            <div class="glass-pill rounded-2xl p-3.5 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm shrink-0">🎁</span>
-                                <div>
-                                    <div class="text-xs font-extrabold text-white">$150 Welcome Travel Credit</div>
-                                    <div class="text-[11px] text-sky-100/85">Automatically applied toward your first escape</div>
-                                </div>
-                            </div>
-                            <div class="glass-pill rounded-2xl p-3.5 flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm shrink-0">🛎️</span>
-                                <div>
-                                    <div class="text-xs font-extrabold text-white">24/7 White-Glove Concierge</div>
-                                    <div class="text-[11px] text-sky-100/85">Dedicated specialist for flights, yachts & villas</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Glass Destination Badge -->
-                    <div class="relative z-10 glass-pill rounded-2xl p-4 flex items-center justify-between gap-3">
-                        <div>
-                            <div class="text-[11px] font-bold uppercase tracking-widest text-cyan-200">Trusted Worldwide</div>
-                            <div class="text-sm font-extrabold text-white mt-0.5">42,800+ Verified Luxury Travelers</div>
-                        </div>
-                        <span class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white shrink-0">
-                            ✈️
-                        </span>
                     </div>
                 </div>
 
