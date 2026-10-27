@@ -311,7 +311,7 @@
                             <th class="py-3 px-4">Location</th>
                             <th class="py-3 px-4">Duration & Capacity</th>
                             <th class="py-3 px-4">Dates</th>
-                            <th class="py-3 px-4">Price (RM)</th>
+                            <th class="py-3 px-4">Price (RM / Pax)</th>
                             <th class="py-3 px-4">Status</th>
                             <th class="py-3 px-4 text-right">Actions</th>
                         </tr>
@@ -345,6 +345,7 @@
                                 </td>
                                 <td class="py-3.5 px-4 font-extrabold text-slate-900 whitespace-nowrap">
                                     RM {{ number_format((float) $pkg->price, 2) }}
+                                    <span class="text-[10px] font-normal text-slate-400 block">per person</span>
                                 </td>
                                 <td class="py-3.5 px-4 whitespace-nowrap">
                                     @if ($pkg->is_active)
@@ -861,11 +862,11 @@
                         <input type="number" name="duration_days" value="7" min="1" max="60" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Capacity (Guests) *</label>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Capacity (Max Guests) *</label>
                         <input type="number" name="capacity" value="2" min="1" max="50" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Price (RM) *</label>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Price / Guest (RM) *</label>
                         <input type="number" step="0.01" name="price" value="12000" min="0" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                 </div>
@@ -953,11 +954,11 @@
                         <input type="number" id="edit-duration" name="duration_days" min="1" max="60" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Capacity (Guests) *</label>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Capacity (Max Guests) *</label>
                         <input type="number" id="edit-capacity" name="capacity" min="1" max="50" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Price (RM) *</label>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Price / Guest (RM) *</label>
                         <input type="number" step="0.01" id="edit-price" name="price" min="0" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                 </div>
