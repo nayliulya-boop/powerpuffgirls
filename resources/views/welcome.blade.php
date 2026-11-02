@@ -256,7 +256,7 @@
                                         id="email"
                                         name="email"
                                         value="{{ old('email') }}"
-                                        placeholder="ulyaboolat@gmail.com"
+                                        placeholder="customer1@gmail.com"
                                         autocomplete="email"
                                         required
                                         class="w-full pl-12 pr-4 py-3.5 rounded-2xl glass-input text-sm sm:text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none"
